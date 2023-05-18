@@ -1,6 +1,11 @@
 import React from 'react'
 import logo from '../assets/gym_person.png'
+import { useState } from 'react'
 function LoginPage() {
+    const [isRegistrationForm, setISRegistrationForm]= useState(true)
+    const notRegisterButtonHandler =()=>{
+
+    }
   return (
     <div className=' max-w-[1440px] flex justify-center items-center  mx-auto h-screen'>
         <div className='w-screen flex h-4/5 items-center '>
@@ -42,7 +47,7 @@ function LoginPage() {
                     <div className=' text-3xl my-5 '>
                     Click below    
                     </div>
-                    <button className=' bg-orange-400 w-full'>Register</button>
+                    <button onClick={notRegisterButtonHandler} className=' bg-orange-400 w-full'>Register</button>
                 </label>
                 <label className='h-1/3 '>
                 </label>
