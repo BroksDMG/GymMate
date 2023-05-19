@@ -3,8 +3,7 @@ function IndexPage() {
   return (
     <div className='max-w-[1440px]'>
         <div className='w-full'>
-            
-
+          
         </div>
     </div>
   )
