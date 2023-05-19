@@ -1,5 +1,6 @@
 import React from 'react'
 import logo from '../assets/gym_person.png'
+import { motion } from 'framer-motion';
 function LoginForm({toggleForm}) {
     const handelSubmit=(e)=>{
         e.preventDefault()
@@ -7,7 +8,12 @@ function LoginForm({toggleForm}) {
     }
   return (
     <>
-    <form className='w-full bg-gray-200 h-full rounded-l-3xl min-w-min' onSubmit={handelSubmit}>
+    <motion.form 
+    initial={{ x: '100%', opacity: 0 }}
+    animate={{ x: '0%', opacity: 1 }}
+    exit={{ x: '-100%', opacity: 0 }}
+    transition={{ duration: 0.5 }}
+    className='w-full bg-gray-200 h-full rounded-l-3xl min-w-min' onSubmit={handelSubmit}>
                 <div className='w-full h-full px-32 flex flex-col justify-center items-center'>
                 <label className='w-full h-1/3 pt-10' >
                     <a href="logo" className='flex items-center justify-center gap-1 '>
@@ -17,7 +23,7 @@ function LoginForm({toggleForm}) {
                         <span>GymMate</span>
                     </a>  
                     <div className=' text-3xl mt-5 '>
-                        LOGIN
+                        Logowanie
                     </div>
 
                 </label>
@@ -33,8 +39,13 @@ function LoginForm({toggleForm}) {
                 </label>
                 </div>
               
-            </form>
-            <form className='w-full bg-stone-700 h-full flex flex-col items-center justify-center rounded-r-3xl'>
+    </motion.form>
+    <motion.form 
+    initial={{ x: '-100%', opacity: 0 }}
+    animate={{ x: '0%', opacity: 1 }}
+    exit={{ x: '100%', opacity: 0 }}
+    transition={{ duration: 0.5 }}
+    className='w-full bg-stone-700 h-full flex flex-col items-center justify-center rounded-r-3xl'>
             <div className='w-full h-full px-32 flex flex-col justify-center items-center'>
                 <label className='w-full h-1/3 pt-10' >
                 </label>
@@ -50,7 +61,7 @@ function LoginForm({toggleForm}) {
                 <label className='h-1/3 '>
                 </label>
                 </div>
-            </form>
+    </motion.form>
     </>
   )
 }
