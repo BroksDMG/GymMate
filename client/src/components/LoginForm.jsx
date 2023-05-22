@@ -1,11 +1,31 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import logo from '../assets/gym_person.png'
 import { motion } from 'framer-motion';
+import axios from 'axios';
+import { Navigate } from 'react-router-dom';
+import { UserContex } from './UserContext';
 function LoginForm({toggleForm}) {
-    const handelSubmit=(e)=>{
+    const [email, setEmail]=useState('')
+    const [password,setPassword]=useState('')
+    const [redirect, setRedirect]=useState(false)
+    const {setUser}=useContext(UserContex)
+    const handelLoginSubmit=async(e)=>{
         e.preventDefault()
-
+        try{
+            const {data}= await axios.post('/login',{email,password},{withCredentials:true})
+            setUser(data)
+            alert('Login succefsul')
+            setRedirect(true)
+        }
+        catch{
+            alert("something went wrong")
+        }
     }
+
+    if(redirect){
+        return <Navigate to={"/"}/>
+    }
+
   return (
     <>
     <motion.form 
@@ -13,7 +33,7 @@ function LoginForm({toggleForm}) {
     animate={{ x: '0%', opacity: 1 }}
     exit={{ x: '-100%', opacity: 0 }}
     transition={{ duration: 0.5 }}
-    className='w-full bg-gray-200 h-full rounded-l-3xl min-w-min' onSubmit={handelSubmit}>
+    className='w-full bg-gray-200 h-full rounded-l-3xl min-w-min' onSubmit={handelLoginSubmit}>
                 <div className='w-full h-full px-32 flex flex-col justify-center items-center'>
                 <label className='w-full h-1/3 pt-10' >
                     <a href="logo" className='flex items-center justify-center gap-1 '>
@@ -28,8 +48,8 @@ function LoginForm({toggleForm}) {
 
                 </label>
                 <label className='h-1/3 w-full flex flex-col items-center justify-center min-w-min'>
-                    <input type="email" placeholder='Email' className='w-full' />
-                    <input type="password" placeholder='Hasło' className='w-full'/>
+                    <input type="email" placeholder='Email' className='w-full' value={email} onChange={ev=>setEmail(ev.target.value)}/>
+                    <input type="password" placeholder='Hasło' className='w-full' value={password} onChange={ev=>setPassword(ev.target.value)}/>
                     <button className=' bg-orange-400 w-full'>zaloguj</button>
                 </label>
                 <label className='h-1/3 '>

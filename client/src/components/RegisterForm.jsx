@@ -1,10 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react'
 import logo from '../assets/gym_person.png'
 import { motion } from 'framer-motion';
+import axios from 'axios'
 function RegisterForm({toggleForm}) {
-    const handelSubmit=(e)=>{
+    const [name,setName]=useState('')
+    const [surname,SetSurname]=useState('')
+    const [email,setEmail]=useState('')
+    const [password,setPassword]=useState('')
+    const handelRegisterSubmit= async(e)=>{
         e.preventDefault()
-
+        try{
+            await axios.post("/register",{
+                name,
+                surname,
+                email,
+                password
+            });
+            alert('Registration succesful, now you can log i')
+        
+        }catch{
+            alert("Registration failde. Please try again later")
+        }
     }
   return (
     < >
@@ -13,7 +29,7 @@ function RegisterForm({toggleForm}) {
     animate={{ x: '0%', opacity: 1 }}
     exit={{ x: '-100%', opacity: 0 }}
     transition={{ duration: 0.5 }}
-    className='w-full bg-gray-200 h-full rounded-l-3xl min-w-min' onSubmit={handelSubmit}>
+    className='w-full bg-gray-200 h-full rounded-l-3xl min-w-min' onSubmit={handelRegisterSubmit}>
                 <div className='w-full h-full px-32 flex flex-col justify-center items-center'>
                 <label className='w-full h-1/3 pt-10' >
                     <a href="logo" className='flex items-center justify-center gap-1 '>
@@ -28,10 +44,10 @@ function RegisterForm({toggleForm}) {
 
                 </label>
                 <label className='h-1/3 w-full flex flex-col items-center justify-center min-w-min'>
-                    <input type="text" placeholder='Imię' className='w-full' />
-                    <input type="text" placeholder='Nazwisko' className='w-full' />
-                    <input type="email" placeholder='Email' className='w-full' />
-                    <input type="password" placeholder='Hasło' className='w-full'/>
+                    <input type="text" placeholder='Imię' className='w-full' value={name} onChange={ev=>setName(ev.target.value)} />
+                    <input type="text" placeholder='Nazwisko' className='w-full'value={surname} onChange={ev=>SetSurname(ev.target.value)}/>
+                    <input type="email" placeholder='Email' className='w-full' value={email} onChange={ev=>setEmail(ev.target.value)} />
+                    <input type="password" placeholder='Hasło' className='w-full'value={password} onChange={ev=>setPassword(ev.target.value)}/>
                     <button className=' bg-orange-400 w-full' type='submit'>Zarejestruj</button>
                 </label>
                 <label className='h-1/3 '>
