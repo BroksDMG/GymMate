@@ -1,5 +1,6 @@
 import React from 'react'
-function IndexPage() {
+
+function IndexPAge() {
   return (
     <div className='max-w-[1440px]'>
         <div className='w-full'>
@@ -9,4 +10,4 @@ function IndexPage() {
   )
 }
 
-export default IndexPage
+export default IndexPAge
