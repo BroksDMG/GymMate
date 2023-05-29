@@ -8,7 +8,7 @@ const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const app = express();
 
-const jwtSecret = 'fasefraw4r5r3wq45wdfgw34twdfg';
+const jwtSecret = "fasefraw4r5r3wq45wdfgw34twdfg";
 
 app.use(express.json());
 app.use(cookieParser());
@@ -59,6 +59,7 @@ app.post("/loginPage/register", async (req, res) => {
 app.post("/loginPage/login", async (req, res) => {
   const { email, password } = req.body;
   const userDoc = await User.findOne({ email });
+  console.log(userDoc);
   if (userDoc) {
     const passOk = bcrypt.compareSync(password, userDoc.password);
     if (passOk) {
@@ -71,9 +72,9 @@ app.post("/loginPage/login", async (req, res) => {
         {},
         (err, token) => {
           if (err) throw err;
+          res.cookie("token", token).json(userDoc);
         }
       );
-      res.cookie("token", "").json("pass ok");
     } else {
       res.status(422).json("pass not ok");
     }
@@ -84,15 +85,15 @@ app.post("/loginPage/login", async (req, res) => {
 
 app.get("/profile", (req, res) => {
   console.log("profil");
-  const { token } = res.cookie;
+  const { token } = req.cookies;
   if (token) {
-    jwt.verify(token, jwtSecret, {}, async (err, user) => {
+    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
       if (err) throw err;
-      const {name, email, _id} = await User.findById(userData.id);
+      const { name, email, _id } = await User.findById(userData.id);
       res.json(name, email, _id);
     });
   } else {
-    res.json({ token });
+    res.json(null);
   }
 });
 
