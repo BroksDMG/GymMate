@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
 import { UserContex } from "./UserContext";
+import { Link } from "react-router-dom";
 function LoginForm({ toggleForm }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,7 +14,7 @@ function LoginForm({ toggleForm }) {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "/login",
+        "/loginPage/login",
         { email, password },
         { withCredentials: true }
       );
@@ -100,9 +101,12 @@ function LoginForm({ toggleForm }) {
           <label className="h-1/3 w-full flex flex-col items-center justify-center min-w-min">
             <div className=" text-3xl mt-5 ">Nie masz konta?</div>
             <div className=" text-3xl my-5 ">Kliknij poniżej</div>
-            <button onClick={toggleForm} className=" bg-orange-400 w-full">
+            <Link to={'/loginPage/register'} className="w-full">
+           <button onClick={toggleForm} className=" bg-orange-400 w-full">
+             
               Zarejestruj się
             </button>
+              </Link>
           </label>
           <label className="h-1/3 "></label>
         </div>
