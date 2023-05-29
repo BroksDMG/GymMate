@@ -49,7 +49,7 @@ function Header() {
         )}
 
         <Link
-          to={user ? "/account" : "/loginPage/login"}
+          to={user ? "/account" : "login"}
           className="felx items-center gap-2"
         >
           <div className=" rounded-full flex justify-center items-center h-10 ">

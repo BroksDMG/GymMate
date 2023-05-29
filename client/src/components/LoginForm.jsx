@@ -13,7 +13,7 @@ function LoginForm({ toggleForm }) {
   const handelLoginSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post("/loginPage/login", {
+      const { data } = await axios.post("/login", {
         email,
         password,
       });
@@ -101,7 +101,7 @@ function LoginForm({ toggleForm }) {
           <label className="h-1/3 w-full flex flex-col items-center justify-center min-w-min">
             <div className=" text-3xl mt-5 ">Nie masz konta?</div>
             <div className=" text-3xl my-5 ">Kliknij poniżej</div>
-            <Link to={"/loginPage/register"} className="w-full">
+            <Link to={"/register"} className="w-full">
               <button onClick={toggleForm} className=" bg-orange-400 w-full">
                 Zarejestruj się
               </button>

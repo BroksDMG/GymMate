@@ -2,9 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-input[type='text'],input[type='email'],input[type='password']{
-    @apply border my-2 py-1 px-4 rounded-full
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+  @apply border my-2 py-1 px-4 rounded-full w-full;
 }
-button{
-    @apply py-1 rounded-full px-4
+button {
+  @apply py-1 rounded-full px-4;
 }
