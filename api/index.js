@@ -8,6 +8,8 @@ const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const app = express();
 
+const jwtSecret = 'fasefraw4r5r3wq45wdfgw34twdfg';
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(
@@ -54,7 +56,7 @@ app.post("/loginPage/register", async (req, res) => {
   }
 });
 
-app.post("/login", async (req, res) => {
+app.post("/loginPage/login", async (req, res) => {
   const { email, password } = req.body;
   const userDoc = await User.findOne({ email });
   if (userDoc) {
