@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
-import { UserContex } from "../components/UserContext";
+import { UserContext } from "../components/UserContext";
 import { Navigate } from "react-router-dom";
 
 function AccountPage() {
-  const { ready, user } = useContext(UserContex);
+  const { ready, user } = useContext(UserContext);
   if (!ready) {
     return "Loading...";
   }
