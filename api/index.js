@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
   res.json("test ok");
 });
 
-app.post("/login", async (req, res) => {
+app.post("/loginPage/register", async (req, res) => {
   const { name, surname, email, password } = req.body;
 
   try {
@@ -53,6 +53,7 @@ app.post("/login", async (req, res) => {
       .json({ error: "Wystąpił błąd podczas rejestracji użytkownika." });
   }
 });
+
 
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
