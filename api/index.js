@@ -56,12 +56,7 @@ app.post("/loginPage/register", async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
 app.post("/loginPage/login", async (req, res) => {
-=======
-
-app.post("/login", async (req, res) => {
->>>>>>> b5d9c4e570a6a9f1841309fe36d6efcafed2c79b
   const { email, password } = req.body;
   const userDoc = await User.findOne({ email });
   if (userDoc) {
