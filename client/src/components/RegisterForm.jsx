@@ -11,7 +11,7 @@ function RegisterForm({ toggleForm }) {
   const handelRegisterSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("/loginPage/register", {
+      await axios.post("/register", {
         name,
         surname,
         email,
@@ -109,10 +109,10 @@ function RegisterForm({ toggleForm }) {
           <label className="h-1/3 w-full flex flex-col items-center justify-center min-w-min">
             <div className=" text-3xl mt-5 ">Masz już konto?</div>
             <div className=" text-3xl my-5 ">Kliknij poniżej</div>
-            <Link to={'/loginPage/login'} className="w-full">
-            <button onClick={toggleForm} className=" bg-orange-400 w-full">
-              Zaloguj się
-            </button>
+            <Link to={"/login"} className="w-full">
+              <button onClick={toggleForm} className=" bg-orange-400 w-full">
+                Zaloguj się
+              </button>
             </Link>
           </label>
           <label className="h-1/3 "></label>
