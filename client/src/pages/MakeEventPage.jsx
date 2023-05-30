@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 
 function MakeEventPage() {
@@ -9,6 +10,14 @@ function MakeEventPage() {
   const [experience, setExperience] = useState("");
   const [date, setDate] = useState("null");
   const [numberGuests, setNumberGuests] = useState(1);
+
+  async function addPhotoByLink(ev) {
+    ev.preventDefault();
+    const { data: filename } = await axios.post("/upload-by-link", {});
+    setAddedPhotos((prev) => {
+      return [...prev, filename];
+    });
+  }
 
   return (
     <div>
