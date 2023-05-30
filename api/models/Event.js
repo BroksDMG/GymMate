@@ -6,11 +6,11 @@ const eventSchema = new mongoose.Schema({
   address: String,
   descripton: String,
   experience: [String],
-  time: Number,
+  time: Date.now(),
   maxGuests: Number,
   photos: [String],
 });
 
-const EventModel = mongoose.model("Place", eventSchema);
+const EventModel = mongoose.model("Event", eventSchema);
 
 module.exports = EventModel;
