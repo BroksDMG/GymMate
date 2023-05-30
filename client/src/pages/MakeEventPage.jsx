@@ -1,27 +1,57 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
 
 function MakeEventPage() {
+  const [title, setTitle] = useState("");
+  const [address, setAddress] = useState("");
+  const [addedPhotos, setAddedPhotos] = useState([]);
+  const [photoLink, setPhotoLink] = useState("");
+  const [description, setDescription] = useState("");
+  const [experience, setExperience] = useState("");
+  const [date, setDate] = useState("null");
+  const [numberGuests, setNumberGuests] = useState(1);
+
+  async function addPhotoByLink(ev) {
+    ev.preventDefault();
+    const { data: filename } = await axios.post("/upload-by-link", {});
+    setAddedPhotos((prev) => {
+      return [...prev, filename];
+    });
+  }
+
   return (
     <div>
       <form className="w-full rounded-xl border h-full m-2 p-3 shadow-md">
         <h2 className="text-2xl mt-4">Title</h2>
         <p className="text-gray-500 text-sm">
-          Tyyuł powinien być krótki i chwytliwy
+          Tytuł powinien być krótki i chwytliwy
         </p>
         <input
           type="text"
           placeholder="title, for example: dear GymMate users"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
         <h2 className="text-2xl mt-4">Address</h2>
         <p className="text-gray-500 text-sm">lokacja wydarzenia</p>
-        <input type="text" placeholder="address" />
+        <input
+          type="text"
+          placeholder="address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+        />
         <h2 className="text-2xl mt-4">Photo</h2>
         <p className="text-gray-500 text-sm">
           dodaj obraz który przyciągnie uwagę
         </p>
         <div className="flex gap-3">
-          <input type="text" placeholder="add using a link ...jpg" />
-          <button className="bg-orange-300 px-4 ">add&nbsp;photo</button>
+          <input
+            type="text"
+            placeholder="add using a link ...jpg"
+            value={photoLink}
+            onChange={(e) => setPhotoLink(e.target.value)}
+          />
+          <button className="bg-blue-400 px-4 ">add&nbsp;photo</button>
         </div>
         <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           <button className="border bg-transparent rounded-2xl p-6 text-2xl flex justify-center items-center ">
@@ -47,12 +77,14 @@ function MakeEventPage() {
         <textarea
           type="text"
           placeholder="title, for example: dear GymMate users"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         />
         <h2 className="text-2xl mt-4">Experience</h2>
         <p className="text-gray-500 text-sm">
           Zaznacz swoj poziom zaawansowania
         </p>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-2 mt-2">
           <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
             <input type="checkbox" />
             <span>Początkujący</span>
@@ -69,6 +101,34 @@ function MakeEventPage() {
             <input type="checkbox" />
             <span>Profesjonalista</span>
           </label>
+        </div>
+        <h2 className="text-2xl mt-4">Date&Number</h2>
+        <p className="text-gray-500 text-sm">
+          zaznacz kiedy i z iloma osobami chesz zorganizować spotkanie
+        </p>
+        <div className="flex mt-2 gap-5">
+          <div className="flex flex-col">
+            <h3 className="text-lg ">Kiedy?</h3>
+            <input
+              type="date"
+              placeholder="title, for example: dear GymMate users"
+              className=" border p-4 rounded-lg text-2xl"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col">
+            <h3 className="text-lg ">Ile osób?</h3>
+            <input
+              type="number"
+              className="border p-4 rounded-lg text-2xl"
+              value={numberGuests}
+              onChange={(e) => setNumberGuests(e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="mt-5">
+          <button className="w-full bg-blue-500">Save</button>
         </div>
       </form>
     </div>
