@@ -2,10 +2,16 @@ const express = require("express");
 const cors = require("cors");
 const { default: mongoose } = require("mongoose");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const User = require("./models/User.js");
+const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const app = express();
+
+const jwtSecret = 'fasefraw4r5r3wq45wdfgw34twdfg';
+
 app.use(express.json());
+app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
@@ -27,7 +33,7 @@ app.get("/", (req, res) => {
   res.json("test ok");
 });
 
-app.post("/login", async (req, res) => {
+app.post("/loginPage/register", async (req, res) => {
   const { name, surname, email, password } = req.body;
 
   try {
@@ -50,19 +56,44 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post('/login', async (req, res) => {
-    const {email, password} = req.body;
-    const userDoc = await User.findOne({email});
-    if ( userDoc ) {
-        const passOk = bcrypt.compareSync(password, userDoc.password);
-        if ( passOk ) {
-            res.json('pass ok');
-        } else {
-            res.status(422).json('pass not ok');
+app.post("/loginPage/login", async (req, res) => {
+  const { email, password } = req.body;
+  const userDoc = await User.findOne({ email });
+  if (userDoc) {
+    const passOk = bcrypt.compareSync(password, userDoc.password);
+    if (passOk) {
+      jwt.sign(
+        {
+          email: userDoc.email,
+          id: userDoc._id,
+        },
+        jwtSecret,
+        {},
+        (err, token) => {
+          if (err) throw err;
         }
+      );
+      res.cookie("token", token).json(userDoc);
     } else {
-        res.json('not found')
+      res.status(422).json("pass not ok");
     }
+  } else {
+    res.json("not found");
+  }
+});
+
+app.get("/profile", (req, res) => {
+  console.log("profil");
+  const { token } = res.cookie;
+  if (token) {
+    jwt.verify(token, jwtSecret, {}, async (err, user) => {
+      if (err) throw err;
+      const {name, email, _id} = await User.findById(userData.id);
+      res.json(name, email, _id);
+    });
+  } else {
+    res.json({ token });
+  }
 });
 
 app.listen(4000);
