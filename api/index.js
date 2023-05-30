@@ -73,7 +73,7 @@ app.post("/loginPage/login", async (req, res) => {
           if (err) throw err;
         }
       );
-      res.cookie("token", "").json("pass ok");
+      res.cookie("token", token).json(userDoc);
     } else {
       res.status(422).json("pass not ok");
     }
