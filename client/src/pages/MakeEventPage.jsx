@@ -20,7 +20,7 @@ function MakeEventPage() {
   async function addNewEvent(e) {
     e.preventDefault();
 
-    const { data: responseData } = axios.post("/events", {
+    await axios.post("/events", {
       title,
       address,
       addedPhotos,
