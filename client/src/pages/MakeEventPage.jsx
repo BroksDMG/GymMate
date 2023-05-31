@@ -8,15 +8,18 @@ function MakeEventPage() {
   const [photoLink, setPhotoLink] = useState("");
   const [description, setDescription] = useState("");
   const [experience, setExperience] = useState("");
-  const [date, setDate] = useState("null");
+  const [date, setDate] = useState("");
   const [numberGuests, setNumberGuests] = useState(1);
 
   async function addPhotoByLink(ev) {
     ev.preventDefault();
-    const { data: filename } = await axios.post("/upload-by-link", {});
+    const { data: filename } = await axios.post("/upload-by-link", {
+      link: photoLink,
+    });
     setAddedPhotos((prev) => {
       return [...prev, filename];
     });
+    setPhotoLink("");
   }
 
   return (
@@ -51,10 +54,23 @@ function MakeEventPage() {
             value={photoLink}
             onChange={(e) => setPhotoLink(e.target.value)}
           />
-          <button className="bg-blue-400 px-4 ">add&nbsp;photo</button>
+          <button onClick={addPhotoByLink} className="bg-blue-400 px-4 ">
+            add&nbsp;photo
+          </button>
         </div>
-        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-          <button className="border bg-transparent rounded-2xl p-6 text-2xl flex justify-center items-center ">
+        <div className="grid gap-2 grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+          {addedPhotos.length > 0 &&
+            addedPhotos.map((link) => (
+              <div className="">
+                <img
+                  className="rounded-lg"
+                  src={"http://127.0.0.1:4000/uploads/" + link}
+                  alt=""
+                />
+              </div>
+            ))}
+          <button className="border bg-transparent rounded-2xl p-2 text-2xl flex justify-center items-center ">
+            <input type="file" className="hidden" />
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
