@@ -175,12 +175,23 @@ app.put("/events", async (req, res) => {
     experience,
     time,
     maxGuests,
-    photos,
+    addedPhotos,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) throw err;
     const eventDoc = await Event.findById(id);
     if (userData.id === eventDoc.owner) {
-      eventDoc.update();
+      eventDoc.set({
+        title,
+        adress,
+        description,
+        experience,
+        time,
+        maxGuests,
+        photos: addedPhotos,
+      });
+      await eventDoc.save();
+      res.json("ok");
     }
   });
 });
