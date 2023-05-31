@@ -5,7 +5,10 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("./models/User.js");
 const cookieParser = require("cookie-parser");
-const imageDownloader = require('image-downloader');
+const imageDownloader = require("image-downloader");
+const multer = require("multer");
+const fs = require("fs");
+
 require("dotenv").config();
 const app = express();
 
@@ -13,6 +16,7 @@ const jwtSecret = "fasefraw4r5r3wq45wdfgw34twdfg";
 
 app.use(express.json());
 app.use(cookieParser());
+app.use("/uploads", express.static(__dirname + "/uploads"));
 app.use(
   cors({
     credentials: true,
@@ -84,7 +88,6 @@ app.post("/login", async (req, res) => {
 });
 
 app.get("/profile", (req, res) => {
-  console.log("profil");
   const { token } = req.cookies;
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
@@ -101,14 +104,18 @@ app.post("/logout", (req, res) => {
   res.cookie("token", "").json(true);
 });
 
-app.post('/upload-by-link', async (req, res) => {
-  const {link} = req.body;
-  const newName = Date.now() + '.jpg';
+app.post("/upload-by-link", async (req, res) => {
+  const { link } = req.body;
+  const newName = "photo" + Date.now() + ".jpg";
   await imageDownloader.image({
     url: link,
-    dest: __dirname + '/uploads/' + newName,
+    dest: __dirname + "/uploads/" + newName,
   });
-  res.json(__dirname + '/uploads/' + newName);
+  res.json(newName);
+});
+
+app.get("/test", (req, res) => {
+  res.json("test ok");
 });
 
 app.listen(4000);
