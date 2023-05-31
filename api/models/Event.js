@@ -5,7 +5,7 @@ const eventSchema = new mongoose.Schema({
   title: String,
   address: String,
   descripton: String,
-  experience: String,
+  experience: [String],
   time: { type: Date, default: Date.now },
   maxGuests: Number,
   photos: [String],
