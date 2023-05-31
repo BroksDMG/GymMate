@@ -132,7 +132,7 @@ app.post("/upload", photosMiddleware.array("photos", 100), (req, res) => {
   res.json(uploadedFiles);
 });
 
-app.post("/event", (req, res) => {
+app.post("/events", (req, res) => {
   const { token } = req.cookies;
   const { title, adress, description, experience, time, maxGuests, photos } =
     req.body;
@@ -146,10 +146,43 @@ app.post("/event", (req, res) => {
       experience,
       time,
       maxGuests,
-      photos,
+      photos: addedPhotos,
     });
+    res.json(eventDoc);
   });
-  res.json(eventDoc);
+});
+
+app.get("/events", (req, res) => {
+  const { token } = req.cookies;
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    const { id } = userData;
+    res.json(await Event.find({ owner: id }));
+  });
+});
+
+app.get("/events/:id", async (req, res) => {
+  const { id } = res.json(req.params);
+  res.json(await Event.findById(id));
+});
+
+app.put("/events", async (req, res) => {
+  const { token } = req.cookies;
+  const {
+    id,
+    title,
+    adress,
+    description,
+    experience,
+    time,
+    maxGuests,
+    photos,
+  } = req.body;
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    const eventDoc = await Event.findById(id);
+    if (userData.id === eventDoc.owner) {
+      eventDoc.update();
+    }
+  });
 });
 
 app.get("/test", (req, res) => {
