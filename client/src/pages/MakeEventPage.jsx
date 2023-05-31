@@ -22,6 +22,28 @@ function MakeEventPage() {
     setPhotoLink("");
   }
 
+  function uploadPhotos(e) {
+    const files = e.target.files;
+    const data = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      data.append("photos", files[i]);
+    }
+    axios
+      .post("/upload", data, {
+        headers: { "Content-Type": "mulipart/form-data" },
+      })
+      .then((res) => {
+        const { data: filenames } = res;
+        setAddedPhotos((prev) => {
+          return [...prev, ...filenames];
+        });
+      });
+  }
+
+  function handleExpClick(lvl) {
+    const { value } = lvl.target;
+    setExperience((prevValue) => (prevValue === value ? "" : value));
+  }
   return (
     <div>
       <form className="w-full rounded-xl border h-full m-2 p-3 shadow-md">
@@ -61,16 +83,21 @@ function MakeEventPage() {
         <div className="grid gap-2 grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {addedPhotos.length > 0 &&
             addedPhotos.map((link) => (
-              <div className="">
+              <div className="h-32 flex">
                 <img
-                  className="rounded-lg"
+                  className="rounded-lg w-full object-cover"
                   src={"http://127.0.0.1:4000/uploads/" + link}
                   alt=""
                 />
               </div>
             ))}
-          <button className="border bg-transparent rounded-2xl p-2 text-2xl flex justify-center items-center ">
-            <input type="file" className="hidden" />
+          <label className="h-32 cursor-pointer border bg-transparent rounded-2xl p-2 text-2xl flex justify-center items-center ">
+            <input
+              type="file"
+              multiple
+              className="hidden"
+              onChange={uploadPhotos}
+            />
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -86,7 +113,7 @@ function MakeEventPage() {
               />
             </svg>
             Uploud
-          </button>
+          </label>
         </div>
         <h2 className="text-2xl mt-4">Description</h2>
         <p className="text-gray-500 text-sm">Opis wydarzenia</p>
@@ -102,19 +129,39 @@ function MakeEventPage() {
         </p>
         <div className="grid grid-cols-2 gap-2 mt-2">
           <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              onChange={handleExpClick}
+              value="junior"
+              checked={experience === "junior"}
+            />
             <span>Początkujący</span>
           </label>
           <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              onChange={handleExpClick}
+              value="mid"
+              checked={experience === "mid"}
+            />
             <span>Średniozaawansowany</span>
           </label>
           <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              onChange={handleExpClick}
+              value="senior"
+              checked={experience === "senior"}
+            />
             <span>Zaawansowany</span>
           </label>
           <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              onChange={handleExpClick}
+              value="prof"
+              checked={experience === "prof"}
+            />
             <span>Profesjonalista</span>
           </label>
         </div>
