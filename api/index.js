@@ -6,6 +6,9 @@ const jwt = require("jsonwebtoken");
 const User = require("./models/User.js");
 const cookieParser = require("cookie-parser");
 const imageDownloader = require("image-downloader");
+const multer = require("multer");
+const fs = require("fs");
+
 require("dotenv").config();
 const app = express();
 
