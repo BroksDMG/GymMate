@@ -4,6 +4,7 @@ const { default: mongoose } = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("./models/User.js");
+const Event = require("./models/Event.js");
 const cookieParser = require("cookie-parser");
 const imageDownloader = require("image-downloader");
 const multer = require("multer");
@@ -16,7 +17,9 @@ const jwtSecret = "fasefraw4r5r3wq45wdfgw34twdfg";
 
 app.use(express.json());
 app.use(cookieParser());
+
 app.use("/uploads", express.static(__dirname + "/uploads"));
+
 app.use(
   cors({
     credentials: true,
@@ -127,6 +130,26 @@ app.post("/upload", photosMiddleware.array("photos", 100), (req, res) => {
   }
 
   res.json(uploadedFiles);
+});
+
+app.post("/events", (req, res) => {
+  const { token } = req.cookies;
+  const { title, adress, description, experience, time, maxGuests, photos } =
+    req.body;
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) throw err;
+    const eventDoc = await Event.create({
+      owner: userData.id,
+      title,
+      adress,
+      description,
+      experience,
+      time,
+      maxGuests,
+      photos,
+    });
+    res.json(eventDoc);
+  });
 });
 
 app.get("/test", (req, res) => {

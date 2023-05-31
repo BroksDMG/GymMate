@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import PhotosUploder from "../components/PhotosUploder";
+import { Navigate } from "react-router-dom";
 
 function MakeEventPage() {
   const [title, setTitle] = useState("");
@@ -11,7 +12,7 @@ function MakeEventPage() {
   const [experience, setExperience] = useState("");
   const [date, setDate] = useState("");
   const [numberGuests, setNumberGuests] = useState(1);
-
+  const [redirect, setRedirect] = useState("");
   function handleExpClick(lvl) {
     const { value } = lvl.target;
     setExperience((prevValue) => (prevValue === value ? "" : value));
@@ -29,6 +30,11 @@ function MakeEventPage() {
       date,
       numberGuests,
     });
+    setRedirect("/eventList");
+  }
+
+  if (redirect) {
+    return <Navigate to={redirect} />;
   }
   return (
     <div>

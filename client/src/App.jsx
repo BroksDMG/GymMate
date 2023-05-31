@@ -7,7 +7,7 @@ import { UserContextProvider } from "./components/UserContext.jsx";
 import AccountPage from "./pages/AccountPage.jsx";
 import FindEventPage from "./pages/FindEventPage.jsx";
 import MakeEventPage from "./pages/MakeEventPage.jsx";
-
+import EventListPage from "./pages/EventListPage.jsx";
 axios.defaults.baseURL = "http://127.0.0.1:4000";
 axios.defaults.withCredentials = true;
 function App() {
@@ -21,6 +21,7 @@ function App() {
           <Route path="/account" element={<AccountPage />}></Route>
           <Route path="/makeEvent" element={<MakeEventPage />}></Route>
           <Route path="/findEvent" element={<FindEventPage />}></Route>
+          <Route path="/eventList" element={<EventListPage />}></Route>
         </Route>
       </Routes>
     </UserContextProvider>
