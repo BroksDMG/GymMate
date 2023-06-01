@@ -152,7 +152,7 @@ app.post("/events", (req, res) => {
   });
 });
 
-app.get("/events", (req, res) => {
+app.get("/user-events", (req, res) => {
   const { token } = req.cookies;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     const { id } = userData;
@@ -161,7 +161,7 @@ app.get("/events", (req, res) => {
 });
 
 app.get("/events/:id", async (req, res) => {
-  const { id } = res.json(req.params);
+  const { id } = req.params;
   res.json(await Event.findById(id));
 });
 
@@ -180,7 +180,7 @@ app.put("/events", async (req, res) => {
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const eventDoc = await Event.findById(id);
-    if (userData.id === eventDoc.owner) {
+    if (userData.id === eventDoc.owner.toString()) {
       eventDoc.set({
         title,
         adress,
@@ -194,6 +194,10 @@ app.put("/events", async (req, res) => {
       res.json("ok");
     }
   });
+});
+
+app.get("/events", async (req, res) => {
+  res.json(await Event.find());
 });
 
 app.get("/test", (req, res) => {
