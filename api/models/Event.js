@@ -4,7 +4,7 @@ const eventSchema = new mongoose.Schema({
   owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   title: String,
   address: String,
-  descripton: String,
+  description: String,
   experience: [String],
   time: { type: Date, default: Date.now },
   maxGuests: Number,

@@ -134,14 +134,21 @@ app.post("/upload", photosMiddleware.array("photos", 100), (req, res) => {
 
 app.post("/events", (req, res) => {
   const { token } = req.cookies;
-  const { title, adress, description, experience, time, maxGuests, photos } =
-    req.body;
+  const {
+    title,
+    address,
+    description,
+    experience,
+    time,
+    maxGuests,
+    addedPhotos,
+  } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const eventDoc = await Event.create({
       owner: userData.id,
       title,
-      adress,
+      address,
       description,
       experience,
       time,
@@ -161,7 +168,7 @@ app.get("/events", (req, res) => {
 });
 
 app.get("/events/:id", async (req, res) => {
-  const { id } = res.json(req.params);
+  const { id } = req.params;
   res.json(await Event.findById(id));
 });
 
@@ -170,7 +177,7 @@ app.put("/events", async (req, res) => {
   const {
     id,
     title,
-    adress,
+    address,
     description,
     experience,
     time,
@@ -180,10 +187,10 @@ app.put("/events", async (req, res) => {
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const eventDoc = await Event.findById(id);
-    if (userData.id === eventDoc.owner) {
+    if (userData.id === eventDoc.owner.toString()) {
       eventDoc.set({
         title,
-        adress,
+        address,
         description,
         experience,
         time,

@@ -1,39 +1,72 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PhotosUploder from "../components/PhotosUploder";
+import { Navigate, useParams } from "react-router-dom";
 
 function MakeEventPage() {
+  const { id } = useParams();
   const [title, setTitle] = useState("");
   const [address, setAddress] = useState("");
   const [addedPhotos, setAddedPhotos] = useState([]);
-
   const [description, setDescription] = useState("");
   const [experience, setExperience] = useState("");
   const [date, setDate] = useState("");
-  const [numberGuests, setNumberGuests] = useState(1);
+  const [maxGuests, setmaxGuests] = useState(1);
+  const [redirect, setRedirect] = useState(false);
+  useEffect(() => {
+    if (!id) return;
+
+    axios.get("/events/" + id).then((response) => {
+      const { data } = response;
+      setTitle(data.title);
+      setAddress(data.address);
+      setAddedPhotos(data.photos);
+      setDescription(data.description);
+      setExperience(data.experience);
+      setDate(data.date);
+      setmaxGuests(data.maxGuests);
+    });
+  }, [id]);
 
   function handleExpClick(lvl) {
-    const { value } = lvl.target;
-    setExperience((prevValue) => (prevValue === value ? "" : value));
+    const { checked, value } = lvl.target;
+    if (checked) {
+      setExperience((prevValue) => (prevValue === value ? "" : value));
+    }
   }
 
-  async function addNewEvent(e) {
+  async function saveEvent(e) {
     e.preventDefault();
-
-    const { data: responseData } = axios.post("/events", {
+    const eventData = {
       title,
       address,
       addedPhotos,
       description,
       experience,
       date,
-      numberGuests,
-    });
+      maxGuests,
+    };
+    if (id) {
+      ///update
+      await axios.put("/events", {
+        id,
+        ...eventData,
+      });
+      setRedirect(true);
+    } else {
+      //new event
+      await axios.post("/events", { ...eventData });
+      setRedirect(true);
+    }
+  }
+
+  if (redirect) {
+    return <Navigate to="/events" />;
   }
   return (
     <div>
       <form
-        onSubmit={addNewEvent}
+        onSubmit={saveEvent}
         className="w-full rounded-xl border h-full m-2 p-3 shadow-md"
       >
         <h2 className="text-2xl mt-4">Title</h2>
@@ -77,7 +110,8 @@ function MakeEventPage() {
               type="checkbox"
               onChange={handleExpClick}
               value="junior"
-              checked={experience === "junior"}
+              checked={experience.includes("junior")}
+              name="junior"
             />
             <span>Początkujący</span>
           </label>
@@ -86,7 +120,8 @@ function MakeEventPage() {
               type="checkbox"
               onChange={handleExpClick}
               value="mid"
-              checked={experience === "mid"}
+              checked={experience.includes("mid")}
+              name="mid"
             />
             <span>Średniozaawansowany</span>
           </label>
@@ -95,7 +130,8 @@ function MakeEventPage() {
               type="checkbox"
               onChange={handleExpClick}
               value="senior"
-              checked={experience === "senior"}
+              checked={experience.includes("senior")}
+              name="senior"
             />
             <span>Zaawansowany</span>
           </label>
@@ -104,7 +140,8 @@ function MakeEventPage() {
               type="checkbox"
               onChange={handleExpClick}
               value="prof"
-              checked={experience === "prof"}
+              checked={experience.includes("prof")}
+              name="prof"
             />
             <span>Profesjonalista</span>
           </label>
@@ -129,8 +166,8 @@ function MakeEventPage() {
             <input
               type="number"
               className="border p-4 rounded-lg text-2xl"
-              value={numberGuests}
-              onChange={(e) => setNumberGuests(e.target.value)}
+              value={maxGuests}
+              onChange={(e) => setmaxGuests(e.target.value)}
             />
           </div>
         </div>
