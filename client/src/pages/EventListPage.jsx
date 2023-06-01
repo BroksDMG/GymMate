@@ -16,12 +16,18 @@ export default function EventListPage() {
         events.map((event) => (
           <Link
             to={"/events/" + event._id}
-            className="flex cursor-pointer gap-4 bg-gray-100 p-4 rounded-xl"
+            className="flex cursor-pointer gap-7 mt-5 bg-gray-100 p-4 rounded-xl"
           >
-            <div className="w-32 h-32 bg-gray-300  ">
-              {event.photos.length > 0 && <img src={event.photos[0]} alt="" />}
+            <div className=" h-32 w-32 bg-gray-300 flex grow shrink-0 ">
+              {event.photos.length > 0 && (
+                <img
+                  className="w-full object-cover"
+                  src={"http://127.0.0.1:4000/uploads/" + event.photos[0]}
+                  alt=""
+                />
+              )}
             </div>
-            <div className="grow-0 shrink">
+            <div className=" grow shrink">
               <h2 className="text-xl">{event.title}</h2>
               <p className="text-sm mt-2">{event.description}</p>
             </div>
