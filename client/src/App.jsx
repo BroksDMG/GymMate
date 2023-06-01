@@ -18,10 +18,11 @@ function App() {
           <Route index element={<IndexPage />}></Route>
           <Route path="/login" element={<LoginPage />}></Route>
           <Route path="/register" element={<LoginPage />}></Route>
-          <Route path="/account" element={<AccountPage />}></Route>
-          <Route path="/makeEvent" element={<MakeEventPage />}></Route>
           <Route path="/findEvent" element={<FindEventPage />}></Route>
-          <Route path="/eventList" element={<EventListPage />}></Route>
+          <Route path="/account" element={<AccountPage />}></Route>
+          <Route path="/events" element={<EventListPage />}></Route>
+          <Route path="/events/new" element={<MakeEventPage />}></Route>
+          <Route path="/events/:id" element={<MakeEventPage />}></Route>
         </Route>
       </Routes>
     </UserContextProvider>

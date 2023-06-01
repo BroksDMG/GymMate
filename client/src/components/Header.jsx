@@ -40,7 +40,7 @@ function Header() {
               Szukaj
             </Link>
             <Link
-              to={"/makeEvent"}
+              to={"/events/new"}
               className=" bg-slate-200 w-full rounded-r-full flex items-center h-full px-8 "
             >
               stwórz
