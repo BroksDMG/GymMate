@@ -76,15 +76,15 @@ function LoginForm({ toggleForm }) {
               value={password}
               onChange={(ev) => setPassword(ev.target.value)}
             />
-            <button className=" bg-orange-400 w-full">zaloguj</button>
+            <button className=" bg-darkBluePrimary w-full">zaloguj</button>
           </label>
           <label className="h-1/3 ">
             <a href="#" className=" w-full h-full">
-              <img
+              {/* <img
                 src={logo}
                 alt="gym"
                 className="w-full h-full object-cover object-center"
-              />
+              /> */}
             </a>
           </label>
         </div>
@@ -102,7 +102,10 @@ function LoginForm({ toggleForm }) {
             <div className=" text-3xl mt-5 ">Nie masz konta?</div>
             <div className=" text-3xl my-5 ">Kliknij poniżej</div>
             <Link to={"/register"} className="w-full">
-              <button onClick={toggleForm} className=" bg-orange-400 w-full">
+              <button
+                onClick={toggleForm}
+                className=" bg-darkBluePrimary w-full"
+              >
                 Zarejestruj się
               </button>
             </Link>

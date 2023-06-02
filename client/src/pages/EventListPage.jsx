@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 export default function EventListPage() {
   const [events, setEvents] = useState([]);
   useEffect(() => {
-    axios.get("/events").then(({ data }) => {
+    axios.get("/user-events").then(({ data }) => {
       setEvents(data);
     });
   }, []);
@@ -18,10 +18,10 @@ export default function EventListPage() {
             to={"/events/" + event._id}
             className="flex cursor-pointer gap-7 mt-5 bg-gray-100 p-4 rounded-xl"
           >
-            <div className=" h-32 w-32 bg-gray-300 flex grow shrink-0 ">
+            <div className=" h-32 w-40 bg-gray-300 flex  ">
               {event.photos.length > 0 && (
                 <img
-                  className="w-full object-cover"
+                  className="w-full object-cover "
                   src={"http://127.0.0.1:4000/uploads/" + event.photos[0]}
                   alt=""
                 />
