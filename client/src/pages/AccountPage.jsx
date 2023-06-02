@@ -23,10 +23,19 @@ function AccountPage() {
   }
 
   return (
-    <div>
+    <div className="mt-3">
       AccountPage{user?.name}
-      <button className="w-50 h-10 px-20 p-2 bg-orange-300" onClick={logout}>
+      <button
+        className="w-50 h-10 px-20 p-2 bg-darkBluePrimary"
+        onClick={logout}
+      >
         Logout
+      </button>
+      <button
+        className="w-50 h-10 px-10 p-2 bg-darkBluePrimary"
+        onClick={() => setRedirect("/events")}
+      >
+        Twoje wydarzenia
       </button>
     </div>
   );
