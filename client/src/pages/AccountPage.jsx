@@ -2,7 +2,8 @@ import React, { useContext, useState } from "react";
 import { UserContext } from "../components/UserContext";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
-
+import InputField from "../components/InputField";
+import NavigationMenuBottom from "../components/NavigationMenuBottom";
 function AccountPage() {
   const { ready, user, setUser } = useContext(UserContext);
   const [redirect, setRedirect] = useState(null);
@@ -37,6 +38,12 @@ function AccountPage() {
       >
         Twoje wydarzenia
       </button>
+      <div className=" max-w-[300px]">
+        <InputField>Name</InputField>
+      </div>
+      <div className="relative">
+        <NavigationMenuBottom />
+      </div>
     </div>
   );
 }

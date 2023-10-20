@@ -1,10 +1,12 @@
 import React from "react";
 import Header from "./Header";
+import NavigationMenuTop from "./NavigationMenuTop";
 import { Outlet } from "react-router-dom";
 function Layout() {
   return (
-    <div className="py-4 px-8 flex flex-col min-h-screen ">
-      <Header></Header>
+    <div className="py-4 w-screen flex flex-col bg-black min-h-screen ">
+      <NavigationMenuTop />
+      {/* <Header></Header> */}
       <Outlet></Outlet>
     </div>
   );
