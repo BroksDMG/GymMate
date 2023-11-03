@@ -13,8 +13,9 @@ export default function EventListPage() {
   return (
     <div className="mt-4">
       {events.length > 0 &&
-        events.map((event) => (
+        events.map((event, key) => (
           <Link
+            key={key}
             to={"/events/" + event._id}
             className="flex cursor-pointer gap-7 mt-5 bg-gray-100 p-4 rounded-xl"
           >

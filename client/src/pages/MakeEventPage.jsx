@@ -69,7 +69,6 @@ function MakeEventPage() {
         onSubmit={saveEvent}
         className="w-full rounded-xl border h-full m-2 p-3 shadow-md"
       >
-        <h2 className="text-2xl mt-4">Title</h2>
         <p className="text-gray-500 text-sm">
           Tytuł powinien być krótki i chwytliwy
         </p>

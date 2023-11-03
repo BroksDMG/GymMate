@@ -15,7 +15,7 @@ function App() {
     <UserContextProvider>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<IndexPage />}></Route>
+          <Route index element={<EventListPage />}></Route>
           <Route path="/login" element={<LoginPage />}></Route>
           <Route path="/findEvent" element={<FindEventPage />}></Route>
           <Route path="/register" element={<LoginPage />}></Route>
