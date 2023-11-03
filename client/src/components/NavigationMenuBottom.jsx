@@ -7,18 +7,14 @@ export default function NavigationMenuBottom() {
   const [value, setValue] = useState(null);
   function onClikHandle(num) {
     setIsActive(num);
-    switch (true) {
-      case num === 1:
-        setValue(-8);
-        break;
-      case num === 2:
-        setValue(48);
-        break;
-      case num === 3:
-        setValue(104);
-        break;
-      default:
-        break;
+    const valueMap = {
+      1: -8,
+      2: 48,
+      3: 104,
+    };
+
+    if (valueMap[num] !== undefined) {
+      setValue(valueMap[num]);
     }
   }
   return (
@@ -80,9 +76,10 @@ export default function NavigationMenuBottom() {
             </a>
           </li>
           <div
+            style={{ transform: value ? `translateX(${value}px)` : "" }}
             className={`bottom-3${
               value
-                ? ` indicator z-10 absolute w-[72px] h-14 translate-x-[${value}px] duration-300 transform ease-linear bg-gradient-to-t from-white from-60%  to-80% dropRadious `
+                ? ` indicator z-10 absolute w-[72px] h-14 duration-300 transform ease-linear bg-gradient-to-t from-white from-60%  to-80% dropRadious `
                 : ""
             }
           

@@ -9,8 +9,11 @@ export default {
         lightBlue: "rgb(162,211,252)",
         mediumBlue: "rgb(86,160,221)",
       },
-      width: {
-        "clamp-200-50%": "clamp(200px, 50%, 400px)",
+      backgroundImage: {
+        "profil-background-left":
+          "url('/src/assets/profileBackgroundLeft.svg')",
+        "profil-background-right":
+          "url('/src/assets/profileBackgroundRight.svg')",
       },
     },
   },

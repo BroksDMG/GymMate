@@ -2,16 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-input[type="text"],
-input[type="email"],
-input[type="password"],
-textarea {
-  @apply border my-2 py-1 px-4 rounded-full w-full;
+/* ///////////////Text Perspective////////////////////// */
+@media (min-width: 1024px) {
+  .perspective {
+    perspective: 300px;
+    transform: rotateY(-4deg) rotateX(56deg) rotateZ(-48deg);
+  }
 }
-button {
-  @apply py-1 rounded-full px-4;
-}
-
 input:focus + .labelline,
 input:valid + .labelline {
   transform: translate(-15px, -16px) scale(0.88);

@@ -1,33 +1,47 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { Link } from "react-router-dom";
+import { UserContext } from "./UserContext";
 import { BiSolidMessageDots } from "react-icons/bi";
 import { BsHouseDoorFill, BsFillPersonFill } from "react-icons/bs";
 import { RiSettings4Fill } from "react-icons/ri";
 import { FaFileExport } from "react-icons/fa6";
+import { Navigate } from "react-router-dom";
+import axios from "axios";
 export default function NavigationMenuTop() {
   const [isActive, setIsActive] = useState(0);
   const [value, setValue] = useState(null);
+  const [redirect, setRedirect] = useState(null);
+  const { ready, user, setUser } = useContext(UserContext);
+  async function logout() {
+    await axios.post("/logout");
+    setRedirect("/");
+    setUser(null);
+  }
+  if (!ready) {
+    return "Loading...";
+  }
+
+  if (ready && !user && !redirect) {
+    return <Navigate to={"/login"} />;
+  }
+  if (redirect) {
+    return <Navigate to={redirect} />;
+  }
   function onClikHandle(num) {
     setIsActive(num);
-    switch (true) {
-      case num === 1:
-        setValue(-8);
-        break;
-      case num === 2:
-        setValue(48);
-        break;
-      case num === 3:
-        setValue(104);
-        break;
-      case num === 4:
-        setValue(160);
-        break;
-      case num === 5:
-        setValue(216);
-        break;
-      default:
-        break;
+    const valueMap = {
+      1: -8,
+      2: 48,
+      3: 104,
+      4: 160,
+      5: 216,
+    };
+
+    if (valueMap[num] !== undefined) {
+      setValue(valueMap[num]);
     }
   }
+
   return (
     <div className="fixed bg-orange-400 h-[65px] top-0 ">
       <div className="fixed left-1/2 transform -translate-x-1/2 top-0 flex justify-center items-center w-96 shadow-md shadow-gray-700 rounded-b-md">
@@ -40,7 +54,8 @@ export default function NavigationMenuTop() {
             onClick={() => onClikHandle(1)}
           >
             <a href="#" className="relative">
-              <span
+              <Link
+                to={"/"}
                 className={`text-xl relative flex dropRadiousTop justify-center items-end pb-[10px] rounded-full w-14 h-10
             ${
               isActive === 1
@@ -50,7 +65,7 @@ export default function NavigationMenuTop() {
               >
                 <BsHouseDoorFill className="z-10" />
                 <BsHouseDoorFill className="absolute text-gray-300 translate-y-[2px]" />
-              </span>
+              </Link>
             </a>
           </li>
           <li
@@ -58,7 +73,8 @@ export default function NavigationMenuTop() {
             onClick={() => onClikHandle(2)}
           >
             <a href="#" className="relative ">
-              <span
+              <Link
+                to={"/account"}
                 className={` relative flex dropRadiousTop justify-center items-end pb-2 rounded-full w-14 h-10
             ${
               isActive === 2
@@ -68,7 +84,7 @@ export default function NavigationMenuTop() {
               >
                 <BsFillPersonFill className="z-10" />
                 <BsFillPersonFill className="absolute text-gray-300 translate-y-[2px]" />
-              </span>
+              </Link>
             </a>
           </li>
           <li
@@ -112,7 +128,8 @@ export default function NavigationMenuTop() {
             onClick={() => onClikHandle(5)}
           >
             <a href="#" className="relative">
-              <span
+              <button
+                onClick={() => logout()}
                 className={` relative flex dropRadiousTop justify-center items-end pb-2 rounded-full w-14 h-10 
             ${
               isActive === 5
@@ -122,24 +139,24 @@ export default function NavigationMenuTop() {
               >
                 <FaFileExport className="z-10" />
                 <FaFileExport className="absolute text-gray-300 translate-y-[2px]" />
-              </span>
+              </button>
             </a>
           </li>
           <div
+            style={{ transform: value ? `translateX(${value}px)` : "" }}
             className={`top-3 ${
               value
-                ? `indicatorTop z-20 absolute w-[72px] h-14 translate-x-[${value}px] duration-300 transform ease-linear bg-darkBluePrimary  to-80% dropRadiousTop`
+                ? `indicatorTop z-20 absolute w-[72px] h-14 duration-300 transform ease-linear bg-darkBluePrimary  to-80% dropRadiousTop`
                 : " "
             }
           
         `}
           ></div>
           <div
-            className={`-top-3 ${
+            style={{ transform: value ? `translateX(${value - 18}px)` : "" }}
+            className={`-top-3  ${
               value
-                ? `z-0 absolute w-[108px] h-20 translate-x-[${
-                    value - 18
-                  }px] duration-300 transform ease-linear bg-darkBluePrimary  to-80% dropRadiousTop`
+                ? `z-0 absolute w-[108px] h-20  duration-300 transform ease-linear bg-darkBluePrimary  to-80% dropRadiousTop`
                 : " "
             } `}
           ></div>

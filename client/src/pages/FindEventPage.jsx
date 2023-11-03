@@ -10,8 +10,8 @@ export default function FindEventPage() {
   return (
     <div className=" mt-7 grid gap-6 gap-y-8 grid-cols-1 max-w-[1000px] self-center ">
       {events.length > 0 &&
-        events.map((event) => (
-          <div className=" bg-gray-200 rounded-xl">
+        events.map((event, key) => (
+          <div key={key} className=" bg-gray-200 rounded-xl">
             <div className="bg-gray-500 mb-2 flex rounded-xl">
               {event.photos?.[0] && (
                 <img

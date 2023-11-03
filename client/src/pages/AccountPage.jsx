@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { UserContext } from "../components/UserContext";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
@@ -22,7 +22,6 @@ function AccountPage() {
   if (redirect) {
     return <Navigate to={redirect} />;
   }
-
   return (
     <div className="mt-3">
       AccountPage{user?.name}

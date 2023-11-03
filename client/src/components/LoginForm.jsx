@@ -1,10 +1,15 @@
-import React, { useContext, useState } from "react";
-import logo from "../assets/gym_person.png";
+import { useContext, useState } from "react";
+import InputField from "./InputField";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import { Link } from "react-router-dom";
+import graphicGymRoomLogin from "../assets/graphicGymRoomLogin.svg";
+import Button from "./Button";
+import { RiArrowRightSFill } from "react-icons/ri";
+import { AiFillCheckCircle } from "react-icons/ai";
+import { TbSquareRoundedArrowRightFilled } from "react-icons/tb";
 function LoginForm({ toggleForm }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,59 +42,71 @@ function LoginForm({ toggleForm }) {
         animate={{ x: "0%", opacity: 1 }}
         exit={{ x: "-100%", opacity: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full bg-gray-200 h-full rounded-l-3xl min-w-min"
+        className="w-full bg-white h-full rounded-t-3xl min-w-min
+        lg:rounded-tl-none lg:rounded-r-[2rem]"
         onSubmit={handelLoginSubmit}
       >
-        <div className="w-full h-full px-32 flex flex-col justify-center items-center">
-          <label className="w-full h-1/3 pt-10">
-            <a href="logo" className="flex items-center justify-center gap-1 ">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-8 h-8"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"
-                />
-              </svg>
-              <span>GymMate</span>
-            </a>
-            <div className=" text-3xl mt-5 ">Logowanie</div>
+        <div className="w-full h-full px-8 flex flex-col justify-center items-center">
+          <label className="text-3xl w-full  mt-12 h-1/6 flex relative md:w-3/4  lg:w-full lg:text-6xl">
+            <span className="z-10  flex font-bold absolute top-0 left-0 lg:left-24 le lg:top-10">
+              Login
+              <div className="relative -translate-y-1 text-5xl translate-x-3 lg:text-7xl">
+                <TbSquareRoundedArrowRightFilled className="z-10 absolute top-0 left-0" />
+                <TbSquareRoundedArrowRightFilled className="z-0 absolute top-[2px] text-gray-600 left-0 lg:top-1" />
+              </div>
+            </span>
+            <span className="z-0 block font-bold absolute top-[2px] text-gray-600 left-0 lg:left-24 lg:top-11">
+              Login
+            </span>
           </label>
-          <label className="h-1/3 w-full flex flex-col items-center justify-center min-w-min">
-            <input
+          <label className="w-full h-full flex flex-col justify-center min-w-min max-h-max md:w-3/4 lg:w-full lg:pr-[30%] lg:h-1/2 lg:pb-10">
+            <InputField
               type="email"
-              placeholder="Email"
-              className="w-full"
               value={email}
               onChange={(ev) => setEmail(ev.target.value)}
-            />
-            <input
+            >
+              Email
+            </InputField>
+            <InputField
               type="password"
-              placeholder="Hasło"
-              className="w-full"
               value={password}
               onChange={(ev) => setPassword(ev.target.value)}
-            />
-            <button className=" bg-darkBluePrimary w-full">zaloguj</button>
+            >
+              Hasło
+            </InputField>
+            <div className="flex w-full gap-5 items-end  mt-5">
+              <div className="w-full">
+                <span className=" text-darkBluePrimary text-[10px] font-semibold lg:text-sm">
+                  New here?
+                </span>
+                <Link to={"/register"} className="w-full">
+                  <Button
+                    style="bg-darkBluePrimary text-[10px] lg:text-base"
+                    onClick={() => toggleForm()}
+                  >
+                    Create Account
+                    <AiFillCheckCircle className="text-base relative translate-x-1 lg:text-xl" />
+                  </Button>
+                </Link>
+              </div>
+              <Button style="bg-darkBluePrimary text-[10px] lg:text-base">
+                Log in
+                <RiArrowRightSFill className="text-base relative lg:text-2xl" />
+              </Button>
+            </div>
           </label>
-          <label className="h-1/3 ">
-            <a href="#" className=" w-full h-full">
-              {/* <img
-                src={logo}
+          <label className=" w-full flex justify-center -translate-x-4 lg:hidden">
+            <a href="#" className="">
+              <img
+                src={graphicGymRoomLogin}
                 alt="gym"
-                className="w-full h-full object-cover object-center"
-              /> */}
+                className="w-80 object-cover object-center"
+              />
             </a>
           </label>
         </div>
       </motion.form>
-      <motion.form
+      {/* <motion.form
         initial={{ x: "-100%", opacity: 0 }}
         animate={{ x: "0%", opacity: 1 }}
         exit={{ x: "100%", opacity: 0 }}
@@ -112,7 +129,7 @@ function LoginForm({ toggleForm }) {
           </label>
           <label className="h-1/3 "></label>
         </div>
-      </motion.form>
+      </motion.form> */}
     </>
   );
 }
