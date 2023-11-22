@@ -1,8 +1,12 @@
 import { useState } from "react";
-
-export default function InputField({ children, ...props }) {
+import PropTypes from "prop-types";
+import { BiSolidErrorCircle } from "react-icons/bi";
+function InputField({ children, value, error, ...props }) {
   const [isFocus, setIsFocus] = useState(false);
-  const [value, setValue] = useState("");
+  const [isError, setIsError] = useState(false);
+  if (error && !isError) {
+    setIsError(true);
+  }
   return (
     <div
       onFocus={() => setIsFocus(true)}
@@ -10,16 +14,22 @@ export default function InputField({ children, ...props }) {
     hover:border-darkBluePrimary hover:text-darkBluePrimary active:text-mediumBlue
     `}
     >
+      <div
+        className={`text-red-400 text- translate-x-3 translate-y-3 lg:translate-y-4 absolute right-10
+      ${isError ? "text-xl lg:text-2xl" : ""}`}
+      >
+        {isError && !isFocus && <BiSolidErrorCircle />}
+      </div>
       <input
-        {...props}
-        onBlur={() => setIsFocus(value.length > 0 ? true : false)}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onClick={() => setIsError(false)}
+        onBlur={() => setIsFocus(value ? true : false)}
         className={`border-[2px] rounded-l-xl h-11 lg:h-14 p-4 border-inherit w-full focus-visible:outline-none
       hover:border-inherit ${
         isFocus ? "text-mediumBlue border-mediumBlue  " : ""
       }`}
+        {...props}
       ></input>
+
       <div
         className={`relative bottom-9 lg:bottom-11 left-5 pt-0.5 bg-white  pointer-events-none  max-w-max transform duration-200 ease-linear${
           isFocus
@@ -32,3 +42,10 @@ export default function InputField({ children, ...props }) {
     </div>
   );
 }
+InputField.propTypes = {
+  children: PropTypes.node,
+  value: PropTypes.string,
+  error: PropTypes.string,
+};
+
+export default InputField;

@@ -1,6 +1,6 @@
 import { TbWorld } from "react-icons/tb";
-
-export default function TextLogin({ style }) {
+import PropTypes from "prop-types";
+function TextLogin({ style }) {
   return (
     <div className={`${style} flex perspective lg:flex-col`}>
       <div className="flex flex-col uppercase text-white leading-snug w-[122px] lg:w-[200px]">
@@ -42,3 +42,9 @@ export default function TextLogin({ style }) {
     </div>
   );
 }
+
+TextLogin.propTypes = {
+  style: PropTypes.string,
+};
+
+export default TextLogin;

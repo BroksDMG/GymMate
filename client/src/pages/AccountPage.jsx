@@ -9,13 +9,12 @@ function AccountPage() {
   const [redirect, setRedirect] = useState(null);
   async function logout() {
     await axios.post("/logout");
-    setRedirect("/");
+    setRedirect("/login");
     setUser(null);
   }
   if (!ready) {
     return "Loading...";
   }
-
   if (ready && !user && !redirect) {
     return <Navigate to={"/login"} />;
   }

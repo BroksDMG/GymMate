@@ -45,6 +45,10 @@ app.post("/register", async (req, res) => {
   const { name, surname, email, password } = req.body;
 
   try {
+    const isUserExist = await User.findOne({ email });
+    if (isUserExist) {
+      res.status(409).json({ error: "usera adlready exist" });
+    }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -65,9 +69,19 @@ app.post("/register", async (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
+  try {
+    await mongoose.connect(process.env.MONGO_URL);
+  } catch (error) {
+    console.error("Database connection error:", error);
+    return res.status(500).json("Database connection error");
+  }
+
   const { email, password } = req.body;
+  console.log("Request body:", req.body);
+
   const userDoc = await User.findOne({ email });
   if (userDoc) {
+    console.log(userDoc);
     const passOk = bcrypt.compareSync(password, userDoc.password);
     if (passOk) {
       jwt.sign(
@@ -76,7 +90,7 @@ app.post("/login", async (req, res) => {
           id: userDoc._id,
         },
         jwtSecret,
-        {},
+        { expiresIn: "2h" },
         (err, token) => {
           if (err) throw err;
           res.cookie("token", token).json(userDoc);
@@ -86,7 +100,7 @@ app.post("/login", async (req, res) => {
       res.status(422).json("pass not ok");
     }
   } else {
-    res.json("not found");
+    res.status(400).json("not found");
   }
 });
 
