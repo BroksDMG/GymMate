@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
+import propTypes from "prop-types";
+
 export default function PhotosUploder({ addedPhotos, onChange }) {
   const [photoLink, setPhotoLink] = useState("");
   async function addPhotoByLink(ev) {
@@ -147,3 +149,7 @@ export default function PhotosUploder({ addedPhotos, onChange }) {
     </>
   );
 }
+PhotosUploder.propTypes = {
+  addedPhotos: propTypes.array,
+  onChange: propTypes.func,
+};

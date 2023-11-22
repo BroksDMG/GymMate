@@ -8,6 +8,7 @@ export default {
         BlackPrimary: "rgb(18,18,18)",
         lightBlue: "rgb(162,211,252)",
         mediumBlue: "rgb(86,160,221)",
+        lightBrown: "rgb(163,163,163)",
       },
       backgroundImage: {
         "profil-background-left":

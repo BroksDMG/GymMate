@@ -10,17 +10,18 @@ import axios from "axios";
 export default function NavigationMenuTop() {
   const [isActive, setIsActive] = useState(0);
   const [value, setValue] = useState(null);
-  const [redirect, setRedirect] = useState(null);
   const { ready, user, setUser } = useContext(UserContext);
+  const [redirect, setRedirect] = useState(null);
   async function logout() {
-    await axios.post("/logout");
-    setRedirect("/");
-    setUser(null);
+    onClikHandle(5);
+    await axios.post("/logout").then(() => {
+      setRedirect("/login");
+      setUser(null);
+    });
   }
   if (!ready) {
     return "Loading...";
   }
-
   if (ready && !user && !redirect) {
     return <Navigate to={"/login"} />;
   }
@@ -53,7 +54,7 @@ export default function NavigationMenuTop() {
             className="relative flex justify-center z-30"
             onClick={() => onClikHandle(1)}
           >
-            <a href="#" className="relative">
+            <div href="#" className="relative">
               <Link
                 to={"/"}
                 className={`text-xl relative flex dropRadiousTop justify-center items-end pb-[10px] rounded-full w-14 h-10
@@ -66,13 +67,13 @@ export default function NavigationMenuTop() {
                 <BsHouseDoorFill className="z-10" />
                 <BsHouseDoorFill className="absolute text-gray-300 translate-y-[2px]" />
               </Link>
-            </a>
+            </div>
           </li>
           <li
             className="relative flex justify-center z-30"
             onClick={() => onClikHandle(2)}
           >
-            <a href="#" className="relative ">
+            <div href="#" className="relative ">
               <Link
                 to={"/account"}
                 className={` relative flex dropRadiousTop justify-center items-end pb-2 rounded-full w-14 h-10
@@ -85,13 +86,13 @@ export default function NavigationMenuTop() {
                 <BsFillPersonFill className="z-10" />
                 <BsFillPersonFill className="absolute text-gray-300 translate-y-[2px]" />
               </Link>
-            </a>
+            </div>
           </li>
           <li
             className="relative  flex justify-center z-30"
             onClick={() => onClikHandle(3)}
           >
-            <a href="#" className="relative">
+            <div href="#" className="relative">
               <span
                 className={` relative flex dropRadiousTop justify-center items-end pb-2 rounded-full w-14 h-10 
             ${
@@ -103,13 +104,13 @@ export default function NavigationMenuTop() {
                 <BiSolidMessageDots className="z-10" />
                 <BiSolidMessageDots className="absolute text-gray-300 translate-y-[2px]" />
               </span>
-            </a>
+            </div>
           </li>
           <li
             className="relative  flex justify-center z-30"
             onClick={() => onClikHandle(4)}
           >
-            <a href="#" className="relative">
+            <div href="#" className="relative">
               <span
                 className={` relative flex dropRadiousTop justify-center items-end pb-2 rounded-full w-14 h-10 
             ${
@@ -121,13 +122,10 @@ export default function NavigationMenuTop() {
                 <RiSettings4Fill className="z-10" />
                 <RiSettings4Fill className="absolute text-gray-300 translate-y-[2px]" />
               </span>
-            </a>
+            </div>
           </li>
-          <li
-            className="relative  flex justify-center z-30"
-            onClick={() => onClikHandle(5)}
-          >
-            <a href="#" className="relative">
+          <li className="relative  flex justify-center z-30">
+            <div href="#" className="relative">
               <button
                 onClick={() => logout()}
                 className={` relative flex dropRadiousTop justify-center items-end pb-2 rounded-full w-14 h-10 
@@ -140,7 +138,7 @@ export default function NavigationMenuTop() {
                 <FaFileExport className="z-10" />
                 <FaFileExport className="absolute text-gray-300 translate-y-[2px]" />
               </button>
-            </a>
+            </div>
           </li>
           <div
             style={{ transform: value ? `translateX(${value}px)` : "" }}
