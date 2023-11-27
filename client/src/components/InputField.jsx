@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import { BiSolidErrorCircle } from "react-icons/bi";
-function InputField({ children, value, error, ...props }) {
+function InputField({ children, value, error, inputHeight = "56", ...props }) {
   const [isFocus, setIsFocus] = useState(false);
   const [isError, setIsError] = useState(false);
   if (error && !isError) {
@@ -20,18 +20,18 @@ function InputField({ children, value, error, ...props }) {
       >
         {isError && !isFocus && <BiSolidErrorCircle />}
       </div>
+
       <input
         onClick={() => setIsError(false)}
         onBlur={() => setIsFocus(value ? true : false)}
-        className={`border-[2px] rounded-l-xl h-11 lg:h-14 p-4 border-inherit w-full focus-visible:outline-none
+        className={`border-[2px] rounded-l-xl h-[${inputHeight}px] lg:h-[${inputHeight}px] overflow-scroll p-4 h-14 border-inherit w-full focus-visible:outline-none
       hover:border-inherit ${
         isFocus ? "text-mediumBlue border-mediumBlue  " : ""
       }`}
         {...props}
       ></input>
-
       <div
-        className={`relative bottom-9 lg:bottom-11 left-5 pt-0.5 bg-white  pointer-events-none  max-w-max transform duration-200 ease-linear${
+        className={`absolute top-4 lg:top-3 left-5 pt-0.5 bg-white  pointer-events-none  max-w-max transform duration-200 ease-linear${
           isFocus
             ? "translate-x-10 -translate-y-5 lg:-translate-y-7 scale-[0.88] px-2 z-[1111] text-mediumBlue"
             : ""
@@ -44,8 +44,9 @@ function InputField({ children, value, error, ...props }) {
 }
 InputField.propTypes = {
   children: PropTypes.node,
-  value: PropTypes.string,
+  value: PropTypes.string || PropTypes.number,
   error: PropTypes.string,
+  inputHeight: PropTypes.string,
 };
 
 export default InputField;

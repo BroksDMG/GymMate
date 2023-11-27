@@ -3,12 +3,11 @@ import Stars from "../components/Stars";
 import { PiMapPinFill } from "react-icons/pi";
 import PropTypes from "prop-types";
 
-function EventListElement({ event, key }) {
+function EventListElement({ event }) {
   let starSize;
   window.innerWidth > 640 ? (starSize = "50") : (starSize = "30");
   return (
     <Link
-      key={key}
       to={"/events/" + event._id}
       className="flex flex-col cursor-pointer mt-5 bg-gray-100  rounded-xl shadow-md shadow-gray-400"
     >

@@ -162,8 +162,8 @@ export default function EventListPage() {
           ? filteredEvents.map((event, key) => (
               <EventListElement event={event} key={key} />
             ))
-          : events.map((event, key) => (
-              <EventListElement event={event} key={key} />
+          : events.map((event, i) => (
+              <EventListElement event={event} key={i} />
             ))}
       </div>
     </div>

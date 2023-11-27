@@ -42,7 +42,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
-  const { name, surname, email, password } = req.body;
+  const { name, surname, email, password, avatar } = req.body;
 
   try {
     const isUserExist = await User.findOne({ email });
@@ -56,6 +56,7 @@ app.post("/register", async (req, res) => {
       name,
       surname,
       email,
+      avatar,
       password: hashedPassword,
     });
 
@@ -109,8 +110,10 @@ app.get("/profile", (req, res) => {
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
       if (err) throw err;
-      const { name, email, _id } = await User.findById(userData.id);
-      res.json(name, email, _id);
+      const { name, email, surname, avatar, _id } = await User.findById(
+        userData.id
+      );
+      res.json(name, email, surname, avatar, _id);
     });
   } else {
     res.json(null);
