@@ -42,7 +42,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
-  const { name, surname, email, password, avatar } = req.body;
+  const { name, surname, email, password } = req.body;
 
   try {
     const isUserExist = await User.findOne({ email });
@@ -56,7 +56,6 @@ app.post("/register", async (req, res) => {
       name,
       surname,
       email,
-      avatar,
       password: hashedPassword,
     });
 
@@ -78,11 +77,9 @@ app.post("/login", async (req, res) => {
   }
 
   const { email, password } = req.body;
-  console.log("Request body:", req.body);
 
   const userDoc = await User.findOne({ email });
   if (userDoc) {
-    console.log(userDoc);
     const passOk = bcrypt.compareSync(password, userDoc.password);
     if (passOk) {
       jwt.sign(
@@ -159,6 +156,7 @@ app.post("/events", (req, res) => {
     time,
     maxGuests,
     addedPhotos,
+    avatar,
   } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
@@ -171,6 +169,7 @@ app.post("/events", (req, res) => {
       time,
       maxGuests,
       photos: addedPhotos,
+      avatar,
     });
     res.json(eventDoc);
   });
@@ -200,7 +199,9 @@ app.put("/events", async (req, res) => {
     time,
     maxGuests,
     addedPhotos,
+    avatar,
   } = req.body;
+
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const eventDoc = await Event.findById(id);
@@ -213,13 +214,32 @@ app.put("/events", async (req, res) => {
         time,
         maxGuests,
         photos: addedPhotos,
+        avatar,
       });
       await eventDoc.save();
       res.json("ok");
     }
   });
 });
-
+app.post("/user-avatar", async (req, res) => {
+  const { token } = req.cookies;
+  const { id, name, surname, email, password, avatar } = req.body;
+  console.log(req.body);
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) throw err;
+    const userDoc = await User.findById(userData.id);
+    userDoc.set({
+      id,
+      name,
+      surname,
+      email,
+      password,
+      avatar,
+    });
+    await userDoc.save();
+    res.json("ok");
+  });
+});
 app.get("/events", async (req, res) => {
   res.json(await Event.find());
 });

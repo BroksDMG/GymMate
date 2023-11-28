@@ -57,6 +57,7 @@ function MakeEventPage() {
     experience: "",
     date: "",
     maxGuests: 1,
+    avatar: user.avatar ? user.avatar : [],
   };
   const validationSchema = Yup.object().shape({
     title: Yup.string().required("Title is required"),
@@ -69,6 +70,7 @@ function MakeEventPage() {
   if (redirect) {
     return <Navigate to="/events" />;
   }
+  console.log(user?.avatar);
   return (
     <div className="w-full h-full rounded-t-[2rem] bg-white mt-32 relative flex flex-col px-10 lg:px-32">
       <Formik
@@ -115,16 +117,26 @@ function MakeEventPage() {
                   onChange={handlePhotosChange}
                 />
                 <div className="px-16 sm:flex  w-full sm">
-                  <div className=" flex-col items-center pt-28 w-1/2">
+                  <div className=" flex-col items-center pt-20 w-1/2">
                     <div className=" absolute top-24 flex justify-center items-center w-[10rem] h-[10rem] bg-white rounded-full  ">
-                      <img
-                        src="https://img.freepik.com/free-photo/elf-woman-forest_71767-117.jpg?w=826&t=st=1699015819~exp=1699016419~hmac=74e1f2bd99b8e2de4489799ab8476301c1747e33fbb6fb1d6da863b5c6230ca6"
-                        alt="profileImg"
-                        className="w-[9rem] h-[9rem] rounded-full object-cover object-center  "
-                      />
+                      {user.avatar?.length > 0 ? (
+                        <img
+                          className="w-[9rem] h-[9rem] rounded-full object-cover object-center"
+                          src={
+                            "http://127.0.0.1:4000/uploads/" + user?.avatar[0]
+                          }
+                          alt=""
+                        />
+                      ) : (
+                        <img
+                          src="https://img.freepik.com/free-photo/elf-woman-forest_71767-117.jpg?w=826&t=st=1699015819~exp=1699016419~hmac=74e1f2bd99b8e2de4489799ab8476301c1747e33fbb6fb1d6da863b5c6230ca6"
+                          alt="profileImg"
+                          className="w-[9rem] h-[9rem] rounded-full object-cover object-center  "
+                        />
+                      )}
                     </div>
-                    <p className="text-gray-500 text-sm">
-                      Tytuł powinien być krótki i chwytliwy
+                    <p className="font-bold text-3xl">
+                      {user?.name} {user?.surname}
                     </p>
                     <InputField
                       name="title"
@@ -198,7 +210,7 @@ function MakeEventPage() {
                       </div>
                     </div>
                     <div className="mt-5">
-                      <Button type="submit" bgColor={"bg-lightBlue"}>
+                      <Button type="submit" bgColor={"bg-mediumBlue"}>
                         Save
                       </Button>
                     </div>

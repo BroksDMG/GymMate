@@ -9,6 +9,7 @@ const eventSchema = new mongoose.Schema({
   time: { type: Date, default: Date.now },
   maxGuests: Number,
   photos: [String],
+  avatar: [String],
 });
 
 const EventModel = mongoose.model("Event", eventSchema);

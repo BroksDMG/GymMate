@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 function EventListElement({ event }) {
   let starSize;
   window.innerWidth > 640 ? (starSize = "50") : (starSize = "30");
+  console.log(event);
   return (
     <Link
       to={"/events/" + event._id}
@@ -25,11 +26,19 @@ function EventListElement({ event }) {
           <div className="pt-14">
             <div className="w-full flex justify-center sm:justify-normal">
               <div className=" absolute -top-14 flex justify-center items-center w-[105px] h-[105px] bg-white rounded-full  ">
-                <img
-                  src="https://img.freepik.com/free-photo/elf-woman-forest_71767-117.jpg?w=826&t=st=1699015819~exp=1699016419~hmac=74e1f2bd99b8e2de4489799ab8476301c1747e33fbb6fb1d6da863b5c6230ca6"
-                  alt="profileImg"
-                  className="w-24 h-24 rounded-full object-cover object-center top-4 "
-                />
+                {event.avatar?.length > 0 ? (
+                  <img
+                    className="w-24 h-24 rounded-full object-cover object-center top-4"
+                    src={"http://127.0.0.1:4000/uploads/" + event.avatar[0]}
+                    alt=""
+                  />
+                ) : (
+                  <img
+                    src="https://img.freepik.com/free-photo/elf-woman-forest_71767-117.jpg?w=826&t=st=1699015819~exp=1699016419~hmac=74e1f2bd99b8e2de4489799ab8476301c1747e33fbb6fb1d6da863b5c6230ca6"
+                    alt="profileImg"
+                    className="w-24 h-24 rounded-full object-cover object-center top-4 "
+                  />
+                )}
               </div>
             </div>
             <h2 className="text-2xl font-bold flex-row">{event.title}</h2>
