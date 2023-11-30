@@ -6,7 +6,6 @@ import PropTypes from "prop-types";
 function EventListElement({ event }) {
   let starSize;
   window.innerWidth > 640 ? (starSize = "50") : (starSize = "30");
-  console.log(event);
   return (
     <Link
       to={"/events/" + event._id}

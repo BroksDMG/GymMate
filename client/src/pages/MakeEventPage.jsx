@@ -23,6 +23,8 @@ function MakeEventPage() {
     axios.get("/events/" + id).then((response) => {
       const { data } = response;
       setTitle(data.title);
+      4;
+
       setAddress(data.address);
       setAddedPhotos(data.photos);
       setDescription(data.description);

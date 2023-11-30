@@ -9,6 +9,7 @@ const cookieParser = require("cookie-parser");
 const imageDownloader = require("image-downloader");
 const multer = require("multer");
 const fs = require("fs");
+const { rejects } = require("assert");
 
 require("dotenv").config();
 const app = express();
@@ -106,11 +107,18 @@ app.get("/profile", (req, res) => {
   const { token } = req.cookies;
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-      if (err) throw err;
-      const { name, email, surname, avatar, _id } = await User.findById(
-        userData.id
-      );
-      res.json(name, email, surname, avatar, _id);
+      if (err) {
+        if (err.name === "TokenExpiredError") {
+          return res.status(401).json({ error: "Token expired" });
+        } else {
+          throw err;
+        }
+      } else {
+        const { name, email, surname, avatar, _id } = await User.findById(
+          userData.id
+        );
+        res.json({ name, email, surname, avatar, _id });
+      }
     });
   } else {
     res.json(null);

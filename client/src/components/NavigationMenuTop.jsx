@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import { BiSolidMessageDots } from "react-icons/bi";
@@ -12,18 +12,22 @@ export default function NavigationMenuTop() {
   const [value, setValue] = useState(null);
   const { ready, user, setUser } = useContext(UserContext);
   const [redirect, setRedirect] = useState(null);
+
+  useEffect(() => {
+    if (redirect === "/login") {
+      setUser(null);
+    }
+  }, [redirect, setUser]);
   async function logout() {
     onClikHandle(5);
-    await axios.post("/logout").then(() => {
-      setRedirect("/login");
-      setUser(null);
-    });
+    await axios.post("/logout");
+    setRedirect("/login");
   }
   if (!ready) {
     return "Loading...";
   }
   if (ready && !user && !redirect) {
-    return <Navigate to={"/login"} />;
+    return <Navigate to="/login" />;
   }
   if (redirect) {
     return <Navigate to={redirect} />;
