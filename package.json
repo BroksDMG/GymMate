@@ -6,8 +6,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "client": "cd client && npm run dev",
+    "clientBiuld": "cd client && npm run build",
     "api": "cd api && nodemon index.js",
-    "dev": "concurrently \"npm run client\" \"npm run api\""
+    "dev": "concurrently \"npm run client\" \"npm run api\"",
+    "build":"concurrently \"npm run clientBiuld\" \"npm run api\""
+    
+    
   },
   "author": "",
   "license": "ISC",
