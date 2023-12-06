@@ -16,7 +16,6 @@ function MakeEventPage() {
   const [rating, setRating] = useState(0);
   const [temRating, setTemRating] = useState(0);
   const { user } = useContext(UserContext);
-  console.log(user);
   useEffect(() => {
     if (!id) return;
 
@@ -34,7 +33,7 @@ function MakeEventPage() {
     });
   }, [id]);
 
-  const messageArr = ["Beginner", "Intermediate", "Proffesional"];
+  const experienceArr = ["Beginner", "Intermediate", "Advanced"];
   // const experienceArr = ["junior", "mid", "senior"];
 
   async function handleSubmitSaveEvent(values) {
@@ -72,7 +71,6 @@ function MakeEventPage() {
   if (redirect) {
     return <Navigate to="/events" />;
   }
-  console.log(user?.avatar);
   return (
     <div className="w-full h-full rounded-t-[2rem] bg-white mt-32 relative flex flex-col px-10 lg:px-32">
       <Formik
@@ -86,16 +84,7 @@ function MakeEventPage() {
         {({ values, errors, handleChange, setFieldValue }) => {
           function handleExpClick(value) {
             setRating(value);
-            let experienceLevel;
-            if (value === 1) {
-              experienceLevel = "junior";
-            } else if (value === 2) {
-              experienceLevel = "mid";
-            } else if (value === 3) {
-              experienceLevel = "senior";
-            }
-
-            setFieldValue("experience", experienceLevel);
+            setFieldValue("experience", experienceArr[value - 1]);
           }
           const handlePhotosChange = (photos) => {
             setFieldValue("addedPhotos", photos);
@@ -117,6 +106,7 @@ function MakeEventPage() {
                 <PhotosUploder
                   addedPhotos={values.addedPhotos}
                   onChange={handlePhotosChange}
+                  backgroundStyles={`h-44 rounded-t-2xl w-full`}
                 />
                 <div className="px-16 sm:flex  w-full sm">
                   <div className=" flex-col items-center pt-20 w-1/2">
@@ -152,7 +142,11 @@ function MakeEventPage() {
                       <div className="flex flex-col w-full">
                         <p className="text-gray-500 text-sm">
                           Zaznacz swoj poziom zaawansowania :{" "}
-                          {messageArr[temRating ? temRating - 1 : rating - 1]}
+                          {
+                            experienceArr[
+                              temRating ? temRating - 1 : rating - 1
+                            ]
+                          }
                         </p>
                         <Stars
                           quantity={3}

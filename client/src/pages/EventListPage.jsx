@@ -20,10 +20,33 @@ export default function EventListPage() {
       setEvents(data);
     });
   }, []);
+  const handleSubmit = (values) => {
+    const filteredEvents = events?.filter((event) => {
+      const addressCondition =
+        !values.address ||
+        event.address.toLowerCase().includes(values.address.toLowerCase());
 
-  const handleSubmit = (valuse) => {
-    setFilteredEvents(valuse);
+      const guestsCondition =
+        !values.guestNumber ||
+        Number(event.maxGuests) <= Number(values.guestNumber);
+
+      const dateCondition =
+        (!values.startingDate || event.time >= values.startingDate) &&
+        (!values.endingDate || event.time <= values.endingDate);
+
+      const experienceCondition =
+        !values.experience || event.experience.includes(values.experience);
+
+      return (
+        addressCondition &&
+        guestsCondition &&
+        dateCondition &&
+        experienceCondition
+      );
+    });
+    setFilteredEvents(filteredEvents);
   };
+  console.log(filteredEvents);
   const handleSearch = (searchValue) => {
     setSerchValue(searchValue);
     if (searchValue.length < 3) {
@@ -40,15 +63,17 @@ export default function EventListPage() {
     guestNumber: "",
     startingDate: "",
     endingDate: "",
-    experience: [],
+    experience: "",
     address: "",
   };
   const sortValidationSchema = Yup.object().shape({
     guestNumber: Yup.number().min(0).max(100).integer(),
-    date: Yup.date(),
-    experience: Yup.array(),
+    startingDate: Yup.date(),
+    endingDate: Yup.date(),
+    experience: Yup.string(),
     address: Yup.string(),
   });
+
   return (
     <div className="w-full h-full rounded-t-[2rem] bg-white mt-32 relative flex flex-col px-2 md:px-10 lg:px-32">
       <div className=" flex  items-center flex-col lg:justify-normal lg:flex-row lg:items-start lg:mb-10">
@@ -88,68 +113,75 @@ export default function EventListPage() {
           validateOnMount={false}
           onSubmit={handleSubmit}
         >
-          {({ values, handleChange, errors }) => (
-            <Form>
-              <div className="flex flex-col items-center w-full mb-10">
-                <div className="flex w-full">
-                  <InputField
-                    name="address"
-                    id="address"
-                    onChange={handleChange}
-                    error={errors.address}
-                    value={values["address"]}
-                  >
-                    Address
-                  </InputField>
-                  <InputField
-                    name="guestNumber"
-                    id="guestNumber"
-                    onChange={handleChange}
-                    error={errors.guestNumber}
-                    value={values["guestNumber"]}
-                  >
-                    Number of Guest
-                  </InputField>
+          {({ values, handleChange, errors, setFieldValue }) => {
+            function handleExpClick(value) {
+              setFieldValue("experience", value);
+            }
+            return (
+              <Form>
+                {console.log(errors)}
+                <div className="flex flex-col items-center w-full mb-10">
+                  <div className="flex w-full">
+                    <InputField
+                      name="address"
+                      id="address"
+                      onChange={handleChange}
+                      error={errors.address}
+                      value={values["address"]}
+                    >
+                      Address
+                    </InputField>
+                    <InputField
+                      name="guestNumber"
+                      id="guestNumber"
+                      onChange={handleChange}
+                      error={errors.guestNumber}
+                      value={values["guestNumber"]}
+                    >
+                      Max Guest
+                    </InputField>
+                  </div>
+                  <div className="flex w-full">
+                    <InputField
+                      type="date"
+                      name="startingDate"
+                      id="startingDate"
+                      onChange={handleChange}
+                      error={errors.startingDate}
+                      value={values["startingDate"]}
+                    >
+                      Starting Date
+                    </InputField>
+                    <InputField
+                      type="date"
+                      name="endingDate"
+                      id="endingDate"
+                      onChange={handleChange}
+                      error={errors.endingDate}
+                      value={values["endingDate"]}
+                    >
+                      Finishing Date
+                    </InputField>
+                  </div>
+                  <div className="flex w-full items-center ">
+                    <InputField
+                      name="experience"
+                      id="experience"
+                      listOnChange={handleExpClick}
+                      error={errors.experience}
+                      isList={true}
+                      listOptions={["Beginner", "Intermediate", "Advanced"]}
+                    >
+                      Experience
+                    </InputField>
+                    <Button type="submit" style="bg-darkBluePrimary">
+                      Add Filters
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex w-full">
-                  <InputField
-                    type="date"
-                    name="startingDate"
-                    id="startingDate"
-                    onChange={handleChange}
-                    error={errors.startingDate}
-                    value={values["startingDate"]}
-                  >
-                    Starting Date
-                  </InputField>
-                  <InputField
-                    type="date"
-                    name="endingDate"
-                    id="endingDate"
-                    onChange={handleChange}
-                    error={errors.endingDate}
-                    value={values["endingDate"]}
-                  >
-                    Finishing Date
-                  </InputField>
-                </div>
-                <div className="flex w-full items-center ">
-                  <InputField
-                    name="experience"
-                    id="experience"
-                    onChange={handleChange}
-                    error={errors.experience}
-                    value={values["experience"]}
-                  >
-                    Experience
-                  </InputField>
-                  <Button type="submit" style="bg-darkBluePrimary">
-                    Add Filters
-                  </Button>
-                </div>
-              </div>
-            </Form>
-          )}
+              </Form>
+            );
+          }}
         </Formik>
       )}
 

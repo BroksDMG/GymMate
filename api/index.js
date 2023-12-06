@@ -161,11 +161,12 @@ app.post("/events", (req, res) => {
     address,
     description,
     experience,
-    time,
+    date,
     maxGuests,
     addedPhotos,
     avatar,
   } = req.body;
+  console.log(req.body);
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const eventDoc = await Event.create({
@@ -174,7 +175,7 @@ app.post("/events", (req, res) => {
       address,
       description,
       experience,
-      time,
+      time: date,
       maxGuests,
       photos: addedPhotos,
       avatar,

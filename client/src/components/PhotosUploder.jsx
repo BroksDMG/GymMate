@@ -1,9 +1,17 @@
 import axios from "axios";
 import propTypes from "prop-types";
+import { UserContext } from "./UserContext";
+import { useContext } from "react";
 import { AiFillPlusCircle } from "react-icons/ai";
 import { BsPlusCircleDotted } from "react-icons/bs";
 import { FaRegTrashAlt } from "react-icons/fa";
-export default function PhotosUploder({ addedPhotos, onChange }) {
+export default function PhotosUploder({
+  addedPhotos,
+  onChange,
+  backgroundStyles,
+  isUserAvatar = false,
+}) {
+  const { user } = useContext(UserContext);
   function uploadPhotos(e) {
     const files = e.target.files;
     const data = new FormData();
@@ -31,11 +39,11 @@ export default function PhotosUploder({ addedPhotos, onChange }) {
     <>
       <div
         className={`${
-          addedPhotos?.length === 0 ? " bg-lightBrown" : ""
-        } w-full  h-44 rounded-t-2xl flex justify-center items-center text-8xl relative `}
+          addedPhotos?.length === 0 && !isUserAvatar ? " bg-lightBrown" : ""
+        }  ${backgroundStyles}  flex justify-center items-center text-6xl lg:text-8xl relative `}
       >
         <label className="absolute justify-center items-center flex ">
-          {addedPhotos?.length > 0 ? (
+          {addedPhotos?.length > 0 || user?.avatar ? (
             <BsPlusCircleDotted
               style={{ filter: "drop-shadow(0px 2px 4px black)" }}
               className="  z-10 text-lightBrown  cursor-pointer "
@@ -53,23 +61,48 @@ export default function PhotosUploder({ addedPhotos, onChange }) {
             onChange={uploadPhotos}
           />
         </label>
-        {addedPhotos.length > 0 &&
-          addedPhotos.map((link) => (
-            <div className="h-44 w-full flex relative" key={link}>
+
+        <div className="w-full flex relative">
+          {addedPhotos.length === 0 && isUserAvatar && (
+            <>
               <img
-                src={`http://127.0.0.1:4000/uploads/${link}`}
+                src={`http://127.0.0.1:4000/uploads/${user?.avatar[0]}`}
                 alt="eventImageBacground"
-                className="rounded-t-2xl w-full object-center object-cover "
+                className={`${backgroundStyles}  object-center object-cover `}
               />
+
+              {/*
+              TODO: remove photo
               <button
                 onClick={(ev) => {
-                  removePhoto(ev, link);
+                  removePhoto(ev, user?.avatar[0]);
                 }}
                 className="absolute bottom-1 right-1 bg-opacity-50 rounded-xl cursor-pointer text-white bg-black p-2"
               >
                 <FaRegTrashAlt className="text-white text-2xl" />
-              </button>
-              {/* <button
+              </button> */}
+            </>
+          )}
+          {addedPhotos.length > 0 &&
+            addedPhotos.map((link) => (
+              <div key={link}>
+                <img
+                  src={`http://127.0.0.1:4000/uploads/${link}`}
+                  alt="eventImageBacground"
+                  className={`${backgroundStyles}  object-center object-cover `}
+                />
+                <button
+                  onClick={(ev) => {
+                    removePhoto(ev, link);
+                  }}
+                  className="absolute bottom-1 right-1 bg-opacity-50 rounded-xl cursor-pointer text-white bg-black p-2"
+                >
+                  <FaRegTrashAlt className="text-white text-2xl" />
+                </button>
+              </div>
+            ))}
+
+          {/* <button
                 onClick={(ev) => {
                   selectAsMainPhoto(ev, link);
                 }}
@@ -82,8 +115,7 @@ export default function PhotosUploder({ addedPhotos, onChange }) {
                   <FaRegStar className="text-white text-2xl" />
                 )}
               </button> */}
-            </div>
-          ))}
+        </div>
       </div>
     </>
   );
@@ -91,4 +123,6 @@ export default function PhotosUploder({ addedPhotos, onChange }) {
 PhotosUploder.propTypes = {
   addedPhotos: propTypes.array,
   onChange: propTypes.func,
+  backgroundStyles: propTypes.string,
+  isUserAvatar: propTypes.bool,
 };
