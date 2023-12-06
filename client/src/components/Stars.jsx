@@ -10,7 +10,7 @@ function Stars({
   defaultRating = 0,
 }) {
   const [rating, setRating] = useState(defaultRating);
-  const [temRating, setTemRating] = useState(0);
+  const [temRating, setTemRating] = useState(defaultRating);
   const handleStarClik = (newRating) => {
     if (onlyShow) return;
     setRating(newRating);

@@ -6,9 +6,10 @@ const eventSchema = new mongoose.Schema({
   address: String,
   description: String,
   experience: [String],
-  time: { type: Date, default: Date.now },
+  time: Date,
   maxGuests: Number,
   photos: [String],
+  avatar: [String],
 });
 
 const EventModel = mongoose.model("Event", eventSchema);

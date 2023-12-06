@@ -9,6 +9,7 @@ const cookieParser = require("cookie-parser");
 const imageDownloader = require("image-downloader");
 const multer = require("multer");
 const fs = require("fs");
+const { rejects } = require("assert");
 
 require("dotenv").config();
 const app = express();
@@ -77,11 +78,9 @@ app.post("/login", async (req, res) => {
   }
 
   const { email, password } = req.body;
-  console.log("Request body:", req.body);
 
   const userDoc = await User.findOne({ email });
   if (userDoc) {
-    console.log(userDoc);
     const passOk = bcrypt.compareSync(password, userDoc.password);
     if (passOk) {
       jwt.sign(
@@ -108,9 +107,18 @@ app.get("/profile", (req, res) => {
   const { token } = req.cookies;
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-      if (err) throw err;
-      const { name, email, _id } = await User.findById(userData.id);
-      res.json(name, email, _id);
+      if (err) {
+        if (err.name === "TokenExpiredError") {
+          return res.status(401).json({ error: "Token expired" });
+        } else {
+          throw err;
+        }
+      } else {
+        const { name, email, surname, avatar, _id } = await User.findById(
+          userData.id
+        );
+        res.json({ name, email, surname, avatar, _id });
+      }
     });
   } else {
     res.json(null);
@@ -153,10 +161,12 @@ app.post("/events", (req, res) => {
     address,
     description,
     experience,
-    time,
+    date,
     maxGuests,
     addedPhotos,
+    avatar,
   } = req.body;
+  console.log(req.body);
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const eventDoc = await Event.create({
@@ -165,9 +175,10 @@ app.post("/events", (req, res) => {
       address,
       description,
       experience,
-      time,
+      time: date,
       maxGuests,
       photos: addedPhotos,
+      avatar,
     });
     res.json(eventDoc);
   });
@@ -197,7 +208,9 @@ app.put("/events", async (req, res) => {
     time,
     maxGuests,
     addedPhotos,
+    avatar,
   } = req.body;
+
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const eventDoc = await Event.findById(id);
@@ -210,13 +223,32 @@ app.put("/events", async (req, res) => {
         time,
         maxGuests,
         photos: addedPhotos,
+        avatar,
       });
       await eventDoc.save();
       res.json("ok");
     }
   });
 });
-
+app.post("/user-avatar", async (req, res) => {
+  const { token } = req.cookies;
+  const { id, name, surname, email, password, avatar } = req.body;
+  console.log(req.body);
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) throw err;
+    const userDoc = await User.findById(userData.id);
+    userDoc.set({
+      id,
+      name,
+      surname,
+      email,
+      password,
+      avatar,
+    });
+    await userDoc.save();
+    res.json("ok");
+  });
+});
 app.get("/events", async (req, res) => {
   res.json(await Event.find());
 });

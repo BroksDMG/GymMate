@@ -3,8 +3,8 @@ import { HiPhoto } from "react-icons/hi2";
 import { MdPeopleAlt } from "react-icons/md";
 import { FaCalendarDays } from "react-icons/fa6";
 export default function NavigationMenuBottom() {
-  const [isActive, setIsActive] = useState(0);
-  const [value, setValue] = useState(null);
+  const [isActive, setIsActive] = useState(1);
+  const [value, setValue] = useState(-8);
   function onClikHandle(num) {
     setIsActive(num);
     const valueMap = {

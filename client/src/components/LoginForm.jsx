@@ -24,6 +24,7 @@ function LoginForm({ toggleForm }) {
     await axios
       .post("/login", { ...values })
       .then(({ data }) => {
+        console.log(data);
         setUser(data);
         toast.success("Login succesful");
         setRedirect(true);

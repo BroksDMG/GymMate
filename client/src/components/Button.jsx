@@ -1,6 +1,6 @@
-import React from "react";
+import PropTypes from "prop-types";
 
-const Button = ({ children, style, ...props }) => {
+const Button = ({ children, bgColor = "bg-blue-900", style, ...props }) => {
   return (
     <div className="relative w-full">
       <button
@@ -12,7 +12,7 @@ const Button = ({ children, style, ...props }) => {
         </span>
       </button>
       <button
-        className={`z-0 bg-blue-900 w-full rounded-xl font-bold min-h-[30px] lg:min-h-[40px] min-w-max px-3 py-2 absolute text-xs -translate-x-full  translate-y-[3px]`}
+        className={`z-0 ${bgColor} w-full rounded-xl font-bold min-h-[30px] lg:min-h-[40px] min-w-max px-3 py-2 absolute text-xs -translate-x-full  translate-y-[3px]`}
       >
         <span className="z-10 min-w-max text-transparent flex">{children}</span>
       </button>
@@ -21,3 +21,9 @@ const Button = ({ children, style, ...props }) => {
 };
 
 export default Button;
+
+Button.propTypes = {
+  children: PropTypes.node,
+  bgColor: PropTypes.string,
+  style: PropTypes.string,
+};
