@@ -85,6 +85,7 @@ lg:rounded-tl-none lg:rounded-r-[2rem]"
                   error={errors.email}
                   value={values["email"]}
                   required
+                  autoFocus
                 >
                   Email
                 </InputField>

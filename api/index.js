@@ -103,7 +103,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/profile", (req, res) => {
+app.get("/profile", async (req, res) => {
   const { token } = req.cookies;
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
@@ -154,7 +154,7 @@ app.post("/upload", photosMiddleware.array("photos", 100), (req, res) => {
   res.json(uploadedFiles);
 });
 
-app.post("/events", (req, res) => {
+app.post("/events", async (req, res) => {
   const { token } = req.cookies;
   const {
     title,
@@ -184,7 +184,7 @@ app.post("/events", (req, res) => {
   });
 });
 
-app.get("/user-events", (req, res) => {
+app.get("/user-events", async (req, res) => {
   const { token } = req.cookies;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     const { id } = userData;

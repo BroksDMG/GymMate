@@ -27,7 +27,7 @@ function Stars({
     setTempRatingOutComponent(valueOnHoverOff);
   }
   return (
-    <div className="flex gap-3 pt-2">
+    <div className="flex gap-1 sm:gap-3 pt-2">
       {Array.from({ length: quantity }, (_, i) => (
         <Star
           key={i}

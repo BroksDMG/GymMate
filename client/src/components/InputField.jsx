@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { BiSolidErrorCircle } from "react-icons/bi";
-import { add } from "date-fns";
 function InputField({
   children,
   value,
@@ -45,7 +44,7 @@ function InputField({
     `}
     >
       <div
-        className={`text-red-400 text- translate-x-3 translate-y-3 lg:translate-y-4 absolute right-10
+        className={`text-red-400  translate-x-3 translate-y-3 lg:translate-y-4 absolute right-10
       ${isError ? "text-xl lg:text-2xl" : ""}`}
       >
         {isError && !isFocus && <BiSolidErrorCircle />}
@@ -54,7 +53,7 @@ function InputField({
       <input
         onClick={() => handleOnClick()}
         onBlur={() => setIsFocus(value ? true : false)}
-        className={`border-[2px] rounded-l-xl h-[${inputHeight}px] lg:h-[${inputHeight}px] overflow-scroll p-4 h-14 border-inherit w-full focus-visible:outline-none
+        className={`border-[2px] rounded-l-xl lg:h-16 overflow-scroll p-4  border-inherit w-full focus-visible:outline-none
       hover:border-inherit ${
         isFocus ? "text-mediumBlue border-mediumBlue  " : ""
       }`}

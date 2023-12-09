@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { UserContext } from "../components/UserContext";
+import { useContext } from "react";
 import axios from "axios";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
@@ -15,6 +17,7 @@ export default function EventListPage() {
   const [serchValue, setSerchValue] = useState("");
   const [searchedEvents, setSearchedEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
+  const { user } = useContext(UserContext);
   useEffect(() => {
     axios.get("/events").then(({ data }) => {
       setEvents(data);
@@ -46,7 +49,6 @@ export default function EventListPage() {
     });
     setFilteredEvents(filteredEvents);
   };
-  console.log(filteredEvents);
   const handleSearch = (searchValue) => {
     setSerchValue(searchValue);
     if (searchValue.length < 3) {
@@ -75,7 +77,7 @@ export default function EventListPage() {
   });
 
   return (
-    <div className="w-full h-full rounded-t-[2rem] bg-white mt-32 relative flex flex-col px-2 md:px-10 lg:px-32">
+    <div className="w-full h-full rounded-t-[2rem] bg-white mt-32 relative flex flex-col px-2 sm:px-10 md:px-20 lg:px-10 xl:px-20">
       <div className=" flex  items-center flex-col lg:justify-normal lg:flex-row lg:items-start lg:mb-10">
         <a href="#" className="absolute -top-20  lg:-top-32 ">
           <img
@@ -188,14 +190,14 @@ export default function EventListPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
         {searchedEvents.length > 0
           ? searchedEvents.map((searchedEvent, key) => (
-              <EventListElement event={searchedEvent} key={key} />
+              <EventListElement event={searchedEvent} key={key} user={user} />
             ))
           : filteredEvents.length > 0
           ? filteredEvents.map((event, key) => (
-              <EventListElement event={event} key={key} />
+              <EventListElement event={event} key={key} user={user} />
             ))
           : events.map((event, i) => (
-              <EventListElement event={event} key={i} />
+              <EventListElement event={event} key={i} user={user} />
             ))}
       </div>
     </div>
