@@ -20,7 +20,6 @@ function LoginForm({ toggleForm }) {
   const { setUser } = useContext(UserContext);
 
   const handleSubmit = async (values) => {
-    console.log(values);
     await axios
       .post("/login", { ...values })
       .then(({ data }) => {

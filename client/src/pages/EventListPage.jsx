@@ -187,7 +187,7 @@ export default function EventListPage() {
         </Formik>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+      <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
         {searchedEvents.length > 0
           ? searchedEvents.map((searchedEvent, key) => (
               <EventListElement event={searchedEvent} key={key} user={user} />

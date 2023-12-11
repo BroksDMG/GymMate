@@ -6,18 +6,17 @@ function UserEventsList() {
   const [userEvents, setUserEvents] = useState([]);
   useEffect(() => {
     axios.get("/user-events").then((response) => {
-      console.log(response.data);
       setUserEvents(response.data);
     });
   }, []);
   return (
-    <div>
+    <>
       {userEvents.length > 0 &&
         userEvents.map((event, key) => (
           <EventListElement key={key} event={event} />
         ))}
       ;
-    </div>
+    </>
   );
 }
 

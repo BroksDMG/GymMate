@@ -7,6 +7,8 @@ const UserSchema = new Schema({
   email: { type: String, unique: true },
   password: String,
   avatar: [String],
+  gallery: [{ image: String, description: String }],
+  userDescription: String,
 });
 
 const UserModel = mongoose.model("User", UserSchema);

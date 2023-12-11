@@ -232,7 +232,16 @@ app.put("/events", async (req, res) => {
 });
 app.post("/user-avatar", async (req, res) => {
   const { token } = req.cookies;
-  const { id, name, surname, email, password, avatar } = req.body;
+  const {
+    id,
+    name,
+    surname,
+    email,
+    password,
+    avatar,
+    gallery,
+    userDescription,
+  } = req.body;
   console.log(req.body);
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
@@ -244,11 +253,14 @@ app.post("/user-avatar", async (req, res) => {
       email,
       password,
       avatar,
+      gallery,
+      userDescription,
     });
     await userDoc.save();
     res.json("ok");
   });
 });
+
 app.get("/events", async (req, res) => {
   res.json(await Event.find());
 });
