@@ -2,11 +2,13 @@ import { useState } from "react";
 import { HiPhoto } from "react-icons/hi2";
 import { MdPeopleAlt } from "react-icons/md";
 import { FaCalendarDays } from "react-icons/fa6";
-export default function NavigationMenuBottom() {
+import PropsTypes from "prop-types";
+export default function NavigationMenuBottom({ saveactiveTab }) {
   const [isActive, setIsActive] = useState(1);
   const [value, setValue] = useState(-8);
   function onClikHandle(num) {
     setIsActive(num);
+    saveactiveTab(num);
     const valueMap = {
       1: -8,
       2: 48,
@@ -90,3 +92,7 @@ export default function NavigationMenuBottom() {
     </div>
   );
 }
+
+NavigationMenuBottom.propTypes = {
+  saveactiveTab: PropsTypes.func,
+};

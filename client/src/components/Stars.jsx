@@ -27,7 +27,7 @@ function Stars({
     setTempRatingOutComponent(valueOnHoverOff);
   }
   return (
-    <div className="flex gap-3 pt-2">
+    <div className="flex gap-1 sm:gap-3 pt-2">
       {Array.from({ length: quantity }, (_, i) => (
         <Star
           key={i}
@@ -53,17 +53,25 @@ function Star({ fill, click, onHoveron, onHoveroff, high }) {
       {fill ? (
         <span className=" relative text-yellow-400">
           <BsStarFill
-            style={{ fontSize: high }}
-            className="absolute z-10 -top-2"
+            style={{
+              fontSize: high,
+              filter: "drop-shadow(0px 5px 0px rgb(202 138 4) )",
+            }}
+            className="relative -top-2"
           />
-          <BsStarFill
+          {/* <BsStarFill
             style={{ fontSize: high }}
             className=" blur-[3px] text-yellow-600"
-          />
+          /> */}
         </span>
       ) : (
         <span className=" relative text-lightBlue">
-          <BsStar style={{ fontSize: high }} />
+          <BsStar
+            style={{
+              fontSize: high,
+            }}
+            className="blur-[100 px]"
+          />
           <BsStar
             style={{ fontSize: high }}
             className=" absolute top-1 blur-[6px]"

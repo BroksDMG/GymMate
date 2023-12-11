@@ -8,14 +8,13 @@ import PhotosUploder from "../components/PhotosUploder";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import Button from "../components/Button";
+import UserEventsList from "../components/UserEventsList";
+import TextAreaField from "../components/TextAreaField";
+import UserGallery from "../components/UserGallery";
 function AccountPage() {
   const { ready, user, setUser } = useContext(UserContext);
   const [redirect, setRedirect] = useState(null);
-  async function logout() {
-    await axios.post("/logout");
-    setRedirect("/login");
-    setUser(null);
-  }
+  const [avtiveTab, setActiveTab] = useState(1);
   if (!ready) {
     return "Loading...";
   }
@@ -27,37 +26,50 @@ function AccountPage() {
   }
   const initialValues = {
     avatar: [],
+    userDescription: user.userDescription || "",
+    gallery: user.gallery || [],
   };
   const validationSchema = Yup.object().shape({
-    avatar: Yup.array().required("Photo is required"),
+    avatar: Yup.array(),
+    userDescription: Yup.string(),
+    gallery: Yup.array(),
   });
   async function photosUploderSubmit(values) {
-    await axios.post("/user-avatar", { ...user, avatar: values.avatar });
-    setUser((prev) => ({ ...prev, avatar: values.avatar }));
+    await axios.post("/user-avatar", {
+      ...user,
+      ...values,
+    });
+    setUser((prev) => ({
+      ...prev,
+      ...values,
+    }));
     console.log(values);
   }
-  console.log(user.avatar);
+  //Na siłownie uczęszczam od lat, dobry trening to trening bez kontuzji, jak już tu zabłądziłeś to wal śmiało wyskoczymy poprzerzucać żelastwo 💪
   return (
-    <div className="w-full h-full rounded-t-[2rem] bg-white mt-32 relative flex flex-col px-2 md:px-10 lg:px-32">
-      <div className=" flex  items-center flex-col lg:items-start lg:mb-10">
-        <a href="#" className="absolute -top-20  lg:-top-32 ">
-          {/* <img
+    <div className="w-full h-full rounded-t-[2rem] bg-white mt-32 relative flex flex-col px-2 sm:px-10 md:px-20 lg:px-10 xl:px-20">
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={photosUploderSubmit}
+      >
+        {({ values, setFieldValue, handleChange }) => {
+          const handlePhotoChange = (photo) => {
+            setFieldValue("avatar", photo);
+          };
+          const handleGalleryChange = (galleryItem) => {
+            setFieldValue("gallery", galleryItem);
+          };
+          return (
+            <Form className=" flex  items-center flex-col lg:items-start lg:mb-10 ">
+              <a href="#" className="absolute -top-20  lg:-top-32 lg:left-32">
+                {/* <img
             src={logoWithBorder}
             alt="logoBorder"
             className="w-52 lg:w-full "
           /> */}
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={photosUploderSubmit}
-          >
-            {({ values, setFieldValue }) => {
-              const handlePhotoChange = (photo) => {
-                setFieldValue("avatar", photo);
-                console.log(photo);
-              };
-              return (
-                <Form className="relative h-full flex justify-center">
+
+                <div className="relative h-full flex justify-center">
                   <div
                     style={{ boxShadow: "0px 5px 0px rgb(156 163 175)" }}
                     className="absolute top-5 lg:top-16 h-[9rem] w-[9rem] lg:w-[12rem] lg:h-[12rem] bg-gra flex justify-center items-center bg-darkBluePrimary rounded-full object-cover object-center"
@@ -71,60 +83,64 @@ function AccountPage() {
                     />
                   </div>
                   <div className="relative top-44 lg:top-[17rem] ">
-                    <Button type="submit" bgColor="bg-mediumBlue">
-                      Add Photo
-                    </Button>
+                    <Button type="submit">save changes</Button>
                   </div>
-                </Form>
-              );
-            }}
-          </Formik>
-        </a>
-        <div className="flex items-center flex-col mt-40 lg:mt-0 w-full lg:flex-row lg:pl-80">
-          <div className="flex flex-col items-center">
-            <h2 className="text-2xl gap-1 font-bold flex capitalize">
-              {user ? (
-                <>
-                  <p>{user.name}</p>
-                  <p>{user.surname}</p>
-                </>
-              ) : (
-                <p>user name nof found</p>
-              )}
-            </h2>
-            <p className="text-base text-gray-600 mt-2 capitalize">
-              proffesional
-            </p>
-          </div>
+                </div>
+              </a>
+              <div className="flex items-center flex-col mt-40 lg:mt-10 w-full ">
+                <div className="flex flex-col items-center">
+                  <h2 className="text-2xl lg:text-4xl gap-1 font-bold flex capitalize ">
+                    {user ? (
+                      <>
+                        <p>{user.name}</p>
+                        <p>{user.surname}</p>
+                      </>
+                    ) : (
+                      <p>user name nof found</p>
+                    )}
+                  </h2>
+                  <p className="text-base lg:text-xl text-gray-600 mt-2 capitalize">
+                    proffesional
+                  </p>
+                </div>
+                <div className="w-3/4 lg:mt-20">
+                  <TextAreaField
+                    name="userDescription"
+                    onChange={handleChange}
+                    value={values.userDescription}
+                  >
+                    Description
+                  </TextAreaField>
+                </div>
 
-          <button
-            className="w-50 h-10 px-20 p-2 bg-darkBluePrimary"
-            onClick={logout}
-          >
-            Logout
-          </button>
-          <button
-            className="w-50 h-10 px-10 p-2 bg-darkBluePrimary"
-            onClick={() => setRedirect("/events")}
-          >
-            Twoje wydarzenia
-          </button>
-          <div className=" max-w-[300px]">
-            <InputField>Name</InputField>
-          </div>
-          <div
-            style={{
-              backgroundImage: `url(http://127.0.0.1:4000/uploads/${user?.avatar[0]})`,
-            }}
-            alt="logoBorder"
-            className="w-96 h-96 object-cover object-center lg:w-full mt-10 bg-black"
-          ></div>
-
-          <div className="relative">
-            <NavigationMenuBottom />
-          </div>
-        </div>
-      </div>
+                {avtiveTab === 1 && (
+                  <div className="grid mt-10 grid-cols-1 lg:grid-cols-2 gap-10">
+                    <UserEventsList />
+                  </div>
+                )}
+                {avtiveTab === 2 && (
+                  <div className="grid mt-10 grid-cols-1 lg:grid-cols-2 gap-10">
+                    {/*todo: add user followers list*/}
+                    <UserEventsList />
+                  </div>
+                )}
+                {avtiveTab === 3 && (
+                  <div className="mt-10">
+                    <UserGallery
+                      name="gallery"
+                      onChange={handleGalleryChange}
+                      value={values.gallery}
+                    />
+                  </div>
+                )}
+                <div className="relative">
+                  <NavigationMenuBottom saveactiveTab={setActiveTab} />
+                </div>
+              </div>
+            </Form>
+          );
+        }}
+      </Formik>
     </div>
   );
 }

@@ -63,7 +63,7 @@ export default function PhotosUploder({
         </label>
 
         <div className="w-full flex relative">
-          {addedPhotos.length === 0 && isUserAvatar && (
+          {addedPhotos?.length === 0 && isUserAvatar && (
             <>
               <img
                 src={`http://127.0.0.1:4000/uploads/${user?.avatar[0]}`}
@@ -83,7 +83,7 @@ export default function PhotosUploder({
               </button> */}
             </>
           )}
-          {addedPhotos.length > 0 &&
+          {addedPhotos?.length > 0 &&
             addedPhotos.map((link) => (
               <div key={link}>
                 <img

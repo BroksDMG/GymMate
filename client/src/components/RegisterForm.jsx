@@ -87,6 +87,7 @@ function RegisterForm({ toggleForm }) {
                     error={errors.name}
                     value={values["name"]}
                     onChange={handleChange}
+                    autoFocus
                   >
                     Name
                   </InputField>

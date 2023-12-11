@@ -20,7 +20,6 @@ function LoginForm({ toggleForm }) {
   const { setUser } = useContext(UserContext);
 
   const handleSubmit = async (values) => {
-    console.log(values);
     await axios
       .post("/login", { ...values })
       .then(({ data }) => {
@@ -85,6 +84,7 @@ lg:rounded-tl-none lg:rounded-r-[2rem]"
                   error={errors.email}
                   value={values["email"]}
                   required
+                  autoFocus
                 >
                   Email
                 </InputField>

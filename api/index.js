@@ -103,7 +103,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/profile", (req, res) => {
+app.get("/profile", async (req, res) => {
   const { token } = req.cookies;
   if (token) {
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
@@ -154,7 +154,7 @@ app.post("/upload", photosMiddleware.array("photos", 100), (req, res) => {
   res.json(uploadedFiles);
 });
 
-app.post("/events", (req, res) => {
+app.post("/events", async (req, res) => {
   const { token } = req.cookies;
   const {
     title,
@@ -184,7 +184,7 @@ app.post("/events", (req, res) => {
   });
 });
 
-app.get("/user-events", (req, res) => {
+app.get("/user-events", async (req, res) => {
   const { token } = req.cookies;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     const { id } = userData;
@@ -232,7 +232,16 @@ app.put("/events", async (req, res) => {
 });
 app.post("/user-avatar", async (req, res) => {
   const { token } = req.cookies;
-  const { id, name, surname, email, password, avatar } = req.body;
+  const {
+    id,
+    name,
+    surname,
+    email,
+    password,
+    avatar,
+    gallery,
+    userDescription,
+  } = req.body;
   console.log(req.body);
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
@@ -244,11 +253,14 @@ app.post("/user-avatar", async (req, res) => {
       email,
       password,
       avatar,
+      gallery,
+      userDescription,
     });
     await userDoc.save();
     res.json("ok");
   });
 });
+
 app.get("/events", async (req, res) => {
   res.json(await Event.find());
 });
