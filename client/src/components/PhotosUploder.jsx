@@ -5,11 +5,13 @@ import { useContext } from "react";
 import { AiFillPlusCircle } from "react-icons/ai";
 import { BsPlusCircleDotted } from "react-icons/bs";
 import { FaRegTrashAlt } from "react-icons/fa";
+import userDefaultAvatar from "../assets/user-128.png";
 export default function PhotosUploder({
   addedPhotos,
   onChange,
   backgroundStyles,
   isUserAvatar = false,
+  isDisplayOnly = false,
 }) {
   const { user } = useContext(UserContext);
   function uploadPhotos(e) {
@@ -40,38 +42,49 @@ export default function PhotosUploder({
       <div
         className={`${
           addedPhotos?.length === 0 && !isUserAvatar ? " bg-lightBrown" : ""
-        }  ${backgroundStyles}  flex justify-center items-center text-6xl lg:text-8xl relative `}
+        }  ${backgroundStyles}  flex justify-center items-center text-6xl lg:text-8xl relative`}
       >
-        <label className="absolute justify-center items-center flex ">
-          {addedPhotos?.length > 0 || user?.avatar ? (
-            <BsPlusCircleDotted
-              style={{ filter: "drop-shadow(0px 2px 4px black)" }}
-              className="  z-10 text-lightBrown  cursor-pointer "
+        {!isDisplayOnly && (
+          <label className="absolute justify-center items-center flex ">
+            {addedPhotos?.length > 0 || user?.avatar ? (
+              <BsPlusCircleDotted
+                style={{ filter: "drop-shadow(0px 2px 4px black)" }}
+                className="  z-10 text-lightBrown  cursor-pointer "
+              />
+            ) : (
+              <AiFillPlusCircle
+                style={{ filter: "drop-shadow(0px 2px 4px black)" }}
+                className="  z-10 text-lightBrown  cursor-pointer "
+              />
+            )}
+            <input
+              type="file"
+              multiple
+              className="hidden"
+              onChange={uploadPhotos}
             />
-          ) : (
-            <AiFillPlusCircle
-              style={{ filter: "drop-shadow(0px 2px 4px black)" }}
-              className="  z-10 text-lightBrown  cursor-pointer "
-            />
-          )}
-          <input
-            type="file"
-            multiple
-            className="hidden"
-            onChange={uploadPhotos}
-          />
-        </label>
+          </label>
+        )}
 
         <div className="w-full flex relative">
-          {addedPhotos?.length === 0 && isUserAvatar && (
-            <>
-              <img
-                src={`http://127.0.0.1:4000/uploads/${user?.avatar[0]}`}
-                alt="eventImageBacground"
-                className={`${backgroundStyles}  object-center object-cover `}
-              />
+          {addedPhotos?.length === 0 && isUserAvatar && !user.avatar[0] && (
+            <img
+              src={userDefaultAvatar}
+              alt="defaultImageBacground"
+              className={`${backgroundStyles}  object-center object-cover `}
+            />
+          )}
+          {user?.avatar?.length !== 0 &&
+            isUserAvatar &&
+            addedPhotos?.length === 0 && (
+              <>
+                <img
+                  src={`http://127.0.0.1:4000/uploads/${user?.avatar[0]}`}
+                  alt="eventImageBacground"
+                  className={`${backgroundStyles}  object-center object-cover `}
+                />
 
-              {/*
+                {/*
               TODO: remove photo
               <button
                 onClick={(ev) => {
@@ -81,24 +94,27 @@ export default function PhotosUploder({
               >
                 <FaRegTrashAlt className="text-white text-2xl" />
               </button> */}
-            </>
-          )}
+              </>
+            )}
+
           {addedPhotos?.length > 0 &&
             addedPhotos.map((link) => (
-              <div key={link}>
+              <div className="w-full" key={link}>
                 <img
                   src={`http://127.0.0.1:4000/uploads/${link}`}
-                  alt="eventImageBacground"
+                  alt="adedeventImageBacground"
                   className={`${backgroundStyles}  object-center object-cover `}
                 />
-                <button
-                  onClick={(ev) => {
-                    removePhoto(ev, link);
-                  }}
-                  className="absolute bottom-1 right-1 bg-opacity-50 rounded-xl cursor-pointer text-white bg-black p-2"
-                >
-                  <FaRegTrashAlt className="text-white text-2xl" />
-                </button>
+                {!isDisplayOnly && (
+                  <button
+                    onClick={(ev) => {
+                      removePhoto(ev, link);
+                    }}
+                    className="absolute bottom-1 right-1 bg-opacity-50 rounded-xl cursor-pointer text-white bg-black p-2"
+                  >
+                    <FaRegTrashAlt className="text-white text-2xl" />
+                  </button>
+                )}
               </div>
             ))}
 
@@ -125,4 +141,5 @@ PhotosUploder.propTypes = {
   onChange: propTypes.func,
   backgroundStyles: propTypes.string,
   isUserAvatar: propTypes.bool,
+  isDisplayOnly: propTypes.bool,
 };

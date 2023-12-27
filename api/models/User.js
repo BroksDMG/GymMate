@@ -7,7 +7,7 @@ const UserSchema = new Schema({
   email: { type: String, unique: true },
   password: String,
   avatar: [String],
-  gallery: [{ image: String, description: String }],
+  gallery: [{ photos: [String], imageDescription: String }],
   userDescription: String,
 });
 

@@ -14,10 +14,12 @@ const Button = ({
       <button
         {...props}
         style={{ boxShadow: `0px 5px 0px ${boxShadowColor} ` }}
-        className={`${style} ${bgColor} uppercase w-full rounded-xl font-semibold min-h-[30px] lg:min-h-[40px] min-w-max ${padding}relative `}
+        className={`${style} ${bgColor} uppercase w-full rounded-xl font-semibold min-h-[30px] lg:min-h-[40px] min-w-max ${padding}relative :a
+        active:translate-y-1 
+        `}
       >
         <span
-          className={`${textSize} min-w-max text-white flex items-center justify-center`}
+          className={`${textSize} min-w-max gap-1 text-white flex items-center justify-center`}
         >
           {children}
         </span>

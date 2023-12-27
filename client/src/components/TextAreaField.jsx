@@ -22,7 +22,8 @@ function TextAreaField({ children, value, error, ...props }) {
   return (
     <div
       onFocus={() => setIsFocus(true)}
-      className={`w-full  text-lightBlue border-lightBlue font-medium  text-base lg:text-xl min-w-[140px] relative mt-6 transform duration-200 ease-linear
+      className={` ${children ? "mt-3 sm:mt-6" : ""}
+      w-full  text-lightBlue border-lightBlue font-medium   text-sm sm:text-base lg:text-xl min-w-[140px] relative transform duration-200 ease-linear
     hover:border-darkBluePrimary hover:text-darkBluePrimary active:text-mediumBlue
     `}
     >
@@ -36,7 +37,7 @@ function TextAreaField({ children, value, error, ...props }) {
       <textarea
         onClick={() => handleOnClick()}
         onBlur={() => setIsFocus(value ? true : false)}
-        className={`border-[2px] rounded-3xl   resize-none p-4  border-inherit w-full focus-visible:outline-none
+        className={`border-[2px] rounded-xl sm:rounded-2xl lg:rounded-3xl  resize-none p-1 pr-0 sm:p-4  border-inherit w-full focus-visible:outline-none
       hover:border-inherit ${
         isFocus ? "text-mediumBlue border-mediumBlue  " : ""
       }`}
@@ -44,11 +45,13 @@ function TextAreaField({ children, value, error, ...props }) {
         {...props}
       ></textarea>
       <div
-        className={`absolute top-4 lg:top-3 left-5 pt-0.5 bg-white  pointer-events-none  max-w-max transform duration-200 ease-linear${
+        className={`absolute top-3 sm:top-4 lg:top-3 left-5 pt-0.5   pointer-events-none  max-w-max transform duration-200 ease-linear${
           isFocus
-            ? "translate-x-10 -translate-y-7 scale-[0.88] px-2 z-[1111] text-mediumBlue"
+            ? "translate-x-10 -translate-y-6 sm:-translate-y-7 scale-[0.88] px-2 z-[1111] text-mediumBlue"
             : ""
-        }`}
+        }
+        ${children ? "bg-white" : "bg-transparent"}
+        `}
       >
         {children}
       </div>

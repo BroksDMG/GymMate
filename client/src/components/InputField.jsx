@@ -5,6 +5,7 @@ function InputField({
   children,
   value,
   error,
+  onChange,
   inputHeight = "56",
   isList = false,
   listOptions = [],
@@ -36,10 +37,13 @@ function InputField({
       }
     });
   });
+  useEffect(() => {
+    setIsFocus(!!value);
+  }, [value]);
   return (
     <div
       onFocus={() => setIsFocus(true)}
-      className={`w-full h-[40px] lg:h-[60px] text-lightBlue border-lightBlue font-medium  text-base lg:text-xl min-w-[140px] relative mt-6 transform duration-200 ease-linear
+      className={`w-full h-[40px] lg:h-[60px] text-lightBlue border-lightBlue font-medium  text-sm sm:text-base lg:text-xl min-w-[140px] relative mt-3 sm:mt-6 transform duration-200 ease-linear
     hover:border-darkBluePrimary hover:text-darkBluePrimary active:text-mediumBlue
     `}
     >
@@ -53,17 +57,16 @@ function InputField({
       <input
         onClick={() => handleOnClick()}
         onBlur={() => setIsFocus(value ? true : false)}
-        className={`border-[2px] rounded-l-xl lg:h-16 overflow-scroll p-4  border-inherit w-full focus-visible:outline-none
-      hover:border-inherit ${
-        isFocus ? "text-mediumBlue border-mediumBlue  " : ""
-      }`}
+        className={`border-[2px] rounded-l-xl lg:h-16 overflow-scroll p-2 pr-0 sm:p-4  border-inherit w-full focus-visible:outline-none
+  hover:border-inherit ${isFocus ? "text-mediumBlue border-mediumBlue  " : ""}`}
         {...props}
-        value={isList ? selectedValue : null}
+        value={isList ? selectedValue : value}
+        onChange={onChange}
       ></input>
       <div
-        className={`absolute top-4 lg:top-3 left-5 pt-0.5 bg-white  pointer-events-none  max-w-max transform duration-200 ease-linear${
+        className={`absolute top-2 sm:top-4 lg:top-3 left-3 sm:left-5 pt-0.5 bg-white  pointer-events-none  max-w-max transform duration-200 ease-linear${
           isFocus
-            ? "translate-x-10 -translate-y-7 scale-[0.88] px-2 z-[1111] text-mediumBlue"
+            ? " -translate-y-5 sm:-translate-y-7 scale-[0.88] px-1 sm:px-2 z-[1111] text-mediumBlue"
             : ""
         }`}
       >
@@ -89,6 +92,7 @@ function InputField({
 InputField.propTypes = {
   children: PropTypes.node,
   value: PropTypes.string || PropTypes.number,
+  onChange: PropTypes.func,
   error: PropTypes.string,
   inputHeight: PropTypes.string,
   isList: PropTypes.bool,

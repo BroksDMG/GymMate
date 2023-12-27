@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import logoWithBorder from "../assets/logoWithBorder.svg";
 import Button from "../components/Button";
 import InputField from "../components/InputField";
-
+import DateInputField from "../components/DateInputField";
 import EventListElement from "../components/EventListElement";
 
 export default function EventListPage() {
@@ -93,8 +93,8 @@ export default function EventListPage() {
           >
             Search
           </InputField>
-          <div className="flex gap-5 mr-5 translate-y-2">
-            <Link to={"/events/new"}>
+          <div className="flex gap-5 lg:mr-5 mt-5 translate-y-5 lg:mt-0 lg:translate-y-2 w-64 sm:w-96 justify-center">
+            <Link className="w-full" to={"/events/new"}>
               <Button style="bg-darkBluePrimary">Add new</Button>
             </Link>
             <Button
@@ -122,7 +122,7 @@ export default function EventListPage() {
             return (
               <Form>
                 {console.log(errors)}
-                <div className="flex flex-col items-center w-full mb-10">
+                <div className="flex flex-col items-center w-full mt-5">
                   <div className="flex w-full">
                     <InputField
                       name="address"
@@ -143,8 +143,8 @@ export default function EventListPage() {
                       Max Guest
                     </InputField>
                   </div>
-                  <div className="flex w-full">
-                    <InputField
+                  <div className="flex flex-col w-full">
+                    <DateInputField
                       type="date"
                       name="startingDate"
                       id="startingDate"
@@ -153,8 +153,8 @@ export default function EventListPage() {
                       value={values["startingDate"]}
                     >
                       Starting Date
-                    </InputField>
-                    <InputField
+                    </DateInputField>
+                    <DateInputField
                       type="date"
                       name="endingDate"
                       id="endingDate"
@@ -163,7 +163,7 @@ export default function EventListPage() {
                       value={values["endingDate"]}
                     >
                       Finishing Date
-                    </InputField>
+                    </DateInputField>
                   </div>
                   <div className="flex w-full items-center ">
                     <InputField
@@ -197,7 +197,9 @@ export default function EventListPage() {
               <EventListElement event={event} key={key} user={user} />
             ))
           : events.map((event, i) => (
-              <EventListElement event={event} key={i} user={user} />
+              <>
+                <EventListElement event={event} key={i} user={user} />
+              </>
             ))}
       </div>
     </div>

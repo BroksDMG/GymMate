@@ -22,7 +22,6 @@ function EventListElement({ event, user }) {
     };
   }, []);
   starSize = screenWidth > 640 ? "50" : "30";
-
   const parsedDate = Date.parse(event.time);
   const monthNames = [
     "styczeń",
@@ -63,7 +62,10 @@ function EventListElement({ event, user }) {
       <div className=" relative flex flex-col  px-4 pb-1  gap-3  md:px-10 ">
         <div className="flex flex-col w-full  h-full ">
           <div className="flex">
-            <div className="absolute -translate-y-10 sm:-translate-y-14 flex justify-center items-center w-[89px] h-[89px] sm:w-[105px] sm:h-[105px] bg-white rounded-full  ">
+            <Link
+              to={"/account/" + event.owner}
+              className="absolute -translate-y-10 hover:-translate-y-12 sm:hover:-translate-y-16  sm:-translate-y-14 flex justify-center items-center w-[89px] h-[89px] sm:w-[105px] sm:h-[105px] bg-white rounded-full  "
+            >
               {event.avatar?.length > 0 ? (
                 <img
                   className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover object-center top-4"
@@ -77,7 +79,7 @@ function EventListElement({ event, user }) {
                   className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover object-center top-4 "
                 />
               )}
-            </div>
+            </Link>
             <div className="w-[120px]  sm:w-[105px]  "></div>
             <h2 className="text-4xl sm:text-5xl font-bold uppercase w-full flex justify-center">
               push-ups

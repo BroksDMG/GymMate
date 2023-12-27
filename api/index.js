@@ -114,10 +114,17 @@ app.get("/profile", async (req, res) => {
           throw err;
         }
       } else {
-        const { name, email, surname, avatar, _id } = await User.findById(
-          userData.id
-        );
-        res.json({ name, email, surname, avatar, _id });
+        const { name, email, surname, _id, avatar, userDescription, gallery } =
+          await User.findById(userData.id);
+        res.json({
+          name,
+          email,
+          surname,
+          _id,
+          avatar,
+          userDescription,
+          gallery,
+        });
       }
     });
   } else {
@@ -191,12 +198,18 @@ app.get("/user-events", async (req, res) => {
     res.json(await Event.find({ owner: id }));
   });
 });
-
+app.get("/members-events/:id", async (req, res) => {
+  const { id } = req.params;
+  res.json(await Event.find({ owner: id }));
+});
 app.get("/events/:id", async (req, res) => {
   const { id } = req.params;
   res.json(await Event.findById(id));
 });
-
+app.get("/account/:id", async (req, res) => {
+  const { id } = req.params;
+  res.json(await User.findById(id));
+});
 app.put("/events", async (req, res) => {
   const { token } = req.cookies;
   const {
@@ -232,26 +245,12 @@ app.put("/events", async (req, res) => {
 });
 app.post("/user-avatar", async (req, res) => {
   const { token } = req.cookies;
-  const {
-    id,
-    name,
-    surname,
-    email,
-    password,
-    avatar,
-    gallery,
-    userDescription,
-  } = req.body;
+  const { avatar, gallery, userDescription } = req.body;
   console.log(req.body);
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const userDoc = await User.findById(userData.id);
     userDoc.set({
-      id,
-      name,
-      surname,
-      email,
-      password,
       avatar,
       gallery,
       userDescription,
