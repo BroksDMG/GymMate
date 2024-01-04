@@ -20,7 +20,7 @@ export default function NavigationMenuBottom({ saveactiveTab }) {
     }
   }
   return (
-    <div className="w-screen fixed bg-white shadowTop h-[65px] bottom-0">
+    <div className="w-screen fixed bg-white shadowTop h-[65px] bottom-0 z-[50]">
       <div className=" bg-darkBluePrimary rounded-t-md fixed left-1/2 transform -translate-x-1/2 bottom-0 flex justify-center items-center w-60">
         <ul className="flex text-2xl items">
           <li

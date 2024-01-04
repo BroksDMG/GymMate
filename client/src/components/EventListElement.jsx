@@ -4,13 +4,14 @@ import { PiMapPinFill } from "react-icons/pi";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
-
+import axios from "axios";
 import { FaHeart } from "react-icons/fa6";
 import { AiFillLike } from "react-icons/ai";
 import { BiSolidCalendarPlus } from "react-icons/bi";
 import Button from "./Button";
 function EventListElement({ event, user }) {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [eventOwner, setEventOwner] = useState({});
   let starSize;
   useEffect(() => {
     const hanldeResize = () => {
@@ -21,8 +22,13 @@ function EventListElement({ event, user }) {
       window.removeEventListener("resize", hanldeResize);
     };
   }, []);
+  useEffect(() => {
+    axios.get("/event-owner/" + event.owner).then(({ data }) => {
+      setEventOwner(data);
+    });
+  }, [event.owner]);
+  console.log(event.owner);
   starSize = screenWidth > 640 ? "50" : "30";
-
   const parsedDate = Date.parse(event.time);
   const monthNames = [
     "styczeń",
@@ -63,7 +69,10 @@ function EventListElement({ event, user }) {
       <div className=" relative flex flex-col  px-4 pb-1  gap-3  md:px-10 ">
         <div className="flex flex-col w-full  h-full ">
           <div className="flex">
-            <div className="absolute -translate-y-10 sm:-translate-y-14 flex justify-center items-center w-[89px] h-[89px] sm:w-[105px] sm:h-[105px] bg-white rounded-full  ">
+            <Link
+              to={"/account/" + event.owner}
+              className="absolute -translate-y-10 hover:-translate-y-12 sm:hover:-translate-y-16  sm:-translate-y-14 flex justify-center items-center w-[89px] h-[89px] sm:w-[105px] sm:h-[105px] bg-white rounded-full  "
+            >
               {event.avatar?.length > 0 ? (
                 <img
                   className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover object-center top-4"
@@ -77,14 +86,14 @@ function EventListElement({ event, user }) {
                   className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover object-center top-4 "
                 />
               )}
-            </div>
+            </Link>
             <div className="w-[120px]  sm:w-[105px]  "></div>
             <h2 className="text-4xl sm:text-5xl font-bold uppercase w-full flex justify-center">
               push-ups
             </h2>
           </div>
           <h2 className="text-lg sm:text-2xl font-bold capitalize mt-2">
-            {user?.name} {user?.surname}
+            {eventOwner?.name} {eventOwner?.surname}
           </h2>
           <p className="text-xs sm:text-base text-gray-600 mt-2">
             {event.description?.length > 200

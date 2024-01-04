@@ -1,8 +1,7 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../components/UserContext";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
-import InputField from "../components/InputField";
 import NavigationMenuBottom from "../components/NavigationMenuBottom";
 import PhotosUploder from "../components/PhotosUploder";
 import { Form, Formik } from "formik";
@@ -11,10 +10,40 @@ import Button from "../components/Button";
 import UserEventsList from "../components/UserEventsList";
 import TextAreaField from "../components/TextAreaField";
 import UserGallery from "../components/UserGallery";
+import UserFriendsList from "../components/UserFriendsList";
+import { set } from "date-fns";
 function AccountPage() {
   const { ready, user, setUser } = useContext(UserContext);
   const [redirect, setRedirect] = useState(null);
   const [avtiveTab, setActiveTab] = useState(1);
+  const [userEvents, setUserEvents] = useState([]);
+  const [userFriends, setUserFriends] = useState([]);
+  const [userFriendsRequest, setUserFriendsRequest] = useState([]);
+  useEffect(() => {
+    axios.get("/user-events").then((response) => {
+      setUserEvents(response.data);
+    });
+  }, []);
+  useEffect(() => {
+    if (!user) return;
+    axios.get(`/friend-request/${user._id}`).then((response) => {
+      const { data } = response;
+      setUserFriendsRequest(data);
+    });
+  }, [user]);
+  useEffect(() => {
+    if (!user) return;
+    axios.get(`/friends/${user._id}`).then((response) => {
+      const { data } = response;
+      setUserFriends(data);
+    });
+  }, [user]);
+  console.log(userFriends);
+  const initialFormValues = {
+    avatar: user?.avatar || [],
+    userDescription: user?.userDescription || "",
+    gallery: user?.gallery || [{ imageDescription: "", photos: [] }],
+  };
   if (!ready) {
     return "Loading...";
   }
@@ -24,11 +53,6 @@ function AccountPage() {
   if (redirect) {
     return <Navigate to={redirect} />;
   }
-  const initialValues = {
-    avatar: [],
-    userDescription: user.userDescription || "",
-    gallery: user.gallery || [],
-  };
   const validationSchema = Yup.object().shape({
     avatar: Yup.array(),
     userDescription: Yup.string(),
@@ -43,14 +67,14 @@ function AccountPage() {
       ...prev,
       ...values,
     }));
-    console.log(values);
   }
-  //Na siłownie uczęszczam od lat, dobry trening to trening bez kontuzji, jak już tu zabłądziłeś to wal śmiało wyskoczymy poprzerzucać żelastwo 💪
+
   return (
     <div className="w-full h-full rounded-t-[2rem] bg-white mt-32 relative flex flex-col px-2 sm:px-10 md:px-20 lg:px-10 xl:px-20">
       <Formik
-        initialValues={initialValues}
+        initialValues={initialFormValues}
         validationSchema={validationSchema}
+        enableReinitialize={true}
         onSubmit={photosUploderSubmit}
       >
         {({ values, setFieldValue, handleChange }) => {
@@ -58,17 +82,11 @@ function AccountPage() {
             setFieldValue("avatar", photo);
           };
           const handleGalleryChange = (galleryItem) => {
-            setFieldValue("gallery", galleryItem);
+            setFieldValue("gallery", [...values.gallery, galleryItem]);
           };
           return (
             <Form className=" flex  items-center flex-col lg:items-start lg:mb-10 ">
               <a href="#" className="absolute -top-20  lg:-top-32 lg:left-32">
-                {/* <img
-            src={logoWithBorder}
-            alt="logoBorder"
-            className="w-52 lg:w-full "
-          /> */}
-
                 <div className="relative h-full flex justify-center">
                   <div
                     style={{ boxShadow: "0px 5px 0px rgb(156 163 175)" }}
@@ -87,7 +105,7 @@ function AccountPage() {
                   </div>
                 </div>
               </a>
-              <div className="flex items-center flex-col mt-40 lg:mt-10 w-full ">
+              <div className="flex items-center flex-col mt-40 lg:mt-10 w-full mb-20 ">
                 <div className="flex flex-col items-center">
                   <h2 className="text-2xl lg:text-4xl gap-1 font-bold flex capitalize ">
                     {user ? (
@@ -115,13 +133,17 @@ function AccountPage() {
 
                 {avtiveTab === 1 && (
                   <div className="grid mt-10 grid-cols-1 lg:grid-cols-2 gap-10">
-                    <UserEventsList />
+                    <UserEventsList userEventsList={userEvents} />
                   </div>
                 )}
                 {avtiveTab === 2 && (
-                  <div className="grid mt-10 grid-cols-1 lg:grid-cols-2 gap-10">
+                  <div className=" mt-5">
                     {/*todo: add user followers list*/}
-                    <UserEventsList />
+                    <UserFriendsList
+                      userFriends={userFriends}
+                      userFriendsRequest={userFriendsRequest}
+                      user={user}
+                    />
                   </div>
                 )}
                 {avtiveTab === 3 && (
@@ -133,9 +155,7 @@ function AccountPage() {
                     />
                   </div>
                 )}
-                <div className="relative">
-                  <NavigationMenuBottom saveactiveTab={setActiveTab} />
-                </div>
+                <NavigationMenuBottom saveactiveTab={setActiveTab} />
               </div>
             </Form>
           );

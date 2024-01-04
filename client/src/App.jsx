@@ -10,6 +10,7 @@ import MakeEventPage from "./pages/MakeEventPage.jsx";
 import EventListPage from "./pages/EventListPage.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import MemberProfilPage from "./pages/MemberProfilPage.jsx";
 axios.defaults.baseURL = "http://127.0.0.1:4000";
 axios.defaults.withCredentials = true;
 function App() {
@@ -23,6 +24,7 @@ function App() {
             <Route path="/findEvent" element={<FindEventPage />}></Route>
             <Route path="/register" element={<LoginPage />}></Route>
             <Route path="/account" element={<AccountPage />}></Route>
+            <Route path="/account/:id" element={<MemberProfilPage />}></Route>
             <Route path="/events" element={<EventListPage />}></Route>
             <Route path="/events/new" element={<MakeEventPage />}></Route>
             <Route path="/events/:id" element={<MakeEventPage />}></Route>

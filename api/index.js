@@ -10,6 +10,7 @@ const imageDownloader = require("image-downloader");
 const multer = require("multer");
 const fs = require("fs");
 const { rejects } = require("assert");
+const { fr } = require("date-fns/locale");
 
 require("dotenv").config();
 const app = express();
@@ -114,10 +115,28 @@ app.get("/profile", async (req, res) => {
           throw err;
         }
       } else {
-        const { name, email, surname, avatar, _id } = await User.findById(
-          userData.id
-        );
-        res.json({ name, email, surname, avatar, _id });
+        const {
+          name,
+          email,
+          surname,
+          _id,
+          avatar,
+          userDescription,
+          gallery,
+          friends,
+          friendRequests,
+        } = await User.findById(userData.id);
+        res.json({
+          name,
+          email,
+          surname,
+          _id,
+          avatar,
+          userDescription,
+          gallery,
+          friends,
+          friendRequests,
+        });
       }
     });
   } else {
@@ -166,7 +185,7 @@ app.post("/events", async (req, res) => {
     addedPhotos,
     avatar,
   } = req.body;
-  console.log(req.body);
+
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const eventDoc = await Event.create({
@@ -191,12 +210,22 @@ app.get("/user-events", async (req, res) => {
     res.json(await Event.find({ owner: id }));
   });
 });
-
+app.get("/event-owner/:id", async (req, res) => {
+  const { id } = req.body;
+  res.json(await User.findById(id));
+});
+app.get("/members-events/:id", async (req, res) => {
+  const { id } = req.params;
+  res.json(await Event.find({ owner: id }));
+});
 app.get("/events/:id", async (req, res) => {
   const { id } = req.params;
   res.json(await Event.findById(id));
 });
-
+app.get("/account/:id", async (req, res) => {
+  const { id } = req.params;
+  res.json(await User.findById(id));
+});
 app.put("/events", async (req, res) => {
   const { token } = req.cookies;
   const {
@@ -230,28 +259,14 @@ app.put("/events", async (req, res) => {
     }
   });
 });
+
 app.post("/user-avatar", async (req, res) => {
   const { token } = req.cookies;
-  const {
-    id,
-    name,
-    surname,
-    email,
-    password,
-    avatar,
-    gallery,
-    userDescription,
-  } = req.body;
-  console.log(req.body);
+  const { avatar, gallery, userDescription } = req.body;
   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
     if (err) throw err;
     const userDoc = await User.findById(userData.id);
     userDoc.set({
-      id,
-      name,
-      surname,
-      email,
-      password,
       avatar,
       gallery,
       userDescription,
@@ -265,6 +280,96 @@ app.get("/events", async (req, res) => {
   res.json(await Event.find());
 });
 
+app.post("/add-friend", async (req, res) => {
+  const { currentUserId, friendId } = req.body;
+
+  const friend = await User.findById(friendId);
+  const currentUser = await User.findById(currentUserId);
+  if (!friend) {
+    return res.status(404).json({ error: "Firend not found" });
+  }
+  if (currentUser.friends.includes(friendId)) {
+    return res.status(400).json({ error: "You are already friends" });
+  }
+  if (friend.friendRequests.includes(currentUserId)) {
+    return res.status(400).json({ error: "Friend request already sent" });
+  }
+
+  friend.friendRequests.push(currentUserId);
+  await friend.save();
+  res.json({ message: "Friend request sent successfully" });
+});
+
+app.post("/accept-friend", async (req, res) => {
+  const { currentUserId, friendId } = req.body;
+
+  const friend = await User.findById(friendId);
+  const currentUser = await User.findById(currentUserId);
+  if (!currentUser || !friend) {
+    return res.status(404).json({ error: "Firend not found" });
+  }
+
+  if (!currentUser.friendRequests.includes(friendId)) {
+    return res.status(400).json({ error: "Friend request not found" });
+  }
+
+  if (currentUser.friends.includes(friendId)) {
+    friend.friendRequests = friend.friendRequests.filter(
+      (id) => id.toString() !== currentUserId
+    );
+    currentUser.friendRequests = currentUser.friendRequests.filter(
+      (id) => id.toString() !== friendId
+    );
+    return res.status(400).json({ error: "Friend request already accepted" });
+  }
+  friend.friendRequests = friend.friendRequests.filter(
+    (id) => id.toString() !== currentUserId
+  );
+  currentUser.friendRequests = currentUser.friendRequests.filter(
+    (id) => id.toString() !== friendId
+  );
+  currentUser.friends.push(friendId);
+  friend.friends.push(currentUserId);
+
+  await friend.save();
+  await currentUser.save();
+
+  res.json({ message: "Friend requset accepted successfully" });
+});
+app.post("/reject-friend", async (req, res) => {
+  const { currentUserId, friendId } = req.body;
+
+  // Fetch the friend
+  const friend = await User.findById(friendId);
+  const currentUser = await User.findById(currentUserId);
+  if (!friend) {
+    return res.status(404).json({ error: "Friend not found" });
+  }
+
+  // Remove the friend request
+  currentUser.friendRequests = currentUser.friendRequests.filter(
+    (id) => id.toString() !== friendId
+  );
+  await currentUser.save();
+
+  res.json({ message: "Friend request rejected successfully" });
+});
+app.get("/friend-request/:userId", async (req, res) => {
+  const { userId } = req.params;
+  const user = await User.findById(userId).populate("friendRequests");
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+  res.json(user.friendRequests);
+});
+app.get("/friends/:userId", async (req, res) => {
+  const { userId } = req.params;
+  const user = await User.findById(userId).populate("friends");
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+  res.json(user.friends);
+});
 app.get("/test", (req, res) => {
   res.json("test ok");
 });

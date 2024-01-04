@@ -3,7 +3,24 @@
 @tailwind utilities;
 
 /* /////////////////////////Global///////////////////////// */
+.text-with-background {
+  position: relative;
+  font-size: 24px;
+  display: inline-block;
+  padding: 10px; /* Dodatkowy padding wokół tekstu */
+}
 
+.text-with-background::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background-color: #3498db; /* Kolor tła */
+  border-radius: 8px; /* Zaokrąglenie rogów, dostosuj według potrzeb */
+}
 /* ///////////////Text Perspective////////////////////// */
 @media (min-width: 1024px) {
   .perspective {
