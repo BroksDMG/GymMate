@@ -4,13 +4,14 @@ import { PiMapPinFill } from "react-icons/pi";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
-
+import axios from "axios";
 import { FaHeart } from "react-icons/fa6";
 import { AiFillLike } from "react-icons/ai";
 import { BiSolidCalendarPlus } from "react-icons/bi";
 import Button from "./Button";
 function EventListElement({ event, user }) {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [eventOwner, setEventOwner] = useState({});
   let starSize;
   useEffect(() => {
     const hanldeResize = () => {
@@ -21,6 +22,12 @@ function EventListElement({ event, user }) {
       window.removeEventListener("resize", hanldeResize);
     };
   }, []);
+  useEffect(() => {
+    axios.get("/event-owner/" + event.owner).then(({ data }) => {
+      setEventOwner(data);
+    });
+  }, [event.owner]);
+  console.log(event.owner);
   starSize = screenWidth > 640 ? "50" : "30";
   const parsedDate = Date.parse(event.time);
   const monthNames = [
@@ -86,7 +93,7 @@ function EventListElement({ event, user }) {
             </h2>
           </div>
           <h2 className="text-lg sm:text-2xl font-bold capitalize mt-2">
-            {user?.name} {user?.surname}
+            {eventOwner?.name} {eventOwner?.surname}
           </h2>
           <p className="text-xs sm:text-base text-gray-600 mt-2">
             {event.description?.length > 200

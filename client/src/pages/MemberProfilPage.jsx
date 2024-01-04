@@ -18,12 +18,12 @@ function MemberProfilPage() {
   const [otherUser, setOtherUser] = useState(null);
   const { id: accountId } = useParams();
   const [userEvents, setUserEvents] = useState([]);
+  const [isSendInvite, setIsSendInvite] = useState(false);
   useEffect(() => {
     axios.get("/members-events/" + accountId).then((response) => {
       setUserEvents(response.data);
     });
   }, [accountId]);
-  console.log(userEvents);
   useEffect(() => {
     if (!accountId) return;
 
@@ -32,7 +32,6 @@ function MemberProfilPage() {
       setOtherUser(data);
     });
   }, [accountId]);
-  console.log(otherUser);
   const initialFormValues = {
     avatar: otherUser?.avatar || [],
     userDescription: otherUser?.userDescription || "",
@@ -52,15 +51,12 @@ function MemberProfilPage() {
     userDescription: Yup.string(),
     gallery: Yup.array(),
   });
-  async function photosUploderSubmit(values) {
-    await axios.post("/user-avatar", {
-      ...user,
-      ...values,
+  async function photosUploderSubmit() {
+    await axios.post("/add-friend", {
+      currentUserId: user._id,
+      friendId: accountId,
     });
-    setUser((prev) => ({
-      ...prev,
-      ...values,
-    }));
+    setIsSendInvite((e) => !e);
   }
 
   return (
@@ -95,7 +91,9 @@ function MemberProfilPage() {
                     />
                   </div>
                   <div className="relative top-44 lg:top-[17rem] ">
-                    <Button type="submit">Invite Mate</Button>
+                    <Button type="submit">
+                      {isSendInvite ? "Invite Sended" : "Invite Mate"}
+                    </Button>
                   </div>
                 </div>
               </a>

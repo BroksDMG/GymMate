@@ -1,10 +1,10 @@
 import EventListElement from "./EventListElement";
 import propTypes from "prop-types";
-function UserEventsList({ UserEventsList }) {
+function UserEventsList({ userEventsList }) {
   return (
     <>
-      {UserEventsList?.length > 0 &&
-        UserEventsList?.map((event, key) => (
+      {userEventsList?.length > 0 &&
+        userEventsList?.map((event, key) => (
           <EventListElement key={key} event={event} />
         ))}
       ;
@@ -15,5 +15,5 @@ function UserEventsList({ UserEventsList }) {
 export default UserEventsList;
 
 UserEventsList.propTypes = {
-  UserEventsList: propTypes.array,
+  userEventsList: propTypes.array,
 };

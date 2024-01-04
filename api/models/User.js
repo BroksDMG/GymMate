@@ -9,6 +9,8 @@ const UserSchema = new Schema({
   avatar: [String],
   gallery: [{ photos: [String], imageDescription: String }],
   userDescription: String,
+  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 
 const UserModel = mongoose.model("User", UserSchema);

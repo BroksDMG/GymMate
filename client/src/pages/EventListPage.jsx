@@ -79,7 +79,7 @@ export default function EventListPage() {
   return (
     <div className="w-full h-full rounded-t-[2rem] bg-white mt-32 relative flex flex-col px-2 sm:px-10 md:px-20 lg:px-10 xl:px-20">
       <div className=" flex  items-center flex-col lg:justify-normal lg:flex-row lg:items-start lg:mb-10">
-        <a href="#" className="absolute -top-20  lg:-top-32 ">
+        <a href="#" className="absolute -top-20  lg:-top-32 select-none ">
           <img
             src={logoWithBorder}
             alt="logoBorder"

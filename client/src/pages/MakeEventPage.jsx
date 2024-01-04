@@ -133,7 +133,7 @@ function MakeEventPage() {
 
           return (
             <Form className=" flex  items-center flex-col lg:justify-normal lg:flex-col lg:items-start lg:mb-10">
-              <a href="#" className="absolute -top-20  lg:-top-32 ">
+              <a href="#" className="absolute -top-20  lg:-top-32 select-none">
                 <img
                   src={logoWithBorder}
                   alt="logoBorder"

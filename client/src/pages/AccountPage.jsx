@@ -10,16 +10,35 @@ import Button from "../components/Button";
 import UserEventsList from "../components/UserEventsList";
 import TextAreaField from "../components/TextAreaField";
 import UserGallery from "../components/UserGallery";
+import UserFriendsList from "../components/UserFriendsList";
+import { set } from "date-fns";
 function AccountPage() {
   const { ready, user, setUser } = useContext(UserContext);
   const [redirect, setRedirect] = useState(null);
   const [avtiveTab, setActiveTab] = useState(1);
   const [userEvents, setUserEvents] = useState([]);
+  const [userFriends, setUserFriends] = useState([]);
+  const [userFriendsRequest, setUserFriendsRequest] = useState([]);
   useEffect(() => {
     axios.get("/user-events").then((response) => {
       setUserEvents(response.data);
     });
   }, []);
+  useEffect(() => {
+    if (!user) return;
+    axios.get(`/friend-request/${user._id}`).then((response) => {
+      const { data } = response;
+      setUserFriendsRequest(data);
+    });
+  }, [user]);
+  useEffect(() => {
+    if (!user) return;
+    axios.get(`/friends/${user._id}`).then((response) => {
+      const { data } = response;
+      setUserFriends(data);
+    });
+  }, [user]);
+  console.log(userFriends);
   const initialFormValues = {
     avatar: user?.avatar || [],
     userDescription: user?.userDescription || "",
@@ -114,13 +133,17 @@ function AccountPage() {
 
                 {avtiveTab === 1 && (
                   <div className="grid mt-10 grid-cols-1 lg:grid-cols-2 gap-10">
-                    <UserEventsList UserEventsList={userEvents} />
+                    <UserEventsList userEventsList={userEvents} />
                   </div>
                 )}
                 {avtiveTab === 2 && (
-                  <div className="grid mt-10 grid-cols-1 lg:grid-cols-2 gap-10">
+                  <div className=" mt-5">
                     {/*todo: add user followers list*/}
-                    <UserEventsList />
+                    <UserFriendsList
+                      userFriends={userFriends}
+                      userFriendsRequest={userFriendsRequest}
+                      user={user}
+                    />
                   </div>
                 )}
                 {avtiveTab === 3 && (
