@@ -27,7 +27,6 @@ function EventListElement({ event, user }) {
       setEventOwner(data);
     });
   }, [event.owner]);
-  console.log(event.owner);
   starSize = screenWidth > 640 ? "50" : "30";
   const parsedDate = Date.parse(event.time);
   const monthNames = [
@@ -52,9 +51,19 @@ function EventListElement({ event, user }) {
     month = monthNames[format(new Date(parsedDate), "M") - 1];
     year = format(new Date(parsedDate), "yyyy");
   }
+  function joinEventHandler() {
+    if (event.owner === user._id) return;
+    axios.put("/join-event/" + user._id).then(({ data }) => {
+      console.log(data);
+    });
+  }
   return (
     <Link
-      to={"/events/" + event._id}
+      to={
+        event.owner === user._id
+          ? "/events/" + event._id
+          : "/event-detail/" + event._id
+      }
       className="flex flex-col cursor-pointer mt-5 bg-gray-100  rounded-xl shadow-md shadow-gray-400"
     >
       <div className="h-24 sm:h-32 w-full bg-gray-300 flex rounded-t-xl">
@@ -92,8 +101,14 @@ function EventListElement({ event, user }) {
               push-ups
             </h2>
           </div>
-          <h2 className="text-lg sm:text-2xl font-bold capitalize mt-2">
-            {eventOwner?.name} {eventOwner?.surname}
+          <h2 className="flex gap-2 text-lg sm:text-2xl font-bold capitalize mt-2">
+            {eventOwner.name && eventOwner.surname ? (
+              <>
+                <p>{eventOwner.name}</p> <p>{eventOwner.surname}</p>
+              </>
+            ) : (
+              <p>Name Surname</p>
+            )}
           </h2>
           <p className="text-xs sm:text-base text-gray-600 mt-2">
             {event.description?.length > 200
@@ -175,6 +190,7 @@ function EventListElement({ event, user }) {
             padding="px-3 py-1"
             textSize="text-sm sm:text-lg"
             style="h-9"
+            onClick={() => joinEventHandler()}
           >
             join event <BiSolidCalendarPlus />
           </Button>

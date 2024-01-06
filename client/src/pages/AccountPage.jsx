@@ -38,7 +38,6 @@ function AccountPage() {
       setUserFriends(data);
     });
   }, [user]);
-  console.log(userFriends);
   const initialFormValues = {
     avatar: user?.avatar || [],
     userDescription: user?.userDescription || "",

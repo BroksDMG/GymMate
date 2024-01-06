@@ -71,6 +71,7 @@ function MakeEventPage() {
       // setmaxGuests(data.maxGuests);
     });
   }, [id, user?.avatar]);
+
   const experienceArr = ["Beginner", "Intermediate", "Advanced"];
   // const experienceArr = ["junior", "mid", "senior"];
 

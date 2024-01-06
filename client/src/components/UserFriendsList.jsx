@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import propTypes from "prop-types";
 import FriendListElement from "./FriendListElement";
@@ -17,23 +17,30 @@ function UserFriendsList({ userFriends, userFriendsRequest, user }) {
       currentUserId: user._id,
     });
   }
+  useEffect(() => {
+    userFriendsRequest?.length === 0 && setIsFriendsTab(true);
+  }, []);
   return (
     <>
       <div className="flex w-full justify-center text-lg select-none">
         <button
           onClick={() => setIsFriendsTab(true)}
-          className="border-2 border-r-0 border-gray-200 rounded-lg rounded-r-none p-1 hover:bg-gray-200  active:bg-gray-200 capitalize "
+          className={`border-2 border-r-0 border-gray-200 rounded-lg rounded-r-none p-1 hover:bg-gray-200 ${
+            isFriendsTab && "bg-gray-200"
+          } capitalize`}
         >
           friends
         </button>
         <button
           onClick={() => setIsFriendsTab(false)}
-          className=" border-2 border-l-0 border-gray-200 rounded-lg rounded-l-none p-1 hover:bg-gray-200  active:bg-gray-200 capitalize"
+          className={` border-2 border-l-0 border-gray-200 rounded-lg rounded-l-none p-1 hover:bg-gray-200  ${
+            !isFriendsTab && "bg-gray-200"
+          } capitalize`}
         >
           Invites
         </button>
       </div>
-      <div className="grid  grid-cols-1 lg:grid-cols-2 gap-10 ">
+      <div className="grid  grid-cols-1  ">
         {isFriendsTab
           ? userFriends?.length > 0 &&
             userFriends.map((friend, key) => (
