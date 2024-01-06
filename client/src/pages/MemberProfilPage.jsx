@@ -11,6 +11,7 @@ import UserEventsList from "../components/UserEventsList";
 import TextAreaField from "../components/TextAreaField";
 import UserGallery from "../components/UserGallery";
 import { useParams } from "react-router-dom";
+import FriendListElement from "../components/FriendListElement";
 function MemberProfilPage() {
   const { ready, user, setUser } = useContext(UserContext);
   const [redirect, setRedirect] = useState(null);
@@ -19,6 +20,7 @@ function MemberProfilPage() {
   const { id: accountId } = useParams();
   const [userEvents, setUserEvents] = useState([]);
   const [isSendInvite, setIsSendInvite] = useState(false);
+  const [userFriends, setUserFriends] = useState([]);
   useEffect(() => {
     axios.get("/members-events/" + accountId).then((response) => {
       setUserEvents(response.data);
@@ -30,6 +32,13 @@ function MemberProfilPage() {
     axios.get(`/account/${accountId}`).then((response) => {
       const { data } = response;
       setOtherUser(data);
+    });
+  }, [accountId]);
+  useEffect(() => {
+    if (!accountId) return;
+    axios.get(`/friends/${accountId}`).then((response) => {
+      const { data } = response;
+      setUserFriends(data);
     });
   }, [accountId]);
   const initialFormValues = {
@@ -124,18 +133,29 @@ function MemberProfilPage() {
 
                 {avtiveTab === 1 && (
                   <div className="grid mt-10 grid-cols-1 lg:grid-cols-2 gap-10">
-                    <UserEventsList UserEventsList={userEvents} />
+                    <UserEventsList userEventsList={userEvents} />
                   </div>
                 )}
                 {avtiveTab === 2 && (
                   <div className="grid mt-10 grid-cols-1 lg:grid-cols-2 gap-10">
                     {/*todo: add user followers list*/}
-                    <UserEventsList />
+                    {userFriends?.length > 0 &&
+                      userFriends.map((friend, key) => (
+                        <FriendListElement
+                          key={key}
+                          friend={friend}
+                          className="px-2 w-full sm:px-10 md:px-20 lg:px-10 xl:px-20"
+                        ></FriendListElement>
+                      ))}
                   </div>
                 )}
                 {avtiveTab === 3 && (
                   <div className="mt-10">
-                    <UserGallery name="gallery" value={values.gallery} />
+                    <UserGallery
+                      name="gallery"
+                      value={values.gallery}
+                      memberGallery={true}
+                    />
                   </div>
                 )}
                 <NavigationMenuBottom saveactiveTab={setActiveTab} />

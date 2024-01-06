@@ -211,8 +211,12 @@ app.get("/user-events", async (req, res) => {
   });
 });
 app.get("/event-owner/:id", async (req, res) => {
-  const { id } = req.body;
-  res.json(await User.findById(id));
+  const { id } = req.params;
+  const user = await User.findById(id);
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+  res.json(user);
 });
 app.get("/members-events/:id", async (req, res) => {
   const { id } = req.params;

@@ -7,7 +7,7 @@ import { UserContext } from "./UserContext";
 import { BsPlusCircleDotted } from "react-icons/bs";
 import Button from "./Button";
 
-function UserGallery({ onChange, value }) {
+function UserGallery({ onChange, value, memberGallery = false }) {
   const [activeImage, setActiveImage] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(null);
   const [imageDescription, setImageDescription] = useState("");
@@ -38,32 +38,34 @@ function UserGallery({ onChange, value }) {
         <span className="p-2 capitalize font-bold">Gallery</span>
         <div className="flex flex-wrap justify-center">
           <div className="flex flex-wrap justify-center">
-            <div className={`p-2 w-1/2 sm:w-1/3  flex flex-col`}>
-              <button
-                onClick={() => handleImageClick(0, true)}
-                className=" min-w-[100px] lg:min-w-[150px]"
-              >
-                {photos?.length > 0 ? (
-                  <img
-                    className="w-full h-36 md:h-64 object-cover "
-                    src={`http://127.0.0.1:4000/uploads/${photos[0]}`}
-                  />
-                ) : (
-                  <div className="w-full h-full flex justify-center  bg-lightBrown text-6xl lg:text-8xl ">
-                    <BsPlusCircleDotted
-                      style={{ filter: "drop-shadow(0px 2px 4px black)" }}
-                      className="   h-36 md:h-64 object-cover z-10 text-lightBrown  cursor-pointer "
+            {!memberGallery && (
+              <div className={`p-2 w-1/2 sm:w-1/3  flex flex-col`}>
+                <button
+                  onClick={() => handleImageClick(0, true)}
+                  className=" min-w-[100px] lg:min-w-[150px]"
+                >
+                  {photos?.length > 0 ? (
+                    <img
+                      className="w-full h-36 md:h-64 object-cover "
+                      src={`http://127.0.0.1:4000/uploads/${photos[0]}`}
                     />
-                  </div>
-                )}
-              </button>
-              <p className="text-base sm:text-lg lg:text-xl min-w-max">
-                Add Photo
-              </p>
-            </div>
+                  ) : (
+                    <div className="w-full h-full flex justify-center  bg-lightBrown text-6xl lg:text-8xl ">
+                      <BsPlusCircleDotted
+                        style={{ filter: "drop-shadow(0px 2px 4px black)" }}
+                        className="   h-36 md:h-64 object-cover z-10 text-lightBrown  cursor-pointer "
+                      />
+                    </div>
+                  )}
+                </button>
+                <p className="text-base sm:text-lg lg:text-xl min-w-max">
+                  Add Photo
+                </p>
+              </div>
+            )}
             {value
               ? value?.map((galleryyItem, i) => (
-                  <div className={`p-2 w-1/2 sm:w-1/3 flex flex-col`} key={i}>
+                  <div className={`p-2 w-1/2  flex flex-col`} key={i}>
                     <button onClick={() => handleImageClick(i)}>
                       <img
                         className="w-full h-36 md:h-64 object-cover rounded-lg"
