@@ -226,6 +226,7 @@ app.get("/events/:id", async (req, res) => {
   const { id } = req.params;
   res.json(await Event.findById(id));
 });
+
 app.get("/account/:id", async (req, res) => {
   const { id } = req.params;
   res.json(await User.findById(id));
@@ -234,6 +235,7 @@ app.put("/events", async (req, res) => {
   const { token } = req.cookies;
   const {
     id,
+    owner,
     title,
     address,
     description,
@@ -250,6 +252,7 @@ app.put("/events", async (req, res) => {
     if (userData.id === eventDoc.owner.toString()) {
       eventDoc.set({
         title,
+        owner,
         address,
         description,
         experience,

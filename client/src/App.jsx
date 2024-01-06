@@ -1,6 +1,5 @@
 import { Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage.jsx";
-import IndexPage from "./pages/IndexPAge.jsx";
 import Layout from "./components/Layout.jsx";
 import axios from "axios";
 import { UserContextProvider } from "./components/UserContext.jsx";
@@ -11,6 +10,7 @@ import EventListPage from "./pages/EventListPage.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MemberProfilPage from "./pages/MemberProfilPage.jsx";
+import MemberEventPage from "./pages/MemberEventPage.jsx";
 axios.defaults.baseURL = "http://127.0.0.1:4000";
 axios.defaults.withCredentials = true;
 function App() {
@@ -26,6 +26,10 @@ function App() {
             <Route path="/account" element={<AccountPage />}></Route>
             <Route path="/account/:id" element={<MemberProfilPage />}></Route>
             <Route path="/events" element={<EventListPage />}></Route>
+            <Route
+              path="/event-detail/:id"
+              element={<MemberEventPage />}
+            ></Route>
             <Route path="/events/new" element={<MakeEventPage />}></Route>
             <Route path="/events/:id" element={<MakeEventPage />}></Route>
           </Route>

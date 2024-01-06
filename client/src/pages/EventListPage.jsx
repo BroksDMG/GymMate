@@ -196,11 +196,11 @@ export default function EventListPage() {
           ? filteredEvents.map((event, key) => (
               <EventListElement event={event} key={key} user={user} />
             ))
-          : events.map((event, i) => (
-              <>
+          : events
+              .map((event, i) => (
                 <EventListElement event={event} key={i} user={user} />
-              </>
-            ))}
+              ))
+              .reverse()}
       </div>
     </div>
   );

@@ -9,7 +9,7 @@ import { FaHeart } from "react-icons/fa6";
 import { AiFillLike } from "react-icons/ai";
 import { BiSolidCalendarPlus } from "react-icons/bi";
 import Button from "./Button";
-function EventListElement({ event, user }) {
+function EventMemberDetail({ event, user }) {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [eventOwner, setEventOwner] = useState({});
   let starSize;
@@ -22,6 +22,7 @@ function EventListElement({ event, user }) {
       window.removeEventListener("resize", hanldeResize);
     };
   }, []);
+
   useEffect(() => {
     if (event.owner) {
       axios.get("/event-owner/" + event?.owner).then(({ data }) => {
@@ -201,9 +202,9 @@ function EventListElement({ event, user }) {
     </Link>
   );
 }
-EventListElement.propTypes = {
+EventMemberDetail.propTypes = {
   event: PropTypes.object,
   user: PropTypes.object,
 };
 
-export default EventListElement;
+export default EventMemberDetail;
