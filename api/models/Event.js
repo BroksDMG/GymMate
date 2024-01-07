@@ -9,6 +9,7 @@ const eventSchema = new mongoose.Schema({
   time: Date,
   maxGuests: Number,
   photos: [String],
+  guests: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   avatar: [String],
 });
 

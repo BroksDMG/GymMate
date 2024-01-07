@@ -3,15 +3,18 @@ import Stars from "../components/Stars";
 import { PiMapPinFill } from "react-icons/pi";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import axios from "axios";
 import { FaHeart } from "react-icons/fa6";
 import { AiFillLike } from "react-icons/ai";
 import { BiSolidCalendarPlus } from "react-icons/bi";
 import Button from "./Button";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function EventMemberDetail({ event, user }) {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [eventOwner, setEventOwner] = useState({});
+  const [guests, setGuests] = useState(event?.guests || []);
   let starSize;
   useEffect(() => {
     const hanldeResize = () => {
@@ -56,10 +59,19 @@ function EventMemberDetail({ event, user }) {
   }
   function joinEventHandler() {
     if (event.owner === user._id) return;
-    axios.put("/join-event/" + user._id).then(({ data }) => {
-      console.log(data);
-    });
+    axios
+      .post("/join-event", { guestId: user._id, eventId: event._id })
+      .then(({ data }) => {
+        if (data === "joined") {
+          toast.success("You joined the event");
+          setGuests((prev) => [...prev, user._id]);
+        }
+      })
+      .catch((error) => {
+        toast.error(error.response.data.error);
+      });
   }
+  console.log(guests);
   return (
     <Link
       to={
@@ -158,12 +170,12 @@ function EventMemberDetail({ event, user }) {
             className=" bg-lightBlue rounded-lg p-1 pb-2 flex flex-col items-center"
           >
             <div className="text-xl sm:text-2xl font-bold">
-              {event.guests?.length || "0"}/{event.maxGuests}
+              {guests?.length || "0"}/{event.maxGuests}
             </div>
             <div className="w-full bg-gray-200 h-1 sm:h-2 rounded-md">
               <div
                 style={{
-                  width: `${(event.guests?.length / event.maxGuests) * 100}%`,
+                  width: `${(guests?.length / event.maxGuests) * 100}%`,
                 }}
                 className=" bg-darkBluePrimary h-2 rounded-md"
               ></div>
