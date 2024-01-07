@@ -178,6 +178,7 @@ app.post("/events", async (req, res) => {
   const {
     title,
     address,
+    guests,
     description,
     experience,
     date,
@@ -192,6 +193,7 @@ app.post("/events", async (req, res) => {
       owner: userData.id,
       title,
       address,
+      guests,
       description,
       experience,
       time: date,
@@ -226,7 +228,23 @@ app.get("/events/:id", async (req, res) => {
   const { id } = req.params;
   res.json(await Event.findById(id));
 });
-
+app.post("/join-event", async (req, res) => {
+  const { token } = req.cookies;
+  const { guestId, eventId } = req.body;
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) throw err;
+    const eventDoc = await Event.findById(eventId);
+    if (eventDoc.guests.includes(guestId)) {
+      return res.status(401).json({ error: "You are already a guest" });
+    }
+    if (eventDoc.guests.length >= eventDoc.maxGuests) {
+      return res.status(402).json({ error: "Event is full" });
+    }
+    eventDoc.guests.push(userData.id);
+    await eventDoc.save();
+    res.json("joined");
+  });
+});
 app.get("/account/:id", async (req, res) => {
   const { id } = req.params;
   res.json(await User.findById(id));
