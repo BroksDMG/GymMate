@@ -25,7 +25,7 @@ app.use("/uploads", express.static(__dirname + "/uploads"));
 app.use(
   cors({
     credentials: true,
-    origin: "https://gymmateapp-6d240ab18af8.herokuapp.com/",
+    origin: process.env.CLIENT_URL,
   })
 );
 console.log(process.env.MONGO_URL);

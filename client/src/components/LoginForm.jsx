@@ -44,7 +44,7 @@ function LoginForm({ toggleForm }) {
   });
 
   if (redirect) {
-    return <Navigate to={"/"} />;
+    return <Navigate to={"/events"} />;
   }
 
   return (

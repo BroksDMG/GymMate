@@ -60,7 +60,7 @@ export default function NavigationMenuTop() {
           >
             <div href="#" className="relative">
               <Link
-                to={"/"}
+                to={"/events"}
                 className={`text-xl relative flex dropRadiousTop justify-center items-end pb-[10px] rounded-full w-14 h-10
             ${
               isActive === 1

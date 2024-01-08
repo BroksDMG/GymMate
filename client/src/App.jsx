@@ -11,7 +11,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MemberProfilPage from "./pages/MemberProfilPage.jsx";
 import MemberEventPage from "./pages/MemberEventPage.jsx";
-axios.defaults.baseURL = "https://gymmateapp-6d240ab18af8.herokuapp.com";
+axios.defaults.baseURL = "http://127.0.0.1:4000";
 axios.defaults.withCredentials = true;
 function App() {
   return (
@@ -19,7 +19,7 @@ function App() {
       <UserContextProvider>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={<EventListPage />}></Route>
+            <Route index element={<LoginPage />}></Route>
             <Route path="/login" element={<LoginPage />}></Route>
             <Route path="/findEvent" element={<FindEventPage />}></Route>
             <Route path="/register" element={<LoginPage />}></Route>
