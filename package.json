@@ -9,7 +9,7 @@
     "clientBiuld": "cd client && npm run build",
     "api": "cd api && nodemon index.js",
     "dev": "concurrently \"npm run client\" \"npm run api\"",
-    "build":"concurrently \"npm run clientBiuld\" \"npm run api\""
+    
     
     
   },
