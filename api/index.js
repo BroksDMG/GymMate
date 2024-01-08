@@ -29,7 +29,10 @@ app.use(
   })
 );
 console.log(process.env.MONGO_URL);
-mongoose.connect(process.env.MONGO_URL);
+mongoose.connect(process.env.MONGO_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 // Nasłuchiwanie na zdarzenie "error" (błąd połączenia z bazą danych)
 mongoose.connection.on("error", (error) => {
   console.error("Błąd połączenia z bazą danych:", error);
