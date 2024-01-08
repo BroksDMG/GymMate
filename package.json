@@ -9,9 +9,7 @@
     "clientBiuld": "cd client && npm install && npm run dev",
     "api": "cd api && nodemon index.js",
     "dev": "concurrently \"npm run client\" \"npm run api\"",
-    "build":"cd api && npm install"
-    
-    
+    "build": "cd api && npm install"
   },
   "author": "",
   "license": "ISC",

@@ -13,6 +13,7 @@ import MemberProfilPage from "./pages/MemberProfilPage.jsx";
 import MemberEventPage from "./pages/MemberEventPage.jsx";
 axios.defaults.baseURL = "https://gymmateapp-6d240ab18af8.herokuapp.com";
 axios.defaults.withCredentials = true;
+
 function App() {
   return (
     <>
