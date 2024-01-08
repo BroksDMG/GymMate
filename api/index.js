@@ -25,7 +25,7 @@ app.use("/uploads", express.static(__dirname + "/uploads"));
 app.use(
   cors({
     credentials: true,
-    origin: process.env.CLIENT_URL,
+    origin: "https://main--poetic-duckanoo-7c796e.netlify.app",
   })
 );
 console.log(process.env.MONGO_URL);
