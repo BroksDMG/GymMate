@@ -69,15 +69,17 @@ function RegisterForm({ toggleForm }) {
           >
             <div className="w-full h-full px-8 flex flex-col justify-center items-center ">
               <label className=" text-3xl w-full  mt-12 h-1/6 flex relative md:w-3/4  lg:w-full lg:text-6xl">
-                <span className=" z-10  flex font-bold absolute top-0 left-0 lg:left-24 le lg:top-10">
-                  Create Account
-                  <div className="relative -translate-y-1 text-5xl translate-x-8 lg:text-7xl">
+                <span
+                  style={{ filter: "drop-shadow(0px 3px 0px  gray)" }}
+                  className=" z-10  flex font-bold gap-2"
+                >
+                  <p> Create Account</p>
+                  <div
+                    style={{ filter: "drop-shadow(0px 3px 0px  gray)" }}
+                    className="relative -translate-y-1 text-5xl  lg:text-7xl"
+                  >
                     <BsPersonVcardFill className=" z-10 absolute top-0 left-0 " />
-                    <BsPersonVcardFill className=" z-0 absolute top-[2px] text-gray-600 left-0 lg:top-1" />
                   </div>
-                </span>
-                <span className=" z-0 block font-bold absolute top-[2px] text-gray-600 left-0 lg:left-24 lg:top-11">
-                  Create Account
                 </span>
               </label>
               <label className="w-full h-full flex flex-col justify-center min-w-min max-h-max md:w-3/4 lg:w-full lg:pl-[30%] lg:h-1/2 lg:pb-10">
@@ -128,9 +130,12 @@ function RegisterForm({ toggleForm }) {
                   Confirm Password
                 </InputField>
                 <div className="flex w-full gap-5 items-end  mt-5">
-                  <Button style="bg-darkBluePrimary text-[10px] lg:text-base">
+                  <Button
+                    type="submit"
+                    textSize="text-[10px] sm:text-xs lg:text-base"
+                  >
                     Create Account
-                    <AiFillCheckCircle className="text-base relative translate-x-1 lg:text-xl" />
+                    <AiFillCheckCircle className="text-xs sm:text-base relative translate-x-1 lg:text-xl" />
                   </Button>
                   <div className="w-full">
                     <span className=" text-darkBluePrimary text-[10px] font-semibold lg:text-sm">
@@ -138,7 +143,7 @@ function RegisterForm({ toggleForm }) {
                     </span>
                     <Link to={"/login"} className="w-full">
                       <Button
-                        style="bg-darkBluePrimary text-[10px] lg:text-base"
+                        textSize="text-[10px] sm:text-xs lg:text-base"
                         onClick={() => toggleForm()}
                       >
                         Log in

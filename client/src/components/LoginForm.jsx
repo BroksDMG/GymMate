@@ -46,6 +46,10 @@ function LoginForm({ toggleForm }) {
   if (redirect) {
     return <Navigate to={"/events"} />;
   }
+  const rootFontSize = parseFloat(
+    getComputedStyle(document.documentElement).fontSize
+  );
+  console.log(`Aktualna wartość 1rem: ${rootFontSize}px`);
 
   return (
     <>
@@ -63,19 +67,22 @@ function LoginForm({ toggleForm }) {
 lg:rounded-tl-none lg:rounded-r-[2rem]"
           >
             <div className="w-full h-full px-8 flex flex-col justify-center items-center">
-              <label className="text-3xl w-full  mt-12 h-1/6 flex relative md:w-3/4  lg:w-full lg:text-6xl">
-                <span className="z-10  flex font-bold absolute top-0 left-0 lg:left-24 le lg:top-10">
-                  Login
-                  <div className="relative -translate-y-1 text-5xl translate-x-3 lg:text-7xl">
+              <label className="text-3xl w-full  h-1/6 flex relative md:w-3/4  lg:w-full lg:text-6xl">
+                <div
+                  style={{ filter: "drop-shadow(0px 3px 0px  gray)" }}
+                  className="z-10 mt-10 flex font-bold  "
+                >
+                  <p>Login</p>
+                  <div
+                    style={{ filter: "drop-shadow(0px 3px 0px  gray)" }}
+                    className="relative -translate-y-1 text-5xl translate-x-3 lg:text-7xl"
+                  >
                     <TbSquareRoundedArrowRightFilled className="z-10 absolute top-0 left-0" />
-                    <TbSquareRoundedArrowRightFilled className="z-0 absolute top-[2px] text-gray-600 left-0 lg:top-1" />
+                    {/* <TbSquareRoundedArrowRightFilled className="z-0 absolute top-[2px] text-gray-600 left-0 lg:top-1" /> */}
                   </div>
-                </span>
-                <span className="z-0 block font-bold absolute top-[2px] text-gray-600 left-0 lg:left-24 lg:top-11">
-                  Login
-                </span>
+                </div>
               </label>
-              <label className="w-full h-full flex flex-col justify-center min-w-min max-h-max md:w-3/4 lg:w-full lg:pr-[30%] lg:h-1/2 lg:pb-10">
+              <label className="w-full h-full flex flex-col justify-center sm:gap-2 lg:gap-0 min-w-min  md:w-3/4 lg:w-full lg:pr-[30%] lg:h-1/2 lg:pb-10">
                 <InputField
                   name="email"
                   type="email"
@@ -106,18 +113,18 @@ lg:rounded-tl-none lg:rounded-r-[2rem]"
                     </span>
                     <Link to={"/register"} className="w-full">
                       <Button
-                        style="bg-darkBluePrimary text-[10px] lg:text-base"
+                        textSize="text-[10px] sm:text-xs lg:text-base"
                         onClick={() => toggleForm()}
                       >
                         Create Account
-                        <AiFillCheckCircle className="text-base relative translate-x-1 lg:text-xl" />
+                        <AiFillCheckCircle className="text-xs sm:text-base relative translate-x-1 lg:text-xl" />
                       </Button>
                     </Link>
                   </div>
 
                   <Button
                     type="submit"
-                    style="bg-darkBluePrimary text-[10px] lg:text-base"
+                    textSize="text-[10px] sm:text-xs lg:text-base"
                   >
                     Log in
                     <RiArrowRightSFill className="text-base relative lg:text-2xl" />
