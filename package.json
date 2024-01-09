@@ -9,13 +9,12 @@
     "clientBiuld": "cd client && npm run build",
     "api": "cd api && nodemon index.js",
     "dev": "concurrently \"npm run client\" \"npm run api\"",
-    "build":"concurrently \"npm run clientBiuld\" \"npm run api\""
-    
-    
+    "build": "concurrently \"npm run clientBiuld\" \"npm run api\""
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "multer": "^1.4.5-lts.1"
   }
 }
