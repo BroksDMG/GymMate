@@ -11,9 +11,9 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MemberProfilPage from "./pages/MemberProfilPage.jsx";
 import MemberEventPage from "./pages/MemberEventPage.jsx";
-axios.defaults.baseURL = "https://gymmateapp-6d240ab18af8.herokuapp.com";
+// axios.defaults.baseURL = "https://gymmateapp-6d240ab18af8.herokuapp.com";
+axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 axios.defaults.withCredentials = true;
-
 function App() {
   return (
     <>
