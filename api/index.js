@@ -10,7 +10,6 @@ const imageDownloader = require("image-downloader");
 const fs = require("fs");
 const { rejects } = require("assert");
 const { fr } = require("date-fns/locale");
-const update = require("./middleware/upload.js");
 const multer = require("multer");
 
 require("dotenv").config();
@@ -47,42 +46,39 @@ app.get("/", (req, res) => {
   res.json("test ok");
 });
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+app.use("/", require("./routes/imagesRoute.js"));
 
-app.post(
-  "/upload-avatar-test",
-  update.array("avatar", 100),
-  async (req, res) => {
-    try {
-      const { files } = req;
-      const { userId } = req.body;
+// app.post(
+//   "/upload-avatar-test",
+//   update.array("avatar", 100),
+//   async (req, res) => {
+//     const { files } = req;
+//     const uniqueId = uuidv4();
+//     try {
+//       let ImagesLiblary = await Images.findById("global").exec();
+//       if (!ImagesLiblary) {
+//         res.status(400).json({ error: "can't finde image liblary" });
+//       }
 
-      if (!files || files.length === 0) {
-        res.status(400).json({ error: "No files" });
-      }
-      const user = await User.findById(userId);
-      if (!user) {
-        res.status(404).json({ error: "User not found" });
-      }
-      const photosBinary = files.map((file) => ({
-        buffer: file.buffer,
-      }));
-      photosBinary.map((photo) => {
-        user.avatar.push(photo);
-      });
-      // user.avatar.push(photosBinary);
-      // await user.save();
-      console.log(user);
-      res.json("ok");
-    } catch (error) {
-      console.error("Błąd podczas rejestracji użytkownika:", error);
-      res
-        .status(500)
-        .json({ error: "Wystąpił błąd podczas rejestracji użytkownika." });
-    }
-  }
-);
+//       if (!files || files.length === 0) {
+//         res.status(400).json({ error: "No files" });
+//       }
+
+//       const photosBinary = files.map((file) => ({
+//         imageBinary: file.buffer,
+//         imageId: uniqueId,
+//       }));
+//       photosBinary.map((photo) => {
+//         ImagesLiblary.images.push(photo);
+//       });
+//       await ImagesLiblary.save();
+//       res.json(photosBinary);
+//     } catch (error) {
+//       console.error("Błąd podczas uploadu:", error);
+//       res.status(500).json({ error: "Błąd podczas uploadu." });
+//     }
+//   }
+// );
 
 app.post("/register", async (req, res) => {
   const { name, surname, email, password } = req.body;
