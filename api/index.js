@@ -7,10 +7,11 @@ const User = require("./models/User.js");
 const Event = require("./models/Event.js");
 const cookieParser = require("cookie-parser");
 const imageDownloader = require("image-downloader");
-const multer = require("multer");
 const fs = require("fs");
 const { rejects } = require("assert");
 const { fr } = require("date-fns/locale");
+const update = require("./middleware/upload.js");
+const multer = require("multer");
 
 require("dotenv").config();
 const app = express();
@@ -45,6 +46,43 @@ mongoose.connection.on("connected", () => {
 app.get("/", (req, res) => {
   res.json("test ok");
 });
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+app.post(
+  "/upload-avatar-test",
+  update.array("avatar", 100),
+  async (req, res) => {
+    try {
+      const { files } = req;
+      const { userId } = req.body;
+
+      if (!files || files.length === 0) {
+        res.status(400).json({ error: "No files" });
+      }
+      const user = await User.findById(userId);
+      if (!user) {
+        res.status(404).json({ error: "User not found" });
+      }
+      const photosBinary = files.map((file) => ({
+        buffer: file.buffer,
+      }));
+      photosBinary.map((photo) => {
+        user.avatar.push(photo);
+      });
+      // user.avatar.push(photosBinary);
+      // await user.save();
+      console.log(user);
+      res.json("ok");
+    } catch (error) {
+      console.error("Błąd podczas rejestracji użytkownika:", error);
+      res
+        .status(500)
+        .json({ error: "Wystąpił błąd podczas rejestracji użytkownika." });
+    }
+  }
+);
 
 app.post("/register", async (req, res) => {
   const { name, surname, email, password } = req.body;
