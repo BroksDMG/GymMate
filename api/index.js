@@ -47,7 +47,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/", require("./routes/imagesRoute.js"));
-
+app.use("/user", require("./routes/userRoute.js"));
 // app.post(
 //   "/upload-avatar-test",
 //   update.array("avatar", 100),
