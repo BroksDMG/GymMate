@@ -46,39 +46,8 @@ app.get("/", (req, res) => {
   res.json("test ok");
 });
 
-app.use("/", require("./routes/imagesRoute.js"));
+app.use("/images", require("./routes/imagesRoute.js"));
 app.use("/user", require("./routes/userRoute.js"));
-// app.post(
-//   "/upload-avatar-test",
-//   update.array("avatar", 100),
-//   async (req, res) => {
-//     const { files } = req;
-//     const uniqueId = uuidv4();
-//     try {
-//       let ImagesLiblary = await Images.findById("global").exec();
-//       if (!ImagesLiblary) {
-//         res.status(400).json({ error: "can't finde image liblary" });
-//       }
-
-//       if (!files || files.length === 0) {
-//         res.status(400).json({ error: "No files" });
-//       }
-
-//       const photosBinary = files.map((file) => ({
-//         imageBinary: file.buffer,
-//         imageId: uniqueId,
-//       }));
-//       photosBinary.map((photo) => {
-//         ImagesLiblary.images.push(photo);
-//       });
-//       await ImagesLiblary.save();
-//       res.json(photosBinary);
-//     } catch (error) {
-//       console.error("Błąd podczas uploadu:", error);
-//       res.status(500).json({ error: "Błąd podczas uploadu." });
-//     }
-//   }
-// );
 
 app.post("/register", async (req, res) => {
   const { name, surname, email, password } = req.body;
@@ -185,15 +154,15 @@ app.post("/logout", (req, res) => {
   res.cookie("token", "").json(true);
 });
 
-app.post("/upload-by-link", async (req, res) => {
-  const { link } = req.body;
-  const newName = "photo" + Date.now() + ".jpg";
-  await imageDownloader.image({
-    url: link,
-    dest: __dirname + "/uploads/" + newName,
-  });
-  res.json(newName);
-});
+// app.post("/upload-by-link", async (req, res) => {
+//   const { link } = req.body;
+//   const newName = "photo" + Date.now() + ".jpg";
+//   await imageDownloader.image({
+//     url: link,
+//     dest: __dirname + "/uploads/" + newName,
+//   });
+//   res.json(newName);
+// });
 
 const photosMiddleware = multer({ dest: "uploads/" });
 app.post("/upload", photosMiddleware.array("photos", 100), (req, res) => {

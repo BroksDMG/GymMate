@@ -11,6 +11,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MemberProfilPage from "./pages/MemberProfilPage.jsx";
 import MemberEventPage from "./pages/MemberEventPage.jsx";
+import SettingsPage from "./pages/SettingsPage.jsx";
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 axios.defaults.withCredentials = true;
 function App() {
@@ -32,6 +33,7 @@ function App() {
             ></Route>
             <Route path="/events/new" element={<MakeEventPage />}></Route>
             <Route path="/events/:id" element={<MakeEventPage />}></Route>
+            <Route path="/settings" element={<SettingsPage />}></Route>
           </Route>
         </Routes>
       </UserContextProvider>

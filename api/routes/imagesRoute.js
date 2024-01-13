@@ -8,6 +8,6 @@ router.post(
   upload.array("avatar", 100),
   imagesController.uploadImages
 );
+router.get("/get-imageById/:imageId", imagesController.getImageById);
 router.get("/get-images", imagesController.getImages);
-
 module.exports = router;

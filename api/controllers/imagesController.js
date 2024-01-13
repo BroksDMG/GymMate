@@ -28,10 +28,34 @@ const uploadImages = async (req, res) => {
     res.status(500).json({ error: "Błąd podczas uploadu." });
   }
 };
-const getImages = (req, res) => {
-  res.json("test ok");
+const getImageById = async (req, res) => {
+  const { imageId } = req.params;
+  try {
+    const images = await Images.findById("gloabl").exec();
+    if (!images) {
+      return res.status(400).json({ error: "can't finde image liblary" });
+    }
+    if (!imageId) {
+      return res.status(400).json({ error: "can't finde images id" });
+    }
+    const imageToReturn = images.images.filter(
+      (image) => image.imageId !== imageId
+    );
+
+    res.json(imageToReturn);
+  } catch (error) {
+    console.error("Błąd podczas pobierania:", error);
+    res.status(500).json({ error: "Błąd podczas pobierania." });
+  }
+};
+const getImages = async (req, res) => {
+  const { test } = req;
+  console.log(test);
+
+  res.json(test);
 };
 module.exports = {
   uploadImages,
+  getImageById,
   getImages,
 };
