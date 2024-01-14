@@ -1,22 +1,28 @@
 import { useState, useEffect } from "react";
 
-function useBinaryToImage(binaryData) {
-  const [imageUrl, setImageUrl] = useState(null);
+function useImagesFromBinaryArray(binaryArray) {
+  const [imageUrls, setImageUrls] = useState([]);
 
   useEffect(() => {
-    if (binaryData) {
-      const blob = new Blob([binaryData], { type: "image/jpeg" });
-      const url = URL.createObjectURL(blob);
-      setImageUrl(url);
-
-      // Clean up function to revoke the object URL
+    if (binaryArray.length === 0) return;
+    try {
+      const urlarray = binaryArray.map((binaryData) => {
+        const blob = new Blob([binaryData], { type: "image/jpeg" });
+        return URL.createObjectURL(blob);
+      });
+      setImageUrls(urlarray);
+      console.log(urlarray);
       return () => {
-        URL.revokeObjectURL(url);
+        urlarray.forEach((url) => {
+          URL.revokeObjectURL(url);
+        });
       };
+    } catch (error) {
+      console.error("Failed to convert binary data to image URL:", error);
     }
-  }, [binaryData]);
-
-  return imageUrl;
+  }, []); // Add binaryArray to the dependency array
+  console.log(imageUrls);
+  return imageUrls;
 }
 
-export default useBinaryToImage;
+export default useImagesFromBinaryArray;

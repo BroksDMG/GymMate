@@ -43,10 +43,10 @@ const getImageById = async (req, res) => {
       (image) => image.imageId !== imageId
     );
 
-    res.json(imageToReturn);
+    return res.json(imageToReturn);
   } catch (error) {
     console.error("Błąd podczas pobierania:", error);
-    res.status(500).json({ error: "Błąd podczas pobierania." });
+    return res.status(500).json({ error: "Błąd podczas pobierania." });
   }
 };
 const getImages = async (req, res) => {
@@ -63,10 +63,10 @@ const getImages = async (req, res) => {
     const imageToReturn = imagesArray.map((imageId) =>
       imagesLiblary.images.find((image) => image.imageId === imageId)
     );
-    res.json(imageToReturn);
+    return res.json(imageToReturn);
   } catch (error) {
     console.error("Błąd podczas pobierania:", error);
-    res.status(500).json({ error: "Błąd podczas pobierania." });
+    return res.status(500).json({ error: "Błąd podczas pobierania." });
   }
 
   res.json(imagesArray);
