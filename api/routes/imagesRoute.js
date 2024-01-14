@@ -5,7 +5,7 @@ const upload = require("../middleware/upload");
 
 router.post(
   "/upload-images",
-  upload.array("avatar", 100),
+  upload.array("files", 100),
   imagesController.uploadImages
 );
 router.get("/get-imageById/:imageId", imagesController.getImageById);
