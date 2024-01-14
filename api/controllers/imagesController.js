@@ -50,10 +50,26 @@ const getImageById = async (req, res) => {
   }
 };
 const getImages = async (req, res) => {
-  const { test } = req;
-  console.log(test);
+  const { images } = req.query;
+  const imagesArray = images.split(",");
+  try {
+    const imagesLiblary = await Images.findById("gloabl").exec();
+    if (!imagesLiblary) {
+      return res.status(400).json({ error: "can't finde image liblary" });
+    }
+    if (!imagesArray > 0) {
+      return res.status(400).json({ error: "can't finde images" });
+    }
+    const imageToReturn = imagesArray.map((imageId) =>
+      imagesLiblary.images.find((image) => image.imageId === imageId)
+    );
+    res.json(imageToReturn);
+  } catch (error) {
+    console.error("Błąd podczas pobierania:", error);
+    res.status(500).json({ error: "Błąd podczas pobierania." });
+  }
 
-  res.json(test);
+  res.json(imagesArray);
 };
 module.exports = {
   uploadImages,

@@ -9,10 +9,6 @@ function SettingsPage() {
       for (let file of files) {
         formData.append("files", file);
       }
-      // Log FormData entries
-      for (let pair of formData.entries()) {
-        console.log(pair[0] + ", " + pair[1]);
-      }
 
       try {
         const respone = await axios.post("/images/upload-images", formData, {
