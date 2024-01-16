@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const imagesSchema = new mongoose.Schema(
   {
     _id: { type: String, default: "gloabl" },
-    images: [{ imageBinary: Object, imageId: String }],
+    images: [{ imageData: Object, imageId: String }],
   },
   { _id: false }
 );

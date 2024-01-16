@@ -3,7 +3,6 @@ const Images = require("../models/Images.js");
 
 const uploadImages = async (req, res) => {
   const { files } = req;
-
   try {
     let ImagesLiblary = await Images.findById("gloabl").exec();
     if (!ImagesLiblary) {
@@ -16,7 +15,7 @@ const uploadImages = async (req, res) => {
     }
 
     const photosBinary = files.map((file) => ({
-      imageBinary: file.buffer,
+      imageData: file,
       imageId: uuidv4(),
     }));
     photosBinary.map((photo) => {
@@ -51,6 +50,7 @@ const getImageById = async (req, res) => {
 };
 const getImages = async (req, res) => {
   const { images } = req.query;
+  console.log(images);
   const imagesArray = images.split(",");
   try {
     const imagesLiblary = await Images.findById("gloabl").exec();
@@ -68,8 +68,6 @@ const getImages = async (req, res) => {
     console.error("Błąd podczas pobierania:", error);
     return res.status(500).json({ error: "Błąd podczas pobierania." });
   }
-
-  res.json(imagesArray);
 };
 module.exports = {
   uploadImages,

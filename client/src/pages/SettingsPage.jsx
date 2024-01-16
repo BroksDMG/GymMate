@@ -5,13 +5,12 @@ import useImagesFromBinaryArray from "../components/hooks/useBinaryToImage";
 function SettingsPage() {
   const [files, setFiles] = useState([]);
   const [imagesData, setImagesData] = useState([
-    { imageBinary: "binary", imageId: "9740cbe9-9ace-4da3-b754-19df5ffa8267" },
-    { imageBinary: "binary", imageId: "40b698f7-21f0-4c8b-821e-b86ea0db9bb5" },
+    { imageBinary: "binary", imageId: "438f93c4-0ae2-442d-b6de-cf68691bb2af" },
+    { imageBinary: "binary", imageId: "b5b8b74b-9270-47f9-8f97-f72163ccf03d" },
   ]);
+
   const [isLoaded, setIsLoaded] = useState(false);
   const [downloadedImages, setDownloadedImages] = useState([]);
-  const [imagesUrls, setImagesUrls] = useState([]);
-
   useEffect(() => {
     if (files.length === 0) return;
     async function uploadFiles() {
@@ -79,19 +78,18 @@ function SettingsPage() {
     }
     getImages();
   }, [imagesData]);
-  console.log(downloadedImages);
+  // console.log(downloadedImages);
   // Funkcja do konwersji binarnych danych na URL obrazu
-  const convertBinaryToImage = (binaryData) => {
-    const base64Image = binaryData?.toString("base64");
-    const imageUrl = `data:${"image/jpeg"};base64,${base64Image}`;
+  const convertBinaryToImage = (imageData) => {
+    const base64Image = imageData?.buffer.toString("base64");
+    const imageUrl = `data:${imageData?.mimetype};base64,${base64Image}`;
     return imageUrl;
   };
   const [imageUrls, setImageUrls] = useState([]);
-  // const binaryArray = downloadedImages.map((image) => image.imageBinary);
-  // const binaryArray = useMemo(
+  // const binaryArr = downloadedImages.map((image) => image.imageBinary);
+  // const binaryArr = useMemo(
   //   () =>
-  //     downloadedImages.map((image) => {
-  //       console.log("imageBinary data:", image.imageBinary); // Add this line
+  //     downloadedImages.map((image) => { // Add this line
   //       const base64Data = image.imageBinary.split(",")[1];
   //       if (!base64Data) {
   //         console.error("Invalid imageBinary data:", image.imageBinary);
@@ -106,29 +104,47 @@ function SettingsPage() {
   //     }),
   //   [downloadedImages]
   // );
-  // console.log(binaryArray);
-  // const imagesUrlsfromBinary = useImagesFromBinaryArray(imagebinary);
-  // console.log(imagesUrlsfromBinary);
-  // console.log([imagebinary]);
-  // useEffect(() => {
-  //   if (binaryArray.length === 0) return;
-  //   try {
-  //     const urlarray = binaryArray.map((binaryData) => {
-  //       const blob = new Blob([binaryData], { type: "image/jpeg" });
-  //       return URL.createObjectURL(blob);
-  //     });
-  //     setImageUrls(urlarray);
-  //     return () => {
-  //       urlarray.forEach((url) => {
-  //         URL.revokeObjectURL(url);
-  //       });
-  //     };
-  //   } catch (error) {
-  //     console.error("Failed to convert binary data to image URL:", error);
-  //   }
-  // }, [binaryArray]);
-  // console.log(imageUrls);
-  // console.log(imagesUrlsfromBinary);
+  useEffect(() => {
+    if (downloadedImages.length === 0) return;
+    try {
+      const urlarray = downloadedImages
+        .map((image) => {
+          const base64Data = image?.imageData.buffer;
+          if (!base64Data) {
+            console.error(
+              "Invalid imageData.buffer data:",
+              image?.imageData.buffer
+            );
+            return null;
+          }
+          let binaryString;
+          try {
+            binaryString = window.atob(base64Data); // Decode base64
+          } catch (error) {
+            console.error("Failed to decode base64 string:", base64Data, error);
+            return null;
+          }
+          const len = binaryString.length;
+          const bytes = new Uint8Array(len);
+          for (let i = 0; i < len; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+          }
+          const blob = new Blob([bytes.buffer], {
+            type: image.imageData.mimetype,
+          });
+          return window.URL.createObjectURL(blob);
+        })
+        .filter(Boolean);
+      setImageUrls(urlarray);
+      return () => {
+        urlarray.forEach((url) => {
+          URL.revokeObjectURL(url);
+        });
+      };
+    } catch (error) {
+      console.error("Failed to convert binary data to image URL:", error);
+    }
+  }, [downloadedImages]);
   return (
     <div>
       Settings
@@ -138,12 +154,14 @@ function SettingsPage() {
         multiple
         onChange={(e) => setFiles(e.target.files)}
       />
+      {imageUrls.map((url, key) => {
+        return <img key={key} src={url} alt={"image" + key} />;
+      })}
       {downloadedImages.map((imageData, key) => {
-        console.log(convertBinaryToImage(imageData.imageBinary));
         return (
           <img
             key={key}
-            src={convertBinaryToImage(imageData.imageBinary)}
+            src={convertBinaryToImage(imageData.imageData)}
             alt={"binaryIMG" + key}
           />
         );
