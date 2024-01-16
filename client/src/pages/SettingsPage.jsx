@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import useImagesFromBinaryArray from "../components/hooks/useBinaryToImage";
 
@@ -78,73 +78,8 @@ function SettingsPage() {
     }
     getImages();
   }, [imagesData]);
-  // console.log(downloadedImages);
-  // Funkcja do konwersji binarnych danych na URL obrazu
-  const convertBinaryToImage = (imageData) => {
-    const base64Image = imageData?.buffer.toString("base64");
-    const imageUrl = `data:${imageData?.mimetype};base64,${base64Image}`;
-    return imageUrl;
-  };
-  const [imageUrls, setImageUrls] = useState([]);
-  // const binaryArr = downloadedImages.map((image) => image.imageBinary);
-  // const binaryArr = useMemo(
-  //   () =>
-  //     downloadedImages.map((image) => { // Add this line
-  //       const base64Data = image.imageBinary.split(",")[1];
-  //       if (!base64Data) {
-  //         console.error("Invalid imageBinary data:", image.imageBinary);
-  //         return new Uint8Array();
-  //       }
-  //       let binary = atob(base64Data);
-  //       let array = [];
-  //       for (let i = 0; i < binary.length; i++) {
-  //         array.push(binary.charCodeAt(i));
-  //       }
-  //       return new Uint8Array(array);
-  //     }),
-  //   [downloadedImages]
-  // );
-  useEffect(() => {
-    if (downloadedImages.length === 0) return;
-    try {
-      const urlarray = downloadedImages
-        .map((image) => {
-          const base64Data = image?.imageData.buffer;
-          if (!base64Data) {
-            console.error(
-              "Invalid imageData.buffer data:",
-              image?.imageData.buffer
-            );
-            return null;
-          }
-          let binaryString;
-          try {
-            binaryString = window.atob(base64Data); // Decode base64
-          } catch (error) {
-            console.error("Failed to decode base64 string:", base64Data, error);
-            return null;
-          }
-          const len = binaryString.length;
-          const bytes = new Uint8Array(len);
-          for (let i = 0; i < len; i++) {
-            bytes[i] = binaryString.charCodeAt(i);
-          }
-          const blob = new Blob([bytes.buffer], {
-            type: image.imageData.mimetype,
-          });
-          return window.URL.createObjectURL(blob);
-        })
-        .filter(Boolean);
-      setImageUrls(urlarray);
-      return () => {
-        urlarray.forEach((url) => {
-          URL.revokeObjectURL(url);
-        });
-      };
-    } catch (error) {
-      console.error("Failed to convert binary data to image URL:", error);
-    }
-  }, [downloadedImages]);
+
+  const imageUrls = useImagesFromBinaryArray(downloadedImages);
   return (
     <div>
       Settings
@@ -156,15 +91,6 @@ function SettingsPage() {
       />
       {imageUrls.map((url, key) => {
         return <img key={key} src={url} alt={"image" + key} />;
-      })}
-      {downloadedImages.map((imageData, key) => {
-        return (
-          <img
-            key={key}
-            src={convertBinaryToImage(imageData.imageData)}
-            alt={"binaryIMG" + key}
-          />
-        );
       })}
     </div>
   );

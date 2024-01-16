@@ -1,17 +1,40 @@
 import { useState, useEffect } from "react";
 
-function useImagesFromBinaryArray(binaryArray) {
+function useImagesFromBinaryArray(downloadedImages) {
   const [imageUrls, setImageUrls] = useState([]);
 
   useEffect(() => {
-    if (binaryArray.length === 0) return;
+    if (downloadedImages.length === 0) return;
     try {
-      const urlarray = binaryArray.map((binaryData) => {
-        const blob = new Blob([binaryData], { type: "image/jpeg" });
-        return URL.createObjectURL(blob);
-      });
+      const urlarray = downloadedImages
+        .map((image) => {
+          const base64Data = image?.imageData.buffer;
+          if (!base64Data) {
+            console.error(
+              "Invalid imageData.buffer data:",
+              image?.imageData.buffer
+            );
+            return null;
+          }
+          let binaryString;
+          try {
+            binaryString = window.atob(base64Data); // Decode base64
+          } catch (error) {
+            console.error("Failed to decode base64 string:", base64Data, error);
+            return null;
+          }
+          const len = binaryString.length;
+          const bytes = new Uint8Array(len);
+          for (let i = 0; i < len; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+          }
+          const blob = new Blob([bytes.buffer], {
+            type: image.imageData.mimetype,
+          });
+          return window.URL.createObjectURL(blob);
+        })
+        .filter(Boolean);
       setImageUrls(urlarray);
-      console.log(urlarray);
       return () => {
         urlarray.forEach((url) => {
           URL.revokeObjectURL(url);
@@ -20,8 +43,8 @@ function useImagesFromBinaryArray(binaryArray) {
     } catch (error) {
       console.error("Failed to convert binary data to image URL:", error);
     }
-  }, []); // Add binaryArray to the dependency array
-  console.log(imageUrls);
+  }, [downloadedImages]);
+
   return imageUrls;
 }
 
