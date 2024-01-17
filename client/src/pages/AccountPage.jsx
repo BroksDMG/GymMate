@@ -91,13 +91,13 @@ function AccountPage() {
                     style={{ boxShadow: "0px 5px 0px rgb(156 163 175)" }}
                     className="absolute top-5 lg:top-16 h-[9rem] w-[9rem] lg:w-[12rem] lg:h-[12rem] bg-gra flex justify-center items-center bg-darkBluePrimary rounded-full object-cover object-center"
                   >
-                    <PhotosUploder
+                    {/* <PhotosUploder
                       name="avatar"
                       addedPhotos={values.avatar}
                       onChange={handlePhotoChange}
                       backgroundStyles={`w-[8rem] h-[8rem] lg:w-[11rem] lg:h-[11rem] rounded-full  `}
                       isUserAvatar={true}
-                    />
+                    /> */}
                   </div>
                   <div className="relative top-44 lg:top-[17rem] ">
                     <Button type="submit">save changes</Button>

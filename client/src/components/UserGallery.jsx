@@ -6,7 +6,8 @@ import propTypes from "prop-types";
 import { UserContext } from "./UserContext";
 import { BsPlusCircleDotted } from "react-icons/bs";
 import Button from "./Button";
-
+import useGetImagesFromDataBase from "./hooks/useGetImagesFromDataBase";
+import useImagesFromBinaryArray from "./hooks/useBinaryToImage";
 function UserGallery({ onChange, value, memberGallery = false }) {
   const [activeImage, setActiveImage] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(null);
@@ -32,6 +33,11 @@ function UserGallery({ onChange, value, memberGallery = false }) {
     setActiveImage(false);
     setActiveImageIndex(null);
   };
+  const [downloadedImages, error] = useGetImagesFromDataBase(photos);
+  if (error) console.error(error);
+  const imageUrls = useImagesFromBinaryArray(downloadedImages);
+  console.log(downloadedImages);
+  console.log(imageUrls);
   return (
     <div className="px-2 w-full sm:px-10 md:px-20 lg:px-10 xl:px-20">
       <div>
@@ -47,7 +53,7 @@ function UserGallery({ onChange, value, memberGallery = false }) {
                   {photos?.length > 0 ? (
                     <img
                       className="w-full h-36 md:h-64 object-cover "
-                      src={`http://127.0.0.1:4000/uploads/${photos[0]}`}
+                      src={imageUrls?.at(0)}
                     />
                   ) : (
                     <div className="w-full h-full flex justify-center  bg-lightBrown text-6xl lg:text-8xl ">

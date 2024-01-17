@@ -50,7 +50,6 @@ const getImageById = async (req, res) => {
 };
 const getImages = async (req, res) => {
   const { images } = req.query;
-  console.log(images);
   const imagesArray = images.split(",");
   try {
     const imagesLiblary = await Images.findById("gloabl").exec();

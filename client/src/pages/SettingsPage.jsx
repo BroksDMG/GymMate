@@ -8,8 +8,6 @@ function SettingsPage() {
     { imageBinary: "binary", imageId: "438f93c4-0ae2-442d-b6de-cf68691bb2af" },
     { imageBinary: "binary", imageId: "b5b8b74b-9270-47f9-8f97-f72163ccf03d" },
   ]);
-
-  const [isLoaded, setIsLoaded] = useState(false);
   const [downloadedImages, setDownloadedImages] = useState([]);
   useEffect(() => {
     if (files.length === 0) return;
@@ -56,7 +54,6 @@ function SettingsPage() {
           `/images/get-images?images=${imageIds.join(",")}`
         );
         setDownloadedImages(respone.data);
-        setIsLoaded(true);
       } catch (error) {
         if (error.response) {
           // The request was made and the server responded with a status code
@@ -78,7 +75,7 @@ function SettingsPage() {
     }
     getImages();
   }, [imagesData]);
-
+  console.log(downloadedImages);
   const imageUrls = useImagesFromBinaryArray(downloadedImages);
   return (
     <div>

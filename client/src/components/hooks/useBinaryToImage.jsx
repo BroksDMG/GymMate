@@ -23,7 +23,7 @@ function useImagesFromBinaryArray(downloadedImages) {
             console.error("Failed to decode base64 string:", base64Data, error);
             return null;
           }
-          const len = binaryString.length;
+          const len = base64Data.length;
           const bytes = new Uint8Array(len);
           for (let i = 0; i < len; i++) {
             bytes[i] = binaryString.charCodeAt(i);

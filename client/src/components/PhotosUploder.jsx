@@ -1,11 +1,14 @@
 import axios from "axios";
 import propTypes from "prop-types";
 import { UserContext } from "./UserContext";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AiFillPlusCircle } from "react-icons/ai";
 import { BsPlusCircleDotted } from "react-icons/bs";
 import { FaRegTrashAlt } from "react-icons/fa";
 import userDefaultAvatar from "../assets/user-128.png";
+import useImagesFromBinaryArray from "./hooks/useBinaryToImage";
+import useGetImagesFromDataBase from "./hooks/useGetImagesFromDataBase";
+import { useState } from "react";
 export default function PhotosUploder({
   addedPhotos,
   onChange,
@@ -14,29 +17,61 @@ export default function PhotosUploder({
   isDisplayOnly = false,
 }) {
   const { user } = useContext(UserContext);
-  function uploadPhotos(e) {
-    const files = e.target.files;
-    const data = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      data.append("photos", files[i]);
+  const [files, setFiles] = useState([]);
+  const [imagesData, setImagesData] = useState([]);
+  // { imageBinary: "binary", imageId: "438f93c4-0ae2-442d-b6de-cf68691bb2af" },
+  // { imageBinary: "binary", imageId: "b5b8b74b-9270-47f9-8f97-f72163ccf03d" },
+  // const [downloadedImages, setDownloadedImages] = useState([]);
+  useEffect(() => {
+    if (files.length === 0) return;
+    async function uploadFiles() {
+      const formData = new FormData();
+      for (let file of files) {
+        formData.append("files", file);
+      }
+
+      try {
+        const respone = await axios.post("/images/upload-images", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        setImagesData([respone.data[0]]);
+      } catch (error) {
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          console.log(error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log("Error", error.message);
+        }
+        console.log(error.config);
+      }
     }
-    axios
-      .post("/upload", data, {
-        headers: { "Content-Type": "mulipart/form-data" },
-      })
-      .then((res) => {
-        const { data: filenames } = res;
-        onChange([filenames[0]]);
-      });
-  }
+    uploadFiles();
+  }, [files]);
+  const [downloadedImages, error] = useGetImagesFromDataBase(imagesData);
+  if (error) console.error(error);
+
+  const imageUrls = useImagesFromBinaryArray(downloadedImages);
+  onChange(downloadedImages);
   function removePhoto(ev, fileName) {
     ev.preventDefault();
     onChange([...addedPhotos.filter((photo) => photo !== fileName)]);
   }
-  // function selectAsMainPhoto(ev, fileName) {
-  //   ev.preventDefault();
-  //   onChange([fileName, ...addedPhotos.filter((photo) => photo !== fileName)]);
-  // }
+
+  // const addedImageUrls = useImagesFromBinaryArray(addedPhotos);
+  // // function selectAsMainPhoto(ev, fileName) {
+  // //   ev.preventDefault();
+  // //   onChange([fileName, ...addedPhotos.filter((photo) => photo !== fileName)]);
+  // // }
+  // console.log(imageUrls);
   return (
     <>
       <div
@@ -61,7 +96,7 @@ export default function PhotosUploder({
               type="file"
               multiple
               className="hidden"
-              onChange={uploadPhotos}
+              onChange={(e) => setFiles(e.target.files)}
             />
           </label>
         )}
@@ -79,7 +114,7 @@ export default function PhotosUploder({
             addedPhotos?.length === 0 && (
               <>
                 <img
-                  src={`http://127.0.0.1:4000/uploads/${user?.avatar[0]}`}
+                  src={imageUrls?.at(0)}
                   alt="eventImageBacground"
                   className={`${backgroundStyles}  object-center object-cover `}
                 />
@@ -101,7 +136,7 @@ export default function PhotosUploder({
             addedPhotos.map((link) => (
               <div className="w-full" key={link}>
                 <img
-                  src={`http://127.0.0.1:4000/uploads/${link}`}
+                  src={imageUrls?.at(0)}
                   alt="adedeventImageBacground"
                   className={`${backgroundStyles}  object-center object-cover `}
                 />
