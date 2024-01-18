@@ -7,6 +7,7 @@ const useGetImagesFromDataBase = (imagesData) => {
 
   useEffect(() => {
     if (imagesData.length === 0) return;
+    console.log(imagesData);
     const imageIds = imagesData.map((imageData) => imageData.imageId);
     async function getImages() {
       try {

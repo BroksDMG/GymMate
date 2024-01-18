@@ -41,7 +41,7 @@ function AccountPage() {
   const initialFormValues = {
     avatar: user?.avatar || [],
     userDescription: user?.userDescription || "",
-    gallery: user?.gallery || [{ imageDescription: "", photos: [] }],
+    gallery: user?.gallery || [{ imageDescription: "", imageId: [] }],
   };
   if (!ready) {
     return "Loading...";
@@ -81,7 +81,14 @@ function AccountPage() {
             setFieldValue("avatar", photo);
           };
           const handleGalleryChange = (galleryItem) => {
-            setFieldValue("gallery", [...values.gallery, galleryItem]);
+            console.log(galleryItem);
+            setFieldValue("gallery", [
+              ...values.gallery,
+              {
+                imageDescription: galleryItem.imageDescription,
+                imageId: galleryItem.photos[0].imageId,
+              },
+            ]);
           };
           return (
             <Form className=" flex  items-center flex-col lg:items-start lg:mb-10 ">

@@ -7,7 +7,7 @@ const UserSchema = new Schema({
   email: { type: String, unique: true },
   password: String,
   avatar: [{ type: Object }],
-  gallery: [{ photos: [String], imageDescription: String }],
+  gallery: [{ imageId: [String], imageDescription: String }],
   userDescription: String,
   friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],

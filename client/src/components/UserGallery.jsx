@@ -33,11 +33,17 @@ function UserGallery({ onChange, value, memberGallery = false }) {
     setActiveImage(false);
     setActiveImageIndex(null);
   };
-  const [downloadedImages, error] = useGetImagesFromDataBase(photos);
-  if (error) console.error(error);
+  const [downloadedImages, errorUpload] = useGetImagesFromDataBase(photos);
+  if (errorUpload) console.error(errorUpload);
   const imageUrls = useImagesFromBinaryArray(downloadedImages);
-  console.log(downloadedImages);
-  console.log(imageUrls);
+  const [downloadedImagesGallery, errorDownload] =
+    useGetImagesFromDataBase(value);
+  if (errorDownload) console.error(errorDownload);
+  const imageUrlsGallery = useImagesFromBinaryArray(downloadedImagesGallery);
+  console.log("imagesGalerry", imageUrlsGallery);
+  console.log("value", value);
+  console.log("Pobrane", downloadedImages);
+
   return (
     <div className="px-2 w-full sm:px-10 md:px-20 lg:px-10 xl:px-20">
       <div>
@@ -75,9 +81,7 @@ function UserGallery({ onChange, value, memberGallery = false }) {
                     <button onClick={() => handleImageClick(i)}>
                       <img
                         className="w-full h-36 md:h-64 object-cover rounded-lg"
-                        src={`http://127.0.0.1:4000/uploads/${galleryyItem?.photos?.at(
-                          0
-                        )}`}
+                        src={imageUrlsGallery?.at(0)}
                       />
                     </button>
                     <p className="text-base sm:text-lg lg:text-xl ">
@@ -202,4 +206,5 @@ export default UserGallery;
 UserGallery.propTypes = {
   onChange: propTypes.func,
   value: propTypes.array,
+  memberGallery: propTypes.bool,
 };
