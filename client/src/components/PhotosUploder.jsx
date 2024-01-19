@@ -19,9 +19,6 @@ export default function PhotosUploder({
   const { user } = useContext(UserContext);
   const [files, setFiles] = useState([]);
   const [imagesData, setImagesData] = useState([]);
-  // { imageBinary: "binary", imageId: "438f93c4-0ae2-442d-b6de-cf68691bb2af" },
-  // { imageBinary: "binary", imageId: "b5b8b74b-9270-47f9-8f97-f72163ccf03d" },
-  // const [downloadedImages, setDownloadedImages] = useState([]);
   useEffect(() => {
     if (files.length === 0) return;
     async function uploadFiles() {
@@ -29,7 +26,6 @@ export default function PhotosUploder({
       for (let file of files) {
         formData.append("files", file);
       }
-
       try {
         const respone = await axios.post("/images/upload-images", formData, {
           headers: { "Content-Type": "multipart/form-data" },
@@ -60,7 +56,8 @@ export default function PhotosUploder({
   if (error) console.error(error);
 
   const imageUrls = useImagesFromBinaryArray(downloadedImages);
-  onChange(downloadedImages);
+  onChange(imageUrls);
+
   function removePhoto(ev, fileName) {
     ev.preventDefault();
     onChange([...addedPhotos.filter((photo) => photo !== fileName)]);
@@ -71,7 +68,6 @@ export default function PhotosUploder({
   // //   ev.preventDefault();
   // //   onChange([fileName, ...addedPhotos.filter((photo) => photo !== fileName)]);
   // // }
-  // console.log(imageUrls);
   return (
     <>
       <div
@@ -135,8 +131,9 @@ export default function PhotosUploder({
           {addedPhotos?.length > 0 &&
             addedPhotos.map((link) => (
               <div className="w-full" key={link}>
+                {console.log(link?.imageData?.url)}
                 <img
-                  src={imageUrls?.at(0)}
+                  src={link?.imageData?.url}
                   alt="adedeventImageBacground"
                   className={`${backgroundStyles}  object-center object-cover `}
                 />

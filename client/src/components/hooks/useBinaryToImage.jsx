@@ -31,13 +31,14 @@ function useImagesFromBinaryArray(downloadedImages) {
           const blob = new Blob([bytes.buffer], {
             type: image.imageData.mimetype,
           });
-          return window.URL.createObjectURL(blob);
+          image.imageData.url = window.URL.createObjectURL(blob);
+          return image;
         })
         .filter(Boolean);
       setImageUrls(urlarray);
       return () => {
         urlarray.forEach((url) => {
-          URL.revokeObjectURL(url);
+          URL.revokeObjectURL(url.imageData);
         });
       };
     } catch (error) {
