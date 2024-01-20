@@ -56,13 +56,15 @@ export default function PhotosUploder({
   if (error) console.error(error);
 
   const imageUrls = useImagesFromBinaryArray(downloadedImages);
-  onChange(imageUrls);
-
+  if (isUserAvatar && downloadedImages[0]?.imageId) {
+    onChange(downloadedImages);
+  } else onChange(imageUrls);
+  console.log(downloadedImages[0]?.imaggeId);
   function removePhoto(ev, fileName) {
     ev.preventDefault();
     onChange([...addedPhotos.filter((photo) => photo !== fileName)]);
   }
-
+  console.log(addedPhotos);
   // const addedImageUrls = useImagesFromBinaryArray(addedPhotos);
   // // function selectAsMainPhoto(ev, fileName) {
   // //   ev.preventDefault();
