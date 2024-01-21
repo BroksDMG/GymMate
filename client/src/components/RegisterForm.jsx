@@ -66,6 +66,15 @@ function RegisterForm({ toggleForm }) {
             className="w-full bg-white h-full rounded-t-3xl min-w-min
         lg:rounded-tr-none lg:rounded-l-[2rem] "
             onSubmit={handleSubmit}
+            onKeyDown={(e) => {
+              // Check if the Enter key was pressed
+              if (e.key === "Enter") {
+                // Prevent the default action
+                e.preventDefault();
+                // Submit the form
+                handleSubmit(values);
+              }
+            }}
           >
             <div className="w-full h-full px-8 flex flex-col justify-center items-center ">
               <label className=" text-3xl w-full  mt-12 h-1/6 flex relative md:w-3/4  lg:w-full lg:text-6xl">

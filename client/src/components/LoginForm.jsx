@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
@@ -65,6 +65,15 @@ function LoginForm({ toggleForm }) {
           <Form
             className="w-full bg-white h-full rounded-t-3xl min-w-min
 lg:rounded-tl-none lg:rounded-r-[2rem]"
+            onKeyDown={(e) => {
+              // Check if the Enter key was pressed
+              if (e.key === "Enter") {
+                // Prevent the default action
+                e.preventDefault();
+                // Submit the form
+                handleSubmit(values);
+              }
+            }}
           >
             <div className="w-full h-full px-8 flex flex-col justify-center items-center">
               <label className="text-3xl w-full  h-1/6 flex relative md:w-3/4  lg:w-full lg:text-6xl">
