@@ -78,8 +78,12 @@ function AccountPage() {
       >
         {({ values, setFieldValue, handleChange }) => {
           const handlePhotoChange = (photo) => {
-            console.log(photo);
-            if (JSON.stringify(photo) !== JSON.stringify(values.avatar)) {
+            if (
+              JSON.stringify(photo[0]?.imageId) !==
+              JSON.stringify(values.avatar[0]?.imageId)
+            ) {
+              console.log("photo", photo);
+              console.log("values.avatar", values.avatar);
               setFieldValue("avatar", photo);
             }
           };

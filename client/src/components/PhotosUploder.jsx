@@ -8,7 +8,8 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import userDefaultAvatar from "../assets/user-128.png";
 import useImagesFromBinaryArray from "./hooks/useBinaryToImage";
 import useGetImagesFromDataBase from "./hooks/useGetImagesFromDataBase";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { is } from "date-fns/locale";
 export default function PhotosUploder({
   addedPhotos,
   onChange,
@@ -17,54 +18,55 @@ export default function PhotosUploder({
   isDisplayOnly = false,
 }) {
   const { user } = useContext(UserContext);
-  const [files, setFiles] = useState([]);
   const [imagesData, setImagesData] = useState([]);
   useEffect(() => {
-    if (files.length === 0) return;
-    async function uploadFiles() {
-      const formData = new FormData();
-      for (let file of files) {
-        formData.append("files", file);
-      }
-      try {
-        const respone = await axios.post("/images/upload-images", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-        setImagesData([respone.data[0]]);
-      } catch (error) {
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        } else if (error.request) {
-          // The request was made but no response was received
-          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-          // http.ClientRequest in node.js
-          console.log(error.request);
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          console.log("Error", error.message);
-        }
-        console.log(error.config);
-      }
+    if (isUserAvatar && user.avatar) {
+      setImagesData(user.avatar);
     }
-    uploadFiles();
-  }, [files]);
+  }, [isUserAvatar, user.avatar]);
+  async function handleFileUpload(files) {
+    const formData = new FormData();
+    for (let file of files) {
+      formData.append("files", file);
+    }
+    try {
+      const response = await axios.post("/images/upload-images", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      return response.data[0];
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
   const [downloadedImages, error] = useGetImagesFromDataBase(imagesData);
   if (error) console.error(error);
 
   const imageUrls = useImagesFromBinaryArray(downloadedImages);
-  if (isUserAvatar && downloadedImages[0]?.imageId) {
-    onChange(downloadedImages);
-  } else onChange(imageUrls);
-  console.log(downloadedImages[0]?.imaggeId);
   function removePhoto(ev, fileName) {
     ev.preventDefault();
     onChange([...addedPhotos.filter((photo) => photo !== fileName)]);
   }
+  if (isUserAvatar) {
+    onChange([
+      {
+        imageId: imageUrls[0]?.imageId,
+        imageData: { url: imageUrls[0]?.imageData.url },
+      },
+    ]);
+  } else {
+    onChange(imageUrls);
+  }
   console.log(addedPhotos);
+  // console.log(downloadedImages);
+  console.log(imagesData);
+  console.log(imageUrls);
+  console.log(user.avatar);
+  // const [downloadedAvatar, Avatarerror] = useGetImagesFromDataBase(user.avatar);
+  // if (Avatarerror) console.error(Avatarerror);
+  // const imageUrlsAvatar = useImagesFromBinaryArray(downloadedAvatar);
+  // console.log(imageUrlsAvatar);
   // const addedImageUrls = useImagesFromBinaryArray(addedPhotos);
   // // function selectAsMainPhoto(ev, fileName) {
   // //   ev.preventDefault();
@@ -94,7 +96,14 @@ export default function PhotosUploder({
               type="file"
               multiple
               className="hidden"
-              onChange={(e) => setFiles(e.target.files)}
+              onChange={(e) => {
+                const files = e.target.files;
+                handleFileUpload(files).then((uploadedData) => {
+                  if (uploadedData) {
+                    setImagesData([uploadedData]);
+                  }
+                });
+              }}
             />
           </label>
         )}
@@ -133,7 +142,6 @@ export default function PhotosUploder({
           {addedPhotos?.length > 0 &&
             addedPhotos.map((link) => (
               <div className="w-full" key={link}>
-                {console.log(link?.imageData?.url)}
                 <img
                   src={link?.imageData?.url}
                   alt="adedeventImageBacground"
