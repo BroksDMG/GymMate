@@ -79,10 +79,9 @@ function AccountPage() {
         {({ values, setFieldValue, handleChange }) => {
           const handlePhotoChange = (photo) => {
             console.log(photo);
-            // console.log({ imageId: photo[0].imageId });
-            // setFieldValue("avatar", [
-            //   { imageId: photo[0]?.imageId, imageData: photo[0]?.imageData },
-            // ]);
+            if (JSON.stringify(photo) !== JSON.stringify(values.avatar)) {
+              setFieldValue("avatar", photo);
+            }
           };
           const handleGalleryChange = (galleryItem) => {
             console.log(galleryItem);

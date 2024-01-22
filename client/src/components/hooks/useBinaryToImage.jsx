@@ -1,10 +1,8 @@
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
 
 function useImagesFromBinaryArray(downloadedImages) {
-  const [imageUrls, setImageUrls] = useState([]);
-
-  useEffect(() => {
-    if (downloadedImages.length === 0) return;
+  const imageUrls = useMemo(() => {
+    if (downloadedImages.length === 0) return [];
     try {
       const urlarray = downloadedImages
         .map((image) => {
@@ -35,14 +33,10 @@ function useImagesFromBinaryArray(downloadedImages) {
           return image;
         })
         .filter(Boolean);
-      setImageUrls(urlarray);
-      return () => {
-        urlarray.forEach((url) => {
-          URL.revokeObjectURL(url.imageData);
-        });
-      };
+      return urlarray;
     } catch (error) {
       console.error("Failed to convert binary data to image URL:", error);
+      return [];
     }
   }, [downloadedImages]);
 
