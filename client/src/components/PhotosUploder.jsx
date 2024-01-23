@@ -9,6 +9,8 @@ import userDefaultAvatar from "../assets/user-128.png";
 import useImagesFromBinaryArray from "./hooks/useBinaryToImage";
 import useGetImagesFromDataBase from "./hooks/useGetImagesFromDataBase";
 import { useState } from "react";
+import { el } from "date-fns/locale";
+import { add } from "date-fns";
 export default function PhotosUploder({
   addedPhotos,
   onChange,
@@ -20,10 +22,12 @@ export default function PhotosUploder({
   const { user } = useContext(UserContext);
   const [imagesData, setImagesData] = useState([]);
   useEffect(() => {
-    if (isUserAvatar && user.avatar) {
-      setImagesData(user.avatar);
+    if (isUserAvatar && user?.avatar) {
+      setImagesData(user?.avatar);
+    } else if (addedPhotos) {
+      setImagesData(addedPhotos);
     }
-  }, [isUserAvatar, user.avatar]);
+  }, [isUserAvatar, user?.avatar, addedPhotos]);
   async function handleFileUpload(files) {
     const formData = new FormData();
     for (let file of files) {
@@ -48,21 +52,23 @@ export default function PhotosUploder({
     ev.preventDefault();
     onChange([...addedPhotos.filter((photo) => photo !== fileName)]);
   }
-  if (isGallery) {
-    onChange(imageUrls);
-  } else {
-    onChange([
-      {
-        imageId: imageUrls[0]?.imageId,
-        imageData: { url: imageUrls[0]?.imageData.url },
-      },
-    ]);
-  }
+  useEffect(() => {
+    if (isGallery) {
+      onChange(imageUrls);
+    } else if (imageUrls.length > 0) {
+      onChange([
+        {
+          imageId: imageUrls[0]?.imageId,
+          imageData: { url: imageUrls[0]?.imageData.url },
+        },
+      ]);
+    }
+  }, [isGallery, imageUrls, onChange]);
   console.log(addedPhotos);
   // console.log(downloadedImages);
   console.log(imagesData);
   console.log(imageUrls);
-  console.log(user.avatar);
+  console.log(user?.avatar);
   // const [downloadedAvatar, Avatarerror] = useGetImagesFromDataBase(user.avatar);
   // if (Avatarerror) console.error(Avatarerror);
   // const imageUrlsAvatar = useImagesFromBinaryArray(downloadedAvatar);

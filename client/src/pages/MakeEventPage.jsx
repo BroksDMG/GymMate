@@ -101,16 +101,6 @@ function MakeEventPage() {
       setRedirect(true);
     }
   }
-  const initialValues = {
-    title: existedEvent.title ? existedEvent.title : "",
-    address: existedEvent.address || "",
-    addedPhotos: existedEvent.addedPhotos || [],
-    description: existedEvent.description || "",
-    experience: existedEvent.experience || "",
-    date: existedEvent.date || "",
-    maxGuests: existedEvent.maxGuests || 1,
-    avatar: user?.avatar ? user?.avatar : [],
-  };
   const validationSchema = Yup.object().shape({
     title: Yup.string().required("Title is required"),
     address: Yup.string().required("Address is required"),
@@ -122,11 +112,20 @@ function MakeEventPage() {
   if (redirect) {
     return <Navigate to="/events" />;
   }
-
+  console.log(existedEvent.addedPhotos);
   return (
     <div className="w-full h-full rounded-t-[2rem] bg-white mt-32 relative flex flex-col px-1 sm:px-10 lg:px-32">
       <Formik
-        initialValues={initialValues}
+        initialValues={{
+          title: existedEvent.title ? existedEvent.title : "",
+          address: existedEvent.address || "",
+          addedPhotos: existedEvent.addedPhotos || [],
+          description: existedEvent.description || "",
+          experience: existedEvent.experience || "",
+          date: existedEvent.date || "",
+          maxGuests: existedEvent.maxGuests || 1,
+          avatar: user?.avatar ? user?.avatar : [],
+        }}
         enableReinitialize={true}
         validateOnBlur={false}
         validateOnMount={false}
@@ -138,17 +137,8 @@ function MakeEventPage() {
           function handleExpClick(value) {
             setRating(value);
             setFieldValue("experience", experienceArr[value - 1]);
-            console.log(value);
           }
           const handlePhotosChange = (photos) => {
-            // setFieldValue("addedPhotos", photos);
-            console.log(photos);
-            // setFieldValue("addedPhotos", [
-            //   ...values.addedPhotos,
-            //   {
-            //     imageId: photos[0]?.imageId,
-            //   },
-            // ]);
             if (
               JSON.stringify(photos[0]?.imageId) !==
               JSON.stringify(values.addedPhotos[0]?.imageId)
@@ -170,6 +160,7 @@ function MakeEventPage() {
               </a>
               <div className="flex flex-col mt-20 lg:mt-32 w-full border-2 rounded-2xl relative ">
                 {/* <AddingPhotoByLink onChange={setAddedPhotos} /> */}
+                {console.log(values.addedPhotos)}
                 <PhotosUploder
                   addedPhotos={values.addedPhotos}
                   onChange={handlePhotosChange}
