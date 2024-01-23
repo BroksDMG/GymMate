@@ -8,9 +8,9 @@ const eventSchema = new mongoose.Schema({
   experience: [String],
   time: Date,
   maxGuests: Number,
-  photos: [String],
+  photos: [{ imageId: [String] }],
   guests: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-  avatar: [String],
+  avatar: [{ imageId: [String] }],
 });
 
 const EventModel = mongoose.model("Event", eventSchema);

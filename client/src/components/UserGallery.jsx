@@ -140,6 +140,7 @@ function UserGallery({ onChange, value, memberGallery = false }) {
                       addedPhotos={photos}
                       onChange={onPhotosGalleryChange}
                       backgroundStyles={`w-96 h-96   `}
+                      isGallery={true}
                     />
                     <p className=" text-base text-darkBluePrimary pl-5 sm:text-lg lg:text-xl ">
                       Image Description

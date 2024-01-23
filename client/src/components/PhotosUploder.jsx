@@ -8,11 +8,11 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import userDefaultAvatar from "../assets/user-128.png";
 import useImagesFromBinaryArray from "./hooks/useBinaryToImage";
 import useGetImagesFromDataBase from "./hooks/useGetImagesFromDataBase";
-import { useState, useRef } from "react";
-import { is } from "date-fns/locale";
+import { useState } from "react";
 export default function PhotosUploder({
   addedPhotos,
   onChange,
+  isGallery = false,
   backgroundStyles,
   isUserAvatar = false,
   isDisplayOnly = false,
@@ -48,15 +48,15 @@ export default function PhotosUploder({
     ev.preventDefault();
     onChange([...addedPhotos.filter((photo) => photo !== fileName)]);
   }
-  if (isUserAvatar) {
+  if (isGallery) {
+    onChange(imageUrls);
+  } else {
     onChange([
       {
         imageId: imageUrls[0]?.imageId,
         imageData: { url: imageUrls[0]?.imageData.url },
       },
     ]);
-  } else {
-    onChange(imageUrls);
   }
   console.log(addedPhotos);
   // console.log(downloadedImages);
@@ -184,4 +184,5 @@ PhotosUploder.propTypes = {
   backgroundStyles: propTypes.string,
   isUserAvatar: propTypes.bool,
   isDisplayOnly: propTypes.bool,
+  isGallery: propTypes.bool,
 };

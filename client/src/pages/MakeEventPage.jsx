@@ -12,6 +12,8 @@ import TextAreaField from "../components/TextAreaField";
 import DateInputField from "../components/DateInputField";
 import { BiSolidCalendarPlus } from "react-icons/bi";
 import * as Yup from "yup";
+import useGetImagesFromDataBase from "../components/hooks/useGetImagesFromDataBase";
+import useImagesFromBinaryArray from "../components/hooks/useBinaryToImage";
 function MakeEventPage() {
   const { id } = useParams();
   const [redirect, setRedirect] = useState(false);
@@ -19,6 +21,7 @@ function MakeEventPage() {
   const [temRating, setTemRating] = useState(0);
   const { user } = useContext(UserContext);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [imagesData, setImagesData] = useState([]);
   let starSize;
   useEffect(() => {
     const hanldeResize = () => {
@@ -40,6 +43,15 @@ function MakeEventPage() {
     maxGuests: 1,
     // avatar: user?.avatar ? user?.avatar : [],
   });
+  useEffect(() => {
+    if (user?.avatar) {
+      setImagesData(user.avatar);
+    }
+  }, [user?.avatar]);
+  const [downloadedImagesGallery, errorDownload] =
+    useGetImagesFromDataBase(imagesData);
+  if (errorDownload) console.error(errorDownload);
+  const imageUrlsAvatar = useImagesFromBinaryArray(downloadedImagesGallery);
   useEffect(() => {
     if (!id) return;
 
@@ -110,6 +122,7 @@ function MakeEventPage() {
   if (redirect) {
     return <Navigate to="/events" />;
   }
+
   return (
     <div className="w-full h-full rounded-t-[2rem] bg-white mt-32 relative flex flex-col px-1 sm:px-10 lg:px-32">
       <Formik
@@ -128,8 +141,22 @@ function MakeEventPage() {
             console.log(value);
           }
           const handlePhotosChange = (photos) => {
-            setFieldValue("addedPhotos", photos);
+            // setFieldValue("addedPhotos", photos);
             console.log(photos);
+            // setFieldValue("addedPhotos", [
+            //   ...values.addedPhotos,
+            //   {
+            //     imageId: photos[0]?.imageId,
+            //   },
+            // ]);
+            if (
+              JSON.stringify(photos[0]?.imageId) !==
+              JSON.stringify(values.addedPhotos[0]?.imageId)
+            ) {
+              console.log("photo", photos);
+              console.log("values.addedphotos", values.addedPhotos);
+              setFieldValue("addedPhotos", photos);
+            }
           };
 
           return (
@@ -150,10 +177,11 @@ function MakeEventPage() {
                 />
                 <div className="px-2 sm:px-5 md:px-10 lg:px-1 xl:px-10    w-full ">
                   <div className=" absolute top-24 sm:top-32 flex justify-center items-center w-[89px] h-[89px] sm:w-[105px] sm:h-[105px] bg-white rounded-full  ">
-                    {user?.avatar.length > 0 ? (
+                    {user?.avatar.length > 0 &&
+                    imageUrlsAvatar[0]?.imageData.url ? (
                       <img
                         className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover object-center"
-                        src={"http://127.0.0.1:4000/uploads/" + user?.avatar[0]}
+                        src={imageUrlsAvatar[0].imageData.url}
                         alt=""
                       />
                     ) : (
