@@ -23,7 +23,6 @@ function LoginForm({ toggleForm }) {
     await axios
       .post("/login", { ...values })
       .then(({ data }) => {
-        console.log(data);
         setUser(data);
         toast.success("Login succesful");
         setRedirect(true);
@@ -49,8 +48,6 @@ function LoginForm({ toggleForm }) {
   const rootFontSize = parseFloat(
     getComputedStyle(document.documentElement).fontSize
   );
-  console.log(`Aktualna wartość 1rem: ${rootFontSize}px`);
-
   return (
     <>
       <Formik

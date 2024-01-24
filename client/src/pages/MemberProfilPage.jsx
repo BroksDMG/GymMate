@@ -99,14 +99,6 @@ function MemberProfilPage() {
                     style={{ boxShadow: "0px 5px 0px rgb(156 163 175)" }}
                     className="absolute top-5 lg:top-16 h-[9rem] w-[9rem] lg:w-[12rem] lg:h-[12rem] bg-gra flex justify-center items-center bg-darkBluePrimary rounded-full object-cover object-center"
                   >
-                    {/* {console.log(values.avatar)}
-                    <PhotosUploder
-                      name="avatar"
-                      addedPhotos={values.avatar}
-                      backgroundStyles={`w-[8rem] h-[8rem] lg:w-[11rem] lg:h-[11rem] rounded-full  `}
-                      isUserAvatar={true}
-                      isDisplayOnly={true}
-                    /> */}
                     {otherUser?.avatar.length > 0 &&
                     imageUrlsAvatar[0]?.imageData.url ? (
                       <img

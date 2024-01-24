@@ -65,20 +65,6 @@ export default function PhotosUploder({
       ]);
     }
   }, [isGallery, imageUrls, onChange]);
-  console.log(addedPhotos);
-  // console.log(downloadedImages);
-  console.log(imagesData);
-  console.log(imageUrls);
-  console.log(user?.avatar);
-  // const [downloadedAvatar, Avatarerror] = useGetImagesFromDataBase(user.avatar);
-  // if (Avatarerror) console.error(Avatarerror);
-  // const imageUrlsAvatar = useImagesFromBinaryArray(downloadedAvatar);
-  // console.log(imageUrlsAvatar);
-  // const addedImageUrls = useImagesFromBinaryArray(addedPhotos);
-  // // function selectAsMainPhoto(ev, fileName) {
-  // //   ev.preventDefault();
-  // //   onChange([fileName, ...addedPhotos.filter((photo) => photo !== fileName)]);
-  // // }
   return (
     <>
       <div

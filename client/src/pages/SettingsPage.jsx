@@ -75,7 +75,6 @@ function SettingsPage() {
     }
     getImages();
   }, [imagesData]);
-  console.log(downloadedImages);
   const imageUrls = useImagesFromBinaryArray(downloadedImages);
   return (
     <div>

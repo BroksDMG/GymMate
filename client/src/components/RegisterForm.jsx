@@ -22,7 +22,6 @@ function RegisterForm({ toggleForm }) {
         toast.success("Registration succesful, now you can log in");
       })
       .catch(({ response }) => {
-        console.log(response.status);
         if (response.status === 409) toast.error("Email already in use");
         else toast.error("Registration failed");
       });

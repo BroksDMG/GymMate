@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { UserContext } from "./UserContext";
 function Header() {
   const { user } = useContext(UserContext);
-  console.log(user);
   return (
     <div>
       <header className=" flex justify-between px-8">
