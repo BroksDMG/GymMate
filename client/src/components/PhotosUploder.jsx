@@ -19,13 +19,16 @@ export default function PhotosUploder({
 }) {
   const { user } = useContext(UserContext);
   const [imagesData, setImagesData] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
+
   useEffect(() => {
-    if (isUserAvatar && user?.avatar) {
+    if (isUserAvatar && user?.avatar && !isUploading) {
       setImagesData(user?.avatar);
     } else if (addedPhotos) {
       setImagesData(addedPhotos);
     }
-  }, [isUserAvatar, user?.avatar, addedPhotos]);
+  }, [isUserAvatar, user?.avatar, addedPhotos, isUploading]);
+
   async function handleFileUpload(files) {
     const formData = new FormData();
     for (let file of files) {
@@ -102,6 +105,7 @@ export default function PhotosUploder({
               className="hidden"
               onChange={(e) => {
                 const files = e.target.files;
+                setIsUploading(true);
                 handleFileUpload(files).then((uploadedData) => {
                   if (uploadedData) {
                     setImagesData([uploadedData]);

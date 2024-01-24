@@ -121,7 +121,7 @@ function MemberProfilPage() {
                       <img
                         src="https://img.freepik.com/free-photo/elf-woman-forest_71767-117.jpg?w=826&t=st=1699015819~exp=1699016419~hmac=74e1f2bd99b8e2de4489799ab8476301c1747e33fbb6fb1d6da863b5c6230ca6"
                         alt="profileImg"
-                        className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover object-center  "
+                        className="w-[8rem] h-[8rem] lg:w-[11rem] lg:h-[11rem] rounded-full object-cover object-center  "
                       />
                     )}
                   </div>

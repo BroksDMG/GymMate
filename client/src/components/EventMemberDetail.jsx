@@ -11,10 +11,13 @@ import { BiSolidCalendarPlus } from "react-icons/bi";
 import Button from "./Button";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import useGetImagesFromDataBase from "./hooks/useGetImagesFromDataBase";
+import useImagesFromBinaryArray from "./hooks/useBinaryToImage";
 function EventMemberDetail({ event, user }) {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [eventOwner, setEventOwner] = useState({});
   const [guests, setGuests] = useState(event?.guests || []);
+  const [imagesData, setImagesData] = useState([]);
   let starSize;
   useEffect(() => {
     const hanldeResize = () => {
@@ -71,7 +74,19 @@ function EventMemberDetail({ event, user }) {
         toast.error(error.response.data.error);
       });
   }
-
+  const [downloadedImagesAvatar, errorDownload] =
+    useGetImagesFromDataBase(imagesData);
+  if (errorDownload) console.error(errorDownload);
+  const imageUrlsAvatar = useImagesFromBinaryArray(downloadedImagesAvatar);
+  useEffect(() => {
+    if (event?.photos) {
+      setImagesData(event.photos);
+    }
+  }, [event?.photos]);
+  const [downloadedImagesPhotos, errorDownloadPhotos] =
+    useGetImagesFromDataBase(imagesData);
+  if (errorDownloadPhotos) console.error(errorDownloadPhotos);
+  const imageUrlsPhotos = useImagesFromBinaryArray(downloadedImagesPhotos);
   return (
     <Link
       to={
@@ -85,7 +100,7 @@ function EventMemberDetail({ event, user }) {
         {event?.photos?.length > 0 && (
           <img
             className="w-full object-cover  rounded-t-xl"
-            src={"http://127.0.0.1:4000/uploads/" + event.photos[0]}
+            src={imageUrlsPhotos[0]?.imageData.url}
             alt=""
           />
         )}
@@ -100,7 +115,7 @@ function EventMemberDetail({ event, user }) {
               {event.avatar?.length > 0 ? (
                 <img
                   className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover object-center top-4"
-                  src={"http://127.0.0.1:4000/uploads/" + event.avatar[0]}
+                  src={imageUrlsAvatar[0]?.imageData.url}
                   alt="defaultProfileImg"
                 />
               ) : (
