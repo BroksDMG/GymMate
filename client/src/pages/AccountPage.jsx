@@ -11,7 +11,6 @@ import UserEventsList from "../components/UserEventsList";
 import TextAreaField from "../components/TextAreaField";
 import UserGallery from "../components/UserGallery";
 import UserFriendsList from "../components/UserFriendsList";
-import { set } from "date-fns";
 function AccountPage() {
   const { ready, user, setUser } = useContext(UserContext);
   const [redirect, setRedirect] = useState(null);
@@ -41,7 +40,7 @@ function AccountPage() {
   const initialFormValues = {
     avatar: user?.avatar || [],
     userDescription: user?.userDescription || "",
-    gallery: user?.gallery || [{ imageDescription: "", photos: [] }],
+    gallery: user?.gallery || [{ imageDescription: "", imageId: [] }],
   };
   if (!ready) {
     return "Loading...";
@@ -78,10 +77,21 @@ function AccountPage() {
       >
         {({ values, setFieldValue, handleChange }) => {
           const handlePhotoChange = (photo) => {
-            setFieldValue("avatar", photo);
+            if (
+              JSON.stringify(photo[0]?.imageId) !==
+              JSON.stringify(values.avatar[0]?.imageId)
+            ) {
+              setFieldValue("avatar", photo);
+            }
           };
           const handleGalleryChange = (galleryItem) => {
-            setFieldValue("gallery", [...values.gallery, galleryItem]);
+            setFieldValue("gallery", [
+              ...values.gallery,
+              {
+                imageDescription: galleryItem.imageDescription,
+                imageId: galleryItem.photos[0].imageId,
+              },
+            ]);
           };
           return (
             <Form className=" flex  items-center flex-col lg:items-start lg:mb-10 ">

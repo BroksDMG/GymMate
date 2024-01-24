@@ -1,42 +1,70 @@
 import axios from "axios";
 import propTypes from "prop-types";
 import { UserContext } from "./UserContext";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AiFillPlusCircle } from "react-icons/ai";
 import { BsPlusCircleDotted } from "react-icons/bs";
 import { FaRegTrashAlt } from "react-icons/fa";
 import userDefaultAvatar from "../assets/user-128.png";
+import useImagesFromBinaryArray from "./hooks/useBinaryToImage";
+import useGetImagesFromDataBase from "./hooks/useGetImagesFromDataBase";
+import { useState } from "react";
 export default function PhotosUploder({
   addedPhotos,
   onChange,
+  isGallery = false,
   backgroundStyles,
   isUserAvatar = false,
   isDisplayOnly = false,
 }) {
   const { user } = useContext(UserContext);
-  function uploadPhotos(e) {
-    const files = e.target.files;
-    const data = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      data.append("photos", files[i]);
+  const [imagesData, setImagesData] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
+
+  useEffect(() => {
+    if (isUserAvatar && user?.avatar && !isUploading) {
+      setImagesData(user?.avatar);
+    } else if (addedPhotos) {
+      setImagesData(addedPhotos);
     }
-    axios
-      .post("/upload", data, {
-        headers: { "Content-Type": "mulipart/form-data" },
-      })
-      .then((res) => {
-        const { data: filenames } = res;
-        onChange([filenames[0]]);
+  }, [isUserAvatar, user?.avatar, addedPhotos, isUploading]);
+
+  async function handleFileUpload(files) {
+    const formData = new FormData();
+    for (let file of files) {
+      formData.append("files", file);
+    }
+    try {
+      const response = await axios.post("/images/upload-images", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
+      return response.data[0];
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   }
+
+  const [downloadedImages, error] = useGetImagesFromDataBase(imagesData);
+  if (error) console.error(error);
+
+  const imageUrls = useImagesFromBinaryArray(downloadedImages);
   function removePhoto(ev, fileName) {
     ev.preventDefault();
     onChange([...addedPhotos.filter((photo) => photo !== fileName)]);
   }
-  // function selectAsMainPhoto(ev, fileName) {
-  //   ev.preventDefault();
-  //   onChange([fileName, ...addedPhotos.filter((photo) => photo !== fileName)]);
-  // }
+  useEffect(() => {
+    if (isGallery) {
+      onChange(imageUrls);
+    } else if (imageUrls.length > 0) {
+      onChange([
+        {
+          imageId: imageUrls[0]?.imageId,
+          imageData: { url: imageUrls[0]?.imageData.url },
+        },
+      ]);
+    }
+  }, [isGallery, imageUrls, onChange]);
   return (
     <>
       <div
@@ -61,7 +89,15 @@ export default function PhotosUploder({
               type="file"
               multiple
               className="hidden"
-              onChange={uploadPhotos}
+              onChange={(e) => {
+                const files = e.target.files;
+                setIsUploading(true);
+                handleFileUpload(files).then((uploadedData) => {
+                  if (uploadedData) {
+                    setImagesData([uploadedData]);
+                  }
+                });
+              }}
             />
           </label>
         )}
@@ -79,7 +115,7 @@ export default function PhotosUploder({
             addedPhotos?.length === 0 && (
               <>
                 <img
-                  src={`http://127.0.0.1:4000/uploads/${user?.avatar[0]}`}
+                  src={imageUrls?.at(0)}
                   alt="eventImageBacground"
                   className={`${backgroundStyles}  object-center object-cover `}
                 />
@@ -101,7 +137,7 @@ export default function PhotosUploder({
             addedPhotos.map((link) => (
               <div className="w-full" key={link}>
                 <img
-                  src={`http://127.0.0.1:4000/uploads/${link}`}
+                  src={link?.imageData?.url}
                   alt="adedeventImageBacground"
                   className={`${backgroundStyles}  object-center object-cover `}
                 />
@@ -142,4 +178,5 @@ PhotosUploder.propTypes = {
   backgroundStyles: propTypes.string,
   isUserAvatar: propTypes.bool,
   isDisplayOnly: propTypes.bool,
+  isGallery: propTypes.bool,
 };
