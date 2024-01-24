@@ -17,7 +17,8 @@ function EventListElement({ event, user }) {
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [eventOwner, setEventOwner] = useState({});
   const [guests, setGuests] = useState(event?.guests || []);
-  const [imagesData, setImagesData] = useState([]);
+  const [imagesAvatarData, setImagesAvatarData] = useState([]);
+  const [imagesPhotosData, setImagesPhotosData] = useState([]);
   let starSize;
   useEffect(() => {
     const hanldeResize = () => {
@@ -75,20 +76,20 @@ function EventListElement({ event, user }) {
   }
   useEffect(() => {
     if (event?.avatar) {
-      setImagesData(event.avatar);
+      setImagesAvatarData(event.avatar);
     }
   }, [event?.avatar]);
   const [downloadedImagesAvatar, errorDownload] =
-    useGetImagesFromDataBase(imagesData);
+    useGetImagesFromDataBase(imagesAvatarData);
   if (errorDownload) console.error(errorDownload);
   const imageUrlsAvatar = useImagesFromBinaryArray(downloadedImagesAvatar);
   useEffect(() => {
     if (event?.photos) {
-      setImagesData(event.photos);
+      setImagesPhotosData(event.photos);
     }
   }, [event?.photos]);
   const [downloadedImagesPhotos, errorDownloadPhotos] =
-    useGetImagesFromDataBase(imagesData);
+    useGetImagesFromDataBase(imagesPhotosData);
   if (errorDownloadPhotos) console.error(errorDownloadPhotos);
   const imageUrlsPhotos = useImagesFromBinaryArray(downloadedImagesPhotos);
   return (

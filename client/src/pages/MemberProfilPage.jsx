@@ -3,7 +3,6 @@ import { UserContext } from "../components/UserContext";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
 import NavigationMenuBottom from "../components/NavigationMenuBottom";
-import PhotosUploder from "../components/PhotosUploder";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import Button from "../components/Button";
@@ -35,6 +34,7 @@ function MemberProfilPage() {
     axios.get(`/account/${accountId}`).then((response) => {
       const { data } = response;
       setOtherUser(data);
+      setImagesData(data?.avatar);
     });
   }, [accountId]);
   useEffect(() => {
@@ -44,6 +44,11 @@ function MemberProfilPage() {
       setUserFriends(data);
     });
   }, [accountId]);
+  const [downloadedImagesGallery, errorDownload] =
+    useGetImagesFromDataBase(imagesData);
+  if (errorDownload) console.error(errorDownload);
+  const imageUrlsAvatar = useImagesFromBinaryArray(downloadedImagesGallery);
+
   const initialFormValues = {
     avatar: otherUser?.avatar || [],
     userDescription: otherUser?.userDescription || "",
@@ -70,15 +75,7 @@ function MemberProfilPage() {
     });
     setIsSendInvite((e) => !e);
   }
-  useEffect(() => {
-    if (user?.avatar) {
-      setImagesData(user.avatar);
-    }
-  }, [user?.avatar]);
-  const [downloadedImagesGallery, errorDownload] =
-    useGetImagesFromDataBase(imagesData);
-  if (errorDownload) console.error(errorDownload);
-  const imageUrlsAvatar = useImagesFromBinaryArray(downloadedImagesGallery);
+
   return (
     <div className="w-full h-full rounded-t-[2rem] bg-white mt-32 relative flex flex-col px-2 sm:px-10 md:px-20 lg:px-10 xl:px-20">
       <Formik
@@ -110,7 +107,7 @@ function MemberProfilPage() {
                       isUserAvatar={true}
                       isDisplayOnly={true}
                     /> */}
-                    {user?.avatar.length > 0 &&
+                    {otherUser?.avatar.length > 0 &&
                     imageUrlsAvatar[0]?.imageData.url ? (
                       <img
                         className="w-[8rem] h-[8rem] lg:w-[11rem] lg:h-[11rem] rounded-full object-cover object-center"
