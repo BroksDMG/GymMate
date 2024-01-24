@@ -6,7 +6,8 @@ import propTypes from "prop-types";
 import { UserContext } from "./UserContext";
 import { BsPlusCircleDotted } from "react-icons/bs";
 import Button from "./Button";
-
+import useGetImagesFromDataBase from "./hooks/useGetImagesFromDataBase";
+import useImagesFromBinaryArray from "./hooks/useBinaryToImage";
 function UserGallery({ onChange, value, memberGallery = false }) {
   const [activeImage, setActiveImage] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(null);
@@ -32,6 +33,14 @@ function UserGallery({ onChange, value, memberGallery = false }) {
     setActiveImage(false);
     setActiveImageIndex(null);
   };
+  // const [downloadedImages, errorUpload] = useGetImagesFromDataBase(photos);
+  // if (errorUpload) console.error(errorUpload);
+  // const imageUrls = useImagesFromBinaryArray(downloadedImages);
+  const [downloadedImagesGallery, errorDownload] =
+    useGetImagesFromDataBase(value);
+  if (errorDownload) console.error(errorDownload);
+  const imageUrlsGallery = useImagesFromBinaryArray(downloadedImagesGallery);
+
   return (
     <div className="px-2 w-full sm:px-10 md:px-20 lg:px-10 xl:px-20">
       <div>
@@ -44,34 +53,32 @@ function UserGallery({ onChange, value, memberGallery = false }) {
                   onClick={() => handleImageClick(0, true)}
                   className=" min-w-[100px] lg:min-w-[150px]"
                 >
-                  {photos?.length > 0 ? (
+                  {/* {photos?.length > 0 ? (
                     <img
                       className="w-full h-36 md:h-64 object-cover "
-                      src={`http://127.0.0.1:4000/uploads/${photos[0]}`}
+                      src={photos[0]?.imageData?.url}
                     />
-                  ) : (
-                    <div className="w-full h-full flex justify-center  bg-lightBrown text-6xl lg:text-8xl ">
-                      <BsPlusCircleDotted
-                        style={{ filter: "drop-shadow(0px 2px 4px black)" }}
-                        className="   h-36 md:h-64 object-cover z-10 text-lightBrown  cursor-pointer "
-                      />
-                    </div>
-                  )}
+                  ) : ( */}
+                  <div className="w-full h-full flex justify-center  bg-lightBrown text-6xl lg:text-8xl ">
+                    <BsPlusCircleDotted
+                      style={{ filter: "drop-shadow(0px 2px 4px black)" }}
+                      className="   h-36 md:h-64 object-cover z-10 text-lightBrown  cursor-pointer "
+                    />
+                  </div>
+                  {/* )} */}
                 </button>
                 <p className="text-base sm:text-lg lg:text-xl min-w-max">
                   Add Photo
                 </p>
               </div>
             )}
-            {value
-              ? value?.map((galleryyItem, i) => (
+            {imageUrlsGallery
+              ? imageUrlsGallery?.map((galleryyItem, i) => (
                   <div className={`p-2 w-1/2  flex flex-col`} key={i}>
                     <button onClick={() => handleImageClick(i)}>
                       <img
                         className="w-full h-36 md:h-64 object-cover rounded-lg"
-                        src={`http://127.0.0.1:4000/uploads/${galleryyItem?.photos?.at(
-                          0
-                        )}`}
+                        src={galleryyItem?.imageData?.url}
                       />
                     </button>
                     <p className="text-base sm:text-lg lg:text-xl ">
@@ -133,6 +140,7 @@ function UserGallery({ onChange, value, memberGallery = false }) {
                       addedPhotos={photos}
                       onChange={onPhotosGalleryChange}
                       backgroundStyles={`w-96 h-96   `}
+                      isGallery={true}
                     />
                     <p className=" text-base text-darkBluePrimary pl-5 sm:text-lg lg:text-xl ">
                       Image Description
@@ -155,18 +163,14 @@ function UserGallery({ onChange, value, memberGallery = false }) {
                     <img
                       style={{ boxShadow: "0px 0px 50px 10px black" }}
                       className="w-96 h-96  "
-                      src={`http://127.0.0.1:4000/uploads/${user?.gallery
-                        ?.at(activeImageIndex)
-                        .photos?.at(0)}`}
+                      src={imageUrlsGallery[activeImageIndex].imageData.url}
                     />
                     <p className=" text-base text-darkBluePrimary pl-5 sm:text-lg lg:text-xl ">
                       Image Description
                     </p>
                     <div className=" ">
                       <TextAreaField
-                        value={
-                          user?.gallery?.at(activeImageIndex).imageDescription
-                        }
+                        value={value?.at(activeImageIndex).imageDescription}
                       />
                     </div>
                   </>
@@ -196,4 +200,5 @@ export default UserGallery;
 UserGallery.propTypes = {
   onChange: propTypes.func,
   value: propTypes.array,
+  memberGallery: propTypes.bool,
 };
