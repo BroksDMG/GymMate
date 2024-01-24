@@ -43,10 +43,14 @@ function LoginPage() {
           >
             <LoginForm toggleForm={toggleForm} />
           </motion.div>
-          <div className="hidden z-10 pointer-events-none absolute lg:block translate-y-32  lg:right-1/4 lg:translate-x-64 xl:right-1/3 xl:translate-x-96 ">
-            <a href="#" className="relative tr">
-              <TextLogin style="absolute right-3 -top-1 hidden lg:flex" />
-              <img src={graphicGymRoomLogin} alt="logo" className="w-[41rem]" />
+          <div className="hidden overflow-hidden z-10 pointer-events-none absolute lg:block translate-y-32  lg:right-1/4 lg:translate-x-64 xl:right-1/3 xl:translate-x-96 ">
+            <a href="#" className="relative block overflow-hidden">
+              <TextLogin style="absolute right-3 -top-1 hidden lg:flex " />
+              <img
+                src={graphicGymRoomLogin}
+                alt="logo"
+                className="w-[41rem] overflow-hidden"
+              />
             </a>
           </div>
         </>
@@ -62,7 +66,7 @@ function LoginPage() {
             </a>
             <TextRegister style={"flex lg:hidden"} />
           </div>
-          <div className="hidden z-10 pointer-events-none absolute lg:block lg:left-1/4 lg:-translate-x-72 translate-y-32 xl:left-1/3 xl:-translate-x-96">
+          <div className="hidden overflow-hidden z-10 pointer-events-none absolute lg:block lg:left-1/4 lg:-translate-x-72 translate-y-32 xl:left-1/3 xl:-translate-x-96">
             <a href="#" className="relative tr">
               <TextRegister style="absolute left-1 top-5 hidden lg:flex" />
               <img

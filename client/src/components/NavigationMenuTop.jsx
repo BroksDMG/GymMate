@@ -115,7 +115,8 @@ export default function NavigationMenuTop() {
             onClick={() => onClikHandle(4)}
           >
             <div href="#" className="relative">
-              <span
+              <Link
+                to={"/settings"}
                 className={` relative flex dropRadiousTop justify-center items-end pb-2 rounded-full w-14 h-10 
             ${
               isActive === 4
@@ -125,7 +126,7 @@ export default function NavigationMenuTop() {
               >
                 <RiSettings4Fill className="z-10" />
                 <RiSettings4Fill className="absolute text-gray-300 translate-y-[2px]" />
-              </span>
+              </Link>
             </div>
           </li>
           <li className="relative  flex justify-center z-30">

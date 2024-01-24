@@ -7,10 +7,10 @@ const User = require("./models/User.js");
 const Event = require("./models/Event.js");
 const cookieParser = require("cookie-parser");
 const imageDownloader = require("image-downloader");
-const multer = require("multer");
 const fs = require("fs");
 const { rejects } = require("assert");
 const { fr } = require("date-fns/locale");
+const multer = require("multer");
 
 require("dotenv").config();
 const app = express();
@@ -45,6 +45,9 @@ mongoose.connection.on("connected", () => {
 app.get("/", (req, res) => {
   res.json("test ok");
 });
+
+app.use("/images", require("./routes/imagesRoute.js"));
+app.use("/user", require("./routes/userRoute.js"));
 
 app.post("/register", async (req, res) => {
   const { name, surname, email, password } = req.body;
@@ -151,15 +154,15 @@ app.post("/logout", (req, res) => {
   res.cookie("token", "").json(true);
 });
 
-app.post("/upload-by-link", async (req, res) => {
-  const { link } = req.body;
-  const newName = "photo" + Date.now() + ".jpg";
-  await imageDownloader.image({
-    url: link,
-    dest: __dirname + "/uploads/" + newName,
-  });
-  res.json(newName);
-});
+// app.post("/upload-by-link", async (req, res) => {
+//   const { link } = req.body;
+//   const newName = "photo" + Date.now() + ".jpg";
+//   await imageDownloader.image({
+//     url: link,
+//     dest: __dirname + "/uploads/" + newName,
+//   });
+//   res.json(newName);
+// });
 
 const photosMiddleware = multer({ dest: "uploads/" });
 app.post("/upload", photosMiddleware.array("photos", 100), (req, res) => {
