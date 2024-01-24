@@ -11,7 +11,6 @@ import UserEventsList from "../components/UserEventsList";
 import TextAreaField from "../components/TextAreaField";
 import UserGallery from "../components/UserGallery";
 import UserFriendsList from "../components/UserFriendsList";
-import { set } from "date-fns";
 function AccountPage() {
   const { ready, user, setUser } = useContext(UserContext);
   const [redirect, setRedirect] = useState(null);

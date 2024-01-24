@@ -73,7 +73,6 @@ function EventListElement({ event, user }) {
         toast.error(error.response.data.error);
       });
   }
-  console.log(event);
   useEffect(() => {
     if (event?.avatar) {
       setImagesData(event.avatar);
@@ -83,7 +82,6 @@ function EventListElement({ event, user }) {
     useGetImagesFromDataBase(imagesData);
   if (errorDownload) console.error(errorDownload);
   const imageUrlsAvatar = useImagesFromBinaryArray(downloadedImagesAvatar);
-  console.log(imageUrlsAvatar);
   useEffect(() => {
     if (event?.photos) {
       setImagesData(event.photos);
@@ -93,7 +91,6 @@ function EventListElement({ event, user }) {
     useGetImagesFromDataBase(imagesData);
   if (errorDownloadPhotos) console.error(errorDownloadPhotos);
   const imageUrlsPhotos = useImagesFromBinaryArray(downloadedImagesPhotos);
-  console.log(imageUrlsPhotos);
   return (
     <Link
       to={

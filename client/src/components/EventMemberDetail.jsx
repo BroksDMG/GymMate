@@ -71,7 +71,7 @@ function EventMemberDetail({ event, user }) {
         toast.error(error.response.data.error);
       });
   }
-  console.log(guests);
+
   return (
     <Link
       to={

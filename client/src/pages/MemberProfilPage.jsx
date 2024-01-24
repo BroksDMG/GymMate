@@ -12,6 +12,8 @@ import TextAreaField from "../components/TextAreaField";
 import UserGallery from "../components/UserGallery";
 import { useParams } from "react-router-dom";
 import FriendListElement from "../components/FriendListElement";
+import useGetImagesFromDataBase from "../components/hooks/useGetImagesFromDataBase";
+import useImagesFromBinaryArray from "../components/hooks/useBinaryToImage";
 function MemberProfilPage() {
   const { ready, user, setUser } = useContext(UserContext);
   const [redirect, setRedirect] = useState(null);
@@ -21,6 +23,7 @@ function MemberProfilPage() {
   const [userEvents, setUserEvents] = useState([]);
   const [isSendInvite, setIsSendInvite] = useState(false);
   const [userFriends, setUserFriends] = useState([]);
+  const [imagesData, setImagesData] = useState([]);
   useEffect(() => {
     axios.get("/members-events/" + accountId).then((response) => {
       setUserEvents(response.data);
@@ -67,7 +70,15 @@ function MemberProfilPage() {
     });
     setIsSendInvite((e) => !e);
   }
-
+  useEffect(() => {
+    if (user?.avatar) {
+      setImagesData(user.avatar);
+    }
+  }, [user?.avatar]);
+  const [downloadedImagesGallery, errorDownload] =
+    useGetImagesFromDataBase(imagesData);
+  if (errorDownload) console.error(errorDownload);
+  const imageUrlsAvatar = useImagesFromBinaryArray(downloadedImagesGallery);
   return (
     <div className="w-full h-full rounded-t-[2rem] bg-white mt-32 relative flex flex-col px-2 sm:px-10 md:px-20 lg:px-10 xl:px-20">
       <Formik
@@ -91,13 +102,28 @@ function MemberProfilPage() {
                     style={{ boxShadow: "0px 5px 0px rgb(156 163 175)" }}
                     className="absolute top-5 lg:top-16 h-[9rem] w-[9rem] lg:w-[12rem] lg:h-[12rem] bg-gra flex justify-center items-center bg-darkBluePrimary rounded-full object-cover object-center"
                   >
+                    {/* {console.log(values.avatar)}
                     <PhotosUploder
                       name="avatar"
                       addedPhotos={values.avatar}
                       backgroundStyles={`w-[8rem] h-[8rem] lg:w-[11rem] lg:h-[11rem] rounded-full  `}
                       isUserAvatar={true}
                       isDisplayOnly={true}
-                    />
+                    /> */}
+                    {user?.avatar.length > 0 &&
+                    imageUrlsAvatar[0]?.imageData.url ? (
+                      <img
+                        className="w-[8rem] h-[8rem] lg:w-[11rem] lg:h-[11rem] rounded-full object-cover object-center"
+                        src={imageUrlsAvatar[0].imageData.url}
+                        alt=""
+                      />
+                    ) : (
+                      <img
+                        src="https://img.freepik.com/free-photo/elf-woman-forest_71767-117.jpg?w=826&t=st=1699015819~exp=1699016419~hmac=74e1f2bd99b8e2de4489799ab8476301c1747e33fbb6fb1d6da863b5c6230ca6"
+                        alt="profileImg"
+                        className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover object-center  "
+                      />
+                    )}
                   </div>
                   <div className="relative top-44 lg:top-[17rem] ">
                     <Button type="submit">

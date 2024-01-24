@@ -9,8 +9,6 @@ import userDefaultAvatar from "../assets/user-128.png";
 import useImagesFromBinaryArray from "./hooks/useBinaryToImage";
 import useGetImagesFromDataBase from "./hooks/useGetImagesFromDataBase";
 import { useState } from "react";
-import { el } from "date-fns/locale";
-import { add } from "date-fns";
 export default function PhotosUploder({
   addedPhotos,
   onChange,
