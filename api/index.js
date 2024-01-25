@@ -158,8 +158,16 @@ app.get("/profile", async (req, res) => {
   }
 });
 
+let isLogoutInProgress = false;
+
 app.post("/logout", (req, res) => {
-  res.clearCookie("token", { httpOnly: true, secure: true }).json(true);
+  if (!isLogoutInProgress) {
+    isLogoutInProgress = true;
+    res.clearCookie("token", { httpOnly: true, secure: true }).json(true);
+    isLogoutInProgress = false;
+  } else {
+    res.status(500).json({ error: "Logout in progress" });
+  }
 });
 
 // app.post("/upload-by-link", async (req, res) => {
