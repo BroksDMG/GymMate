@@ -163,7 +163,9 @@ let isLogoutInProgress = false;
 app.post("/logout", (req, res) => {
   if (!isLogoutInProgress) {
     isLogoutInProgress = true;
-    res.clearCookie("token", { httpOnly: true, secure: true }).json(true);
+    res
+      .clearCookie("token", { httpOnly: true, sameSite: "None", secure: true })
+      .json(true);
     isLogoutInProgress = false;
   } else {
     res.status(500).json({ error: "Logout in progress" });
