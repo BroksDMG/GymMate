@@ -213,13 +213,13 @@ app.post("/events", async (req, res) => {
   });
 });
 
-app.get("/user-events", async (req, res) => {
-  const { token } = req.cookies;
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    const { id } = userData;
-    res.json(await Event.find({ owner: id }));
-  });
-});
+// app.get("/user-events", async (req, res) => {
+//   const { token } = req.cookies;
+//   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+//     const { id } = userData;
+//     res.json(await Event.find({ owner: id }));
+//   });
+// });
 app.get("/user-events", async (req, res) => {
   try {
     const { token } = req.cookies;
