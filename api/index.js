@@ -101,7 +101,13 @@ app.post("/login", async (req, res) => {
         { expiresIn: "2h" },
         (err, token) => {
           if (err) throw err;
-          res.cookie("token", token).json(userDoc);
+          res
+            .cookie("token", token, {
+              httpOnly: true,
+              sameSite: "None",
+              secure: true,
+            })
+            .json(userDoc);
         }
       );
     } else {
