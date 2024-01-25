@@ -228,31 +228,6 @@ app.post("/events", async (req, res) => {
     res.json(eventDoc);
   });
 });
-
-// app.get("/user-events", async (req, res) => {
-//   const { token } = req.cookies;
-//   jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-//     const { id } = userData;
-//     res.json(await Event.find({ owner: id }));
-//   });
-// });
-// app.get("/user-events", async (req, res) => {
-//   const { token } = req.cookies;
-//   try {
-//     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-//       if (err) {
-//         console.error(err);
-//         return res.status(500).json({ error: "Internal Server Error" });
-//       }
-//       const { id } = userData;
-//       const events = await Event.find({ owner: id });
-//       res.json(events);
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Internal Server Error" });
-//   }
-// });
 app.get("/user-events", async (req, res) => {
   try {
     const { token } = req.cookies;
