@@ -26,6 +26,8 @@ app.use(
   cors({
     credentials: true,
     origin: process.env.CLIENT_URL,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type"],
   })
 );
 console.log(process.env.MONGO_URL);
@@ -99,7 +101,13 @@ app.post("/login", async (req, res) => {
         { expiresIn: "2h" },
         (err, token) => {
           if (err) throw err;
-          res.cookie("token", token).json(userDoc);
+          res
+            .cookie("token", token, {
+              httpOnly: true,
+              sameSite: "None",
+              secure: true,
+            })
+            .json(userDoc);
         }
       );
     } else {
@@ -150,8 +158,18 @@ app.get("/profile", async (req, res) => {
   }
 });
 
+let isLogoutInProgress = false;
+
 app.post("/logout", (req, res) => {
-  res.cookie("token", "").json(true);
+  if (!isLogoutInProgress) {
+    isLogoutInProgress = true;
+    res
+      .clearCookie("token", { httpOnly: true, sameSite: "None", secure: true })
+      .json(true);
+    isLogoutInProgress = false;
+  } else {
+    res.status(500).json({ error: "Logout in progress" });
+  }
 });
 
 // app.post("/upload-by-link", async (req, res) => {
@@ -210,13 +228,32 @@ app.post("/events", async (req, res) => {
     res.json(eventDoc);
   });
 });
-
 app.get("/user-events", async (req, res) => {
-  const { token } = req.cookies;
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    const { id } = userData;
-    res.json(await Event.find({ owner: id }));
-  });
+  try {
+    const { token } = req.cookies;
+
+    if (!token) {
+      return res
+        .status(401)
+        .json({ error: "Unauthorized - Token not provided" });
+    }
+
+    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+      if (err) {
+        console.error(err);
+        return res
+          .status(500)
+          .json({ error: "Internal Server Error - Invalid token" });
+      }
+
+      const { id } = userData;
+      const events = await Event.find({ owner: id });
+      res.json(events);
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 app.get("/event-owner/:id", async (req, res) => {
   const { id } = req.params;
