@@ -1,6 +1,6 @@
 import error404Img from "../assets/404-Page-Featured-Image.png";
 
-function SettingsPage() {
+function MessagesPage() {
   return (
     <div className="w-full h-full flex justify-center items-center">
       <img
@@ -12,4 +12,4 @@ function SettingsPage() {
   );
 }
 
-export default SettingsPage;
+export default MessagesPage;
