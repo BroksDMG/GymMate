@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { BiSolidErrorCircle } from "react-icons/bi";
+import Modal from "./Modal";
 function InputField({
   children,
   value,
@@ -16,8 +17,10 @@ function InputField({
   const [isError, setIsError] = useState(false);
   const [selectedValue, setSelectedValue] = useState("");
   const [isListOpen, setIsListOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   if (error && !isError) {
     setIsError(true);
+    setIsModalOpen(true);
   }
   function handleOnClick() {
     setIsError(false);
@@ -52,6 +55,11 @@ function InputField({
       ${isError ? "text-xl lg:text-2xl" : ""}`}
       >
         {isError && !isFocus && <BiSolidErrorCircle />}
+        {isModalOpen && (
+          <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+            {error}
+          </Modal>
+        )}
       </div>
 
       <input
