@@ -51,7 +51,7 @@ function InputField({
     `}
     >
       <div
-        className={`text-red-400  translate-x-3 translate-y-3 lg:translate-y-4 absolute right-10
+        className={`text-red-400  -translate-x-10 translate-y-3 lg:translate-y-4 absolute right-10
       ${isError ? "text-xl lg:text-2xl" : ""}`}
       >
         {isError && !isFocus && <BiSolidErrorCircle />}
