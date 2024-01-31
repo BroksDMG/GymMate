@@ -36,7 +36,6 @@ function InputField({
     addEventListener("keydown", (e) => {
       if (e.key === "Backspace") {
         setSelectedValue("");
-        setIsListOpen(false);
       }
     });
   });
@@ -54,7 +53,12 @@ function InputField({
         className={`text-red-400  -translate-x-10 translate-y-3 lg:translate-y-4 absolute right-10
       ${isError ? "text-xl lg:text-2xl" : ""}`}
       >
-        {isError && !isFocus && <BiSolidErrorCircle />}
+        {isError && !isFocus && (
+          <BiSolidErrorCircle
+            onMouseEnter={() => setIsListOpen(true)}
+            onMouseLeave={() => setIsListOpen(false)}
+          />
+        )}
         {isModalOpen && (
           <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
             {error}
