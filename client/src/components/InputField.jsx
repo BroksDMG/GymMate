@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { BiSolidErrorCircle } from "react-icons/bi";
-import Modal from "./Modal";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function InputField({
   children,
   value,
@@ -17,11 +18,12 @@ function InputField({
   const [isError, setIsError] = useState(false);
   const [selectedValue, setSelectedValue] = useState("");
   const [isListOpen, setIsListOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  if (error && !isError) {
-    setIsError(true);
-    setIsModalOpen(true);
-  }
+  useEffect(() => {
+    if (error && !isError) {
+      setIsError(true);
+      toast.error(error);
+    }
+  }, [error, isError]);
   function handleOnClick() {
     setIsError(false);
     setIsListOpen((isPrevListOpen) => !isPrevListOpen);
@@ -50,20 +52,10 @@ function InputField({
     `}
     >
       <div
-        className={`text-red-400  -translate-x-10 translate-y-3 lg:translate-y-4 absolute right-10
+        className={`text-red-400  translate-x-3 translate-y-2 sm:translate-y-5  absolute right-10
       ${isError ? "text-xl lg:text-2xl" : ""}`}
       >
-        {isError && !isFocus && (
-          <BiSolidErrorCircle
-            onMouseEnter={() => setIsListOpen(true)}
-            onMouseLeave={() => setIsListOpen(false)}
-          />
-        )}
-        {isModalOpen && (
-          <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-            {error}
-          </Modal>
-        )}
+        {isError && !isFocus && <BiSolidErrorCircle />}
       </div>
 
       <input
@@ -78,7 +70,7 @@ function InputField({
       <div
         className={`absolute top-2 sm:top-4 lg:top-3 left-3 sm:left-5 pt-0.5 bg-white  pointer-events-none  max-w-max transform duration-200 ease-linear${
           isFocus
-            ? " -translate-y-5 sm:-translate-y-7 scale-[0.88] px-1 sm:px-2 z-[1111] text-mediumBlue"
+            ? " -translate-y-5 sm:-translate-y-7 scale-[0.88] px-1 sm:px-2 z-40 text-mediumBlue"
             : ""
         }`}
       >
