@@ -1,101 +1,56 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { useContext } from "react";
 import logoWithBorder from "../assets/logoWithBorder.svg";
 import InputField from "../components/InputField";
 import Button from "../components/Button";
 import { Form, Formik } from "formik";
 import { UserContext } from "../components/UserContext";
-import { BiSolidCalendarPlus } from "react-icons/bi";
 import * as Yup from "yup";
-import { AiFillCheckCircle } from "react-icons/ai";
-import { Link } from "react-router-dom";
 import { RiArrowRightSFill } from "react-icons/ri";
+import { emailRegex, messages } from "../utils/constanst";
 function SettingsPage() {
-  const { id } = useParams();
-  const [redirect, setRedirect] = useState(false);
   const { user } = useContext(UserContext);
-
-  const [existedEvent, setExistedEvent] = useState({
-    title: "",
-    address: "",
-    addedPhotos: [],
-    description: "",
-    experience: "",
-    date: "",
-    maxGuests: 1,
-    // avatar: user?.avatar ? user?.avatar : [],
-  });
-  useEffect(() => {
-    if (!id) return;
-
-    axios.get("/events/" + id).then((response) => {
-      const { data } = response;
-      setExistedEvent({
-        title: data.title,
-        address: data.address,
-        addedPhotos: data.photos,
-        description: data.description,
-        experience: data.experience,
-        date: data.date,
-        maxGuests: data.maxGuests,
-      });
-      // setTitle(data.title);
-      // 4;
-      // setAddress(data.address);
-      // setAddedPhotos(data.photos);
-      // setDescription(data.description);
-      // setExperience(data.experience);
-      // setDate(data.date);
-      // setmaxGuests(data.maxGuests);
-    });
-  }, [id, user?.avatar]);
-  async function handleSubmitSaveEvent(values) {
-    if (id) {
-      ///update
-      await axios.put("/events", {
-        id,
-        ...values,
-      });
-      setRedirect(true);
-    } else {
-      //new event
-      await axios.post("/events", { ...values });
-      setRedirect(true);
-    }
+  async function handleSubmitSettings(values) {
+    if (!user._id) return;
+    ///update
+    // await axios.put("/settings", {
+    //   id,
+    //   ...values,
+    // });
+    console.log(values);
   }
   const validationSchema = Yup.object().shape({
-    title: Yup.string().required("Title is required"),
-    address: Yup.string().required("Address is required"),
-    description: Yup.string().required("Description is required"),
-    experience: Yup.string().required("Experience is required"),
-    date: Yup.date().required("Date is required"),
-    maxGuests: Yup.number().required("Max guests is required"),
+    name: Yup.string().required(messages.fieldRequired),
+    surname: Yup.string().required(messages.fieldRequired),
+    email: Yup.string()
+      .email(messages.invalidEmail)
+      .matches(emailRegex, messages.invalidEmail)
+      .required(messages.fieldRequired),
+    oldPassword: Yup.string().required(messages.fieldRequired),
+    newPassword: Yup.string().required(messages.fieldRequired),
+    confirmNewPassword: Yup.string()
+      .required(messages.fieldRequired)
+      .oneOf([Yup.ref("newPpassword"), null], messages.passwordsDontMatch),
   });
-  if (redirect) {
-    return <Navigate to="/events" />;
-  }
   return (
     <div className="w-full h-full rounded-t-[2rem] bg-white mt-32 relative flex flex-col px-1 sm:px-10 lg:px-32">
       <Formik
         initialValues={{
-          title: existedEvent.title ? existedEvent.title : "",
-          address: existedEvent.address || "",
-          addedPhotos: existedEvent.addedPhotos || [],
-          description: existedEvent.description || "",
-          experience: existedEvent.experience || "",
-          date: existedEvent.date || "",
-          maxGuests: existedEvent.maxGuests || 1,
-          avatar: user?.avatar ? user?.avatar : [],
+          name: "",
+          surname: "",
+          email: "",
+          oldPassword: "",
+          newPassword: "",
+          confirmNewPassword: "",
         }}
         enableReinitialize={true}
         validateOnBlur={false}
         validateOnMount={false}
         validateOnChange={false}
         validationSchema={validationSchema}
-        onSubmit={handleSubmitSaveEvent}
+        onSubmit={handleSubmitSettings}
       >
-        {({ values, errors, handleChange, setFieldValue }) => {
+        {({ values, errors, handleChange }) => {
           return (
             <Form className=" flex  items-center flex-col lg:justify-normal lg:flex-col lg:items-start lg:mb-10">
               <a href="#" className="absolute -top-20  lg:-top-32 select-none">
@@ -112,6 +67,7 @@ function SettingsPage() {
                     SETTINGS
                   </span>
                   <div className="flex gap-4">
+                    {console.log(errors)}
                     <InputField
                       name="name"
                       error={errors.name}
@@ -140,27 +96,39 @@ function SettingsPage() {
                     Email
                   </InputField>
                   <InputField
-                    name="password"
+                    name="oldPassword"
                     type="password"
-                    value={values["password"]}
+                    value={values["oldPassword"]}
                     onChange={handleChange}
-                    error={errors.password}
+                    error={errors.oldPassword}
                   >
-                    Password
+                    Old Password
                   </InputField>
                   <InputField
-                    name="confirmPassword"
+                    name="newPassword"
                     type="password"
-                    value={values["confirmPassword"]}
+                    value={values["newPassword"]}
                     onChange={handleChange}
-                    error={errors.confirmPassword}
+                    error={errors.newPassword}
                   >
-                    Confirm Password
+                    New Password
+                  </InputField>
+                  <InputField
+                    name="confirmNewPassword"
+                    type="password"
+                    value={values["confirmNewPassword"]}
+                    onChange={handleChange}
+                    error={errors.confirmNewPassword}
+                  >
+                    Confirm New Password
                   </InputField>
                   <div className="flex w-full gap-5 items-end  my-5">
                     <div className="w-full">
                       <div className="w-full">
-                        <Button textSize="text-[10px] sm:text-base lg:text-lg">
+                        <Button
+                          type="submit"
+                          textSize="text-[10px] sm:text-base lg:text-lg"
+                        >
                           Save Changes
                           <RiArrowRightSFill className="text-base relative lg:text-2xl" />
                         </Button>
