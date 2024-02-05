@@ -11,13 +11,14 @@ import { emailRegex, messages } from "../utils/constanst";
 function SettingsPage() {
   const { user } = useContext(UserContext);
   async function handleSubmitSettings(values) {
-    if (!user._id) return;
-    ///update
-    // await axios.put("/settings", {
-    //   id,
-    //   ...values,
-    // });
     console.log(values);
+    if (!user._id) return;
+    const { confirmNewPassword, ...settings } = values;
+    await axios.put("/user/settings", {
+      userId: user._id,
+      settings,
+    });
+    console.log(settings);
   }
   const validationSchema = Yup.object().shape({
     name: Yup.string().required(messages.fieldRequired),
@@ -30,7 +31,7 @@ function SettingsPage() {
     newPassword: Yup.string().required(messages.fieldRequired),
     confirmNewPassword: Yup.string()
       .required(messages.fieldRequired)
-      .oneOf([Yup.ref("newPpassword"), null], messages.passwordsDontMatch),
+      .oneOf([Yup.ref("newPassword"), null], messages.passwordsDontMatch),
   });
   return (
     <div className="w-full h-full rounded-t-[2rem] bg-white mt-32 relative flex flex-col px-1 sm:px-10 lg:px-32">
