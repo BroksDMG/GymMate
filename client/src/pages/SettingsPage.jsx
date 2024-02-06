@@ -16,9 +16,8 @@ function SettingsPage() {
     const { confirmNewPassword, ...settings } = values;
     await axios.put("/user/settings", {
       userId: user._id,
-      settings,
+      settings: values,
     });
-    console.log(settings);
   }
   const validationSchema = Yup.object().shape({
     name: Yup.string().required(messages.fieldRequired),
