@@ -87,7 +87,6 @@ app.post("/login", async (req, res) => {
   }
 
   const { email, password } = req.body;
-  console.log(password);
   const userDoc = await User.findOne({ email });
   if (userDoc) {
     const passOk = bcrypt.compareSync(password, userDoc.password);
@@ -442,4 +441,4 @@ app.get("/test", (req, res) => {
   res.json("test ok");
 });
 
-app.listen(process.env.PORT || 4000);
+app.listen(process.env.PORT || 5000);

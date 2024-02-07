@@ -8,16 +8,24 @@ import { UserContext } from "../components/UserContext";
 import * as Yup from "yup";
 import { RiArrowRightSFill } from "react-icons/ri";
 import { emailRegex, messages } from "../utils/constanst";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function SettingsPage() {
   const { user } = useContext(UserContext);
   async function handleSubmitSettings(values) {
-    console.log(values);
     if (!user._id) return;
-    const { confirmNewPassword, ...settings } = values;
-    await axios.put("/user/settings", {
-      userId: user._id,
-      settings: values,
-    });
+    try {
+      const { data } = await axios.put("/user/settings", {
+        userId: user._id,
+        settings: values,
+      });
+      toast.success(data.message);
+    } catch (error) {
+      console.log(error.response);
+      if (error.response.status === 422) toast.error(error.response.data);
+      if (error.response.status === 408) toast.error(error.response.data);
+      if (error.response.status === 500) toast.error(error.response.data);
+    }
   }
   const validationSchema = Yup.object().shape({
     name: Yup.string().required(messages.fieldRequired),
@@ -67,7 +75,6 @@ function SettingsPage() {
                     SETTINGS
                   </span>
                   <div className="flex gap-4">
-                    {console.log(errors)}
                     <InputField
                       name="name"
                       error={errors.name}
