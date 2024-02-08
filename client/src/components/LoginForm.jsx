@@ -45,9 +45,7 @@ function LoginForm({ toggleForm }) {
   if (redirect) {
     return <Navigate to={"/events"} />;
   }
-  const rootFontSize = parseFloat(
-    getComputedStyle(document.documentElement).fontSize
-  );
+
   return (
     <>
       <Formik

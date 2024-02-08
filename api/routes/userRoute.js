@@ -13,5 +13,5 @@ const userController = require("../controllers/userController");
 // router.get("/friend-request/:userId", userController.getFriendRequests);
 // router.get("/friends/:userId", userController.getFriends);
 // router.get("/account/:id", userController.getAccount);
-
+router.put("/settings", userController.updateSettings);
 module.exports = router;
