@@ -28,22 +28,27 @@ function MessagesPage() {
   };
 
   return (
-    <div>
-      <h1>Messenger</h1>
-      <form onSubmit={onMessageSubmit}>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <h1 className="text-2xl font-bold mb-4">Messenger</h1>
+      <div className="w-4/5 h-96 border border-gray-300 p-4 mb-4 overflow-y-auto bg-white">
+        {chat.map((msg, idx) => (
+          <div key={idx} className="mb-4">
+            {msg}
+          </div>
+        ))}
+      </div>
+      <form onSubmit={onMessageSubmit} className="w-4/5 flex">
         <input
           name="message"
           onChange={(e) => onTextChange(e)}
           value={message}
           label="Message"
+          className="flex-grow mr-4 p-2 border border-gray-300 rounded"
         />
-        <button>Send Message</button>
+        <button className="py-2 px-4 bg-blue-500 text-white rounded">
+          Send Message
+        </button>
       </form>
-      <div>
-        {chat.map((msg, idx) => (
-          <div key={idx}>{msg}</div>
-        ))}
-      </div>
     </div>
   );
 }
