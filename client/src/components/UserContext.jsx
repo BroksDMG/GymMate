@@ -22,7 +22,7 @@ export function UserContextProvider({ children }) {
         }
       });
     }
-  }, [user, ready]);
+  }, [user]);
   console.log(ready);
   if (redirect) {
     if (location.pathname !== "/login") {
