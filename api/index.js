@@ -27,9 +27,16 @@ app.use(
     credentials: true,
     origin: process.env.CLIENT_URL,
     methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type"],
   })
 );
+// app.use(function (req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept"
+//   );
+//   next();
+// });
 console.log(process.env.MONGO_URL);
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
@@ -49,7 +56,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/images", require("./routes/imagesRoute.js"));
-app.use("/user", require("./routes/userRoute.js"));
+// app.use("/user", require("./routes/userRoute.js"));
 
 app.post("/register", async (req, res) => {
   const { name, surname, email, password } = req.body;
@@ -440,8 +447,8 @@ app.get("/friends/:userId", async (req, res) => {
 app.get("/test", (req, res) => {
   res.json("test ok");
 });
-app.use(function (req, res, next) {
-  res.status(404).sendFile(__dirname + "/path/to/your/404page.html");
-});
-
+// app.use(function (req, res, next) {
+//   res.status(404).sendFile(__dirname + "/path/to/your/404page.html");
+// });
+console.log(process.env.PORT);
 app.listen(process.env.PORT || 4000);
