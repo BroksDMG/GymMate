@@ -14,7 +14,6 @@ export function UserContextProvider({ children }) {
       axios.get("/profile").then(({ data, status }) => {
         if (status === 401) {
           setUser(null);
-
           setRedirect(true);
         } else {
           setUser(data);
@@ -22,7 +21,8 @@ export function UserContextProvider({ children }) {
         }
       });
     }
-  }, [user]);
+  }, [user, ready]);
+  console.log(ready);
   if (redirect) {
     if (location.pathname !== "/login") {
       return <Navigate to={"/login"} />;

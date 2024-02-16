@@ -16,7 +16,7 @@ const updateSettings = async (req, res) => {
       user.name = settings.name;
       user.surname = settings.surname;
       user.email = settings.email;
-      // await user.save();
+      await user.save();
       res.json({ message: "settings changed correct" });
     } else {
       res.status(422).json("incorrect password");
