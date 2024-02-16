@@ -29,14 +29,6 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
 );
-// app.use(function (req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "http://localhost:5173");
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept"
-//   );
-//   next();
-// });
 console.log(process.env.MONGO_URL);
 mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
@@ -56,7 +48,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/images", require("./routes/imagesRoute.js"));
-// app.use("/user", require("./routes/userRoute.js"));
+app.use("/user", require("./routes/userRoute.js"));
 
 app.post("/register", async (req, res) => {
   const { name, surname, email, password } = req.body;
