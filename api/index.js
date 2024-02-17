@@ -49,6 +49,7 @@ app.get("/", (req, res) => {
 
 app.use("/images", require("./routes/imagesRoute.js"));
 app.use("/user", require("./routes/userRoute.js"));
+app.use("/message", require("./routes/messageRoute.js"));
 
 app.post("/register", async (req, res) => {
   const { name, surname, email, password } = req.body;
