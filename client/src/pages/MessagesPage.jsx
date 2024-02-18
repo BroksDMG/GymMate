@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import logoWithBorder from "../assets/logoWithBorder.svg";
+import axios from "axios";
+import { useContext } from "react";
+import { UserContext } from "../components/UserContext";
 function MessagesPage() {
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
   const socketRef = useRef();
-
+  const { user } = useContext(UserContext);
   useEffect(() => {
     socketRef.current = io.connect("/"); // Connect to the server
 
@@ -19,11 +22,13 @@ function MessagesPage() {
   const onTextChange = (e) => {
     setMessage(e.target.value);
   };
-
+  console.log(user?._id);
   const onMessageSubmit = (e) => {
     e.preventDefault();
-    const msg = { message };
-    socketRef.current.emit("message", msg);
+    // const msg = { message };
+    // socketRef.current.emit("message", msg);
+    // setMessage("");
+    axios.post("/messages/sendMessage/" + user?._id, message);
     setMessage("");
   };
 

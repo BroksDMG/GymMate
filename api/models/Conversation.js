@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const converstionSchema = new mongoose.Schema(
   {
@@ -19,6 +19,5 @@ const converstionSchema = new mongoose.Schema(
   ///created at, ipdated ad
   { timestamps: true }
 );
-const Converstion = mongoose.model("Converstation", converstionSchema);
-
-export default Converstion;
+const Conversation = mongoose.model("Converstation", converstionSchema);
+module.exports = Conversation;
