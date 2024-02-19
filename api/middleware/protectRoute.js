@@ -2,8 +2,10 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const protectRoute = async (req, res) => {
   try {
-    const token = req.cookies.jwt;
+    const token = req.cookies.token;
     console.log(token, "token");
+    console.log(req.cookies, "req.cookies");
+    console.log(req.cookies.token, "req.cookies");
     if (!token) {
       return res
         .status(401)
