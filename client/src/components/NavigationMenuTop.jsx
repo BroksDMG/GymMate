@@ -20,7 +20,7 @@ export default function NavigationMenuTop() {
   }, [redirect, setUser]);
   async function logout() {
     onClikHandle(5);
-    await axios.post("/logout");
+    await axios.post("/user/logout");
     setRedirect("/login");
   }
   if (!ready) {

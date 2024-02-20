@@ -21,7 +21,7 @@ function LoginForm({ toggleForm }) {
 
   const handleSubmit = async (values) => {
     await axios
-      .post("/login", { ...values })
+      .post("/user/login", { ...values })
       .then(({ data }) => {
         setUser(data);
         toast.success("Login succesful");
