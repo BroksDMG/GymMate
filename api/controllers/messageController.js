@@ -1,31 +1,30 @@
 const Conversation = require("../models/Conversation");
-
+const Message = require("../models/Message");
 const sendMessage = async (req, res) => {
   try {
     const { message } = req.body;
-    const { id: reciverId } = req.params;
+    const reciverId = req.params.id;
     const senderId = req.user._id;
-    console.log("send", senderId, id, message);
-
-    let converstion = await Conversation.findOne({
+    console.log(req.body);
+    let conversation = await Conversation.findOne({
       participants: { $all: [senderId, reciverId] },
     });
 
-    if (!converstion) {
-      converstion = await Conversation.create({
+    if (!conversation) {
+      conversation = await Conversation.create({
         participants: [senderId, reciverId],
       });
-      await converstion.save();
     }
-    const newMessage = {
+    const newMessage = new Message({
       senderId,
       receiverId: reciverId,
       message,
-    };
+    });
     if (newMessage) {
-      converstion.messages.push(newMessage);
-      await converstion.save();
+      conversation.messages.push(newMessage);
     }
+    await conversation.save();
+    await newMessage.save();
     res.status(201).json(newMessage);
   } catch (error) {
     console.log("Error in senMessage controller:", error.message);

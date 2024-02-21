@@ -2,13 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import logoWithBorder from "../assets/logoWithBorder.svg";
 import axios from "axios";
-import { useContext } from "react";
-import { UserContext } from "../components/UserContext";
 function MessagesPage() {
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
   const socketRef = useRef();
-  const { user } = useContext(UserContext);
   useEffect(() => {
     socketRef.current = io.connect("/"); // Connect to the server
 
@@ -22,16 +19,15 @@ function MessagesPage() {
   const onTextChange = (e) => {
     setMessage(e.target.value);
   };
-  console.log(user?._id);
   const onMessageSubmit = (e) => {
     e.preventDefault();
     // const msg = { message };
     // socketRef.current.emit("message", msg);
     // setMessage("");
-    axios.post("/messages/sendMessage/" + user?._id, message);
+    console.log(message);
+    axios.post(`/message/sendMessage/65b1424caec7de72a76d8bd3`, { message });
     setMessage("");
   };
-
   return (
     <div className="w-full h-full rounded-t-[2rem] bg-white mt-32 relative flex flex-col px-1 sm:px-10 lg:px-32">
       <div className=" flex  items-center flex-col lg:justify-normal lg:flex-col lg:items-start lg:mb-10">
@@ -63,7 +59,10 @@ function MessagesPage() {
                     label="Message"
                     className="flex-grow mr-4 p-2 border border-gray-300 rounded"
                   />
-                  <button className="py-2 px-4 bg-blue-500 text-white rounded">
+                  <button
+                    type="submit"
+                    className="py-2 px-4 bg-blue-500 text-white rounded"
+                  >
                     Send Message
                   </button>
                 </form>

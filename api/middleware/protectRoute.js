@@ -1,19 +1,14 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
-const protectRoute = async (req, res) => {
+const protectRoute = async (req, res, next) => {
   try {
     const { token } = req.cookies;
-    console.log(token, "token");
-    console.log(req.cookies, "req.cookies");
-    console.log(req.cookies.token, "req.cookies");
     if (!token) {
       return res
         .status(401)
         .json({ error: "Unauthorized - No token Provided" });
     }
-    console.log(token, "token");
     const decoded = jwt.verify(token, "fasefraw4r5r3wq45wdfgw34twdfg");
-    console.log("decoded", decoded);
     if (!decoded) {
       return res.status(401).json({ error: "Unauthorized - Invalid Token" });
     }

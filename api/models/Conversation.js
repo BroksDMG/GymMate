@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const converstionSchema = new mongoose.Schema(
+const ConversationSchema = new mongoose.Schema(
   {
     participants: [
       {
@@ -19,5 +19,5 @@ const converstionSchema = new mongoose.Schema(
   ///created at, ipdated ad
   { timestamps: true }
 );
-const Conversation = mongoose.model("Converstation", converstionSchema);
+const Conversation = mongoose.model("Conversation", ConversationSchema);
 module.exports = Conversation;
