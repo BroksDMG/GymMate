@@ -3,6 +3,7 @@ import Conversation from "./Conversation";
 
 function SideBarConversations() {
   const { loading, conversation } = useGetConversation();
+  console.log("conversation", conversation);
   return (
     <div className="py2 flex flex-col overflow-auto">
       {conversation.map((conversation) => (

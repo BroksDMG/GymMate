@@ -305,8 +305,15 @@ app.post("/accept-friend", async (req, res) => {
   currentUser.friends.push(friendId);
   friend.friends.push(currentUserId);
 
-  await friend.save();
-  await currentUser.save();
+  await User.findByIdAndUpdate(currentUserId, {
+    $pull: { friendRequests: friendId },
+    $push: { friends: friendId },
+  });
+
+  await User.findByIdAndUpdate(friendId, {
+    $pull: { friendRequests: currentUserId },
+    $push: { friends: currentUserId },
+  });
 
   res.json({ message: "Friend requset accepted successfully" });
 });

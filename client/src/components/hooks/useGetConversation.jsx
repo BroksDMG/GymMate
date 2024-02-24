@@ -12,10 +12,11 @@ function useGetConversation() {
       try {
         const res = await axios.get("/message/getUsersForSidebar");
         const data = await res.json();
+        console.log(res, data);
         if (data.error) throw new Error(data.error);
         setConversation(data);
       } catch (error) {
-        toast.error(error.message);
+        toast.error("Error whit getting conversation", error.message);
       } finally {
         setLoading(false);
       }

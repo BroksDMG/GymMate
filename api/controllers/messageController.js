@@ -1,4 +1,5 @@
 const Conversation = require("../models/Conversation");
+const User = require("../models/User");
 const Message = require("../models/Message");
 const sendMessage = async (req, res) => {
   try {
@@ -52,10 +53,12 @@ const getMessage = async (req, res) => {
 const getUsersForSidebar = async (req, res) => {
   try {
     const LoggedInUserId = req.user._id;
-    const filteredUsers = await User.find({
-      _id: { $ne: LoggedInUserId },
-    }).select("-password");
-    res.status(200).json(filteredUsers);
+    const { friends: filteredFriendsForUserSideBar } = await User.findById(
+      LoggedInUserId
+    )
+      .populate("friends")
+      .exec();
+    res.status(200).json(filteredFriendsForUserSideBar);
   } catch (error) {
     console.log("Error in getUsersForSidebar controller:", error.message);
     res.status(500).json({ error: "internal server error" });
