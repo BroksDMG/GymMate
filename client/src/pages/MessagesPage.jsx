@@ -40,9 +40,9 @@ function MessagesPage() {
           />
         </a>
 
-        <div className="flex flex-col mt-28 sm:mt-20  lg:mt-32 w-full border-2 rounded-2xl relative px-10 shadow-md shadow-gray-400">
+        <div className="flex flex-col mt-28 sm:mt-20  lg:mt-32 w-full border-2 rounded-2xl relative px-1 sm:px-5 shadow-md shadow-gray-400">
           <label className="w-full h-full flex flex-col justify-center min-w-min max-h-max lg:w-full sm:gap-2 lg:gap-0 ">
-            <div className="flex w-full gap-5 items-end  my-5">
+            <div className="flex w-full gap-1 sm:gap-5 items-end  my-5">
               <SideBar />
               <div className="flex flex-col items-center justify-center  bg-gray-100">
                 <h1 className="text-2xl font-bold mb-4">Messenger</h1>

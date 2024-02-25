@@ -3,9 +3,8 @@ import Conversation from "./Conversation";
 
 function SideBarConversations() {
   const { loading, conversation } = useGetConversation();
-  console.log("conversation", conversation);
   return (
-    <div className="py2 flex flex-col overflow-auto">
+    <div className="pt-2 flex flex-col overflow-auto">
       {conversation.map((conversation) => (
         <Conversation key={conversation._id} conversation={conversation} />
       ))}
