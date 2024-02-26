@@ -17,7 +17,7 @@ function Conversation({ conversation }) {
   );
 
   return (
-    <div className="border-b rounded-md flex items-center">
+    <div className="border-b  rounded-md flex items-center">
       {conversation.avatar?.length > 0 ? (
         <img
           className="w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover object-center top-4"
@@ -31,7 +31,7 @@ function Conversation({ conversation }) {
           className="w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover object-center top-4 "
         />
       )}
-      <span className="flex gap-1 capitalize">
+      <span className="flex gap-1 text-lg capitalize">
         <p>{conversation.name}</p>
         <p>{conversation.surname}</p>
       </span>
