@@ -14,6 +14,14 @@ function MessagesPage() {
       setChat([...chat, message]);
     });
 
+    // Get messages from server when component mounts
+    axios
+      .get(`/message/getMessage/65b1424caec7de72a76d8bd3`)
+      .then((response) => {
+        setChat(response.data);
+      })
+      .catch((error) => console.error("Error:", error));
+
     return () => socketRef.current.disconnect();
   }, [chat]);
 
