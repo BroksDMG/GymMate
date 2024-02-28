@@ -3,6 +3,7 @@ import io from "socket.io-client";
 import logoWithBorder from "../assets/logoWithBorder.svg";
 import axios from "axios";
 import SideBar from "../components/Messages/SideBar";
+import Chat from "../components/Messages/Chat";
 function MessagesPage() {
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
@@ -33,10 +34,10 @@ function MessagesPage() {
     // const msg = { message };
     // socketRef.current.emit("message", msg);
     // setMessage("");
-    console.log(message);
     axios.post(`/message/sendMessage/65b1424caec7de72a76d8bd3`, { message });
     setMessage("");
   };
+  console.log("chat", chat, "messag", message);
   return (
     <div className="w-full h-full rounded-t-[2rem] bg-white mt-32 relative flex flex-col px-1 sm:px-10 lg:px-32">
       <div className=" flex h-full items-center flex-col lg:justify-normal lg:flex-col lg:items-start lg:mb-10">
@@ -53,7 +54,12 @@ function MessagesPage() {
             <div className="flex w-full flex-grow gap-1 sm:gap-5 items-end  my-5">
               <SideBar />
               <div className="flex w-full h-full  flex-col items-center justify-center ">
-                <div className="w-full h-full border border-gray-300 p-4 mb-4 overflow-y-auto bg-white">
+                <Chat
+                  onTextChange={onTextChange}
+                  chat={chat}
+                  sendMessage={onMessageSubmit}
+                />
+                {/* <div className="w-full h-full border border-gray-300 p-4 mb-4 overflow-y-auto bg-white">
                   {chat.map((msg, idx) => (
                     <div key={idx} className="mb-4">
                       {msg}
@@ -74,7 +80,7 @@ function MessagesPage() {
                   >
                     Send
                   </button>
-                </form>
+                </form> */}
               </div>
             </div>
           </label>
