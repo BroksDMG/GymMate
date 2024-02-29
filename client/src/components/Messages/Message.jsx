@@ -1,5 +1,11 @@
 import propTypes from "prop-types";
-function Message({ loggedUserMessage }) {
+import { formatDistanceToNow } from "date-fns";
+function Message({ loggedUserMessage, msgData }) {
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    return formatDistanceToNow(date, { addSuffix: true });
+  }
+  const formattedDate = formatDate(msgData?.createdAt);
   return (
     <div
       style={{
@@ -25,12 +31,11 @@ function Message({ loggedUserMessage }) {
           }}
           className="p-3 "
         >
-          <p className="text-sm">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod.
-          </p>
+          <p className="text-sm">{msgData.message}</p>
         </div>
-        <span className="text-xs text-gray-500 leading-none">2 min ago</span>
+        <span className="text-xs text-gray-500 leading-none">
+          {formattedDate}
+        </span>
       </div>
       {loggedUserMessage && (
         <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
@@ -43,4 +48,5 @@ export default Message;
 
 Message.propTypes = {
   loggedUserMessage: propTypes.bool,
+  msgData: propTypes.object,
 };
