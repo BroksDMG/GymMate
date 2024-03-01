@@ -2,7 +2,7 @@ import propTypes from "prop-types";
 import { useEffect, useState } from "react";
 import useGetImagesFromDataBase from "../hooks/useGetImagesFromDataBase";
 import useImagesFromBinaryArray from "../hooks/useBinaryToImage";
-function Conversation({ conversation }) {
+function Conversation({ conversation, setChatId }) {
   const [imagesData, setImagesData] = useState([]);
   useEffect(() => {
     if (conversation?.avatar) {
@@ -15,9 +15,14 @@ function Conversation({ conversation }) {
   const imageUrlsConversationAvatar = useImagesFromBinaryArray(
     downloadedImagesAvatar
   );
-
+  const handleConversationClick = () => {
+    setChatId(conversation._id);
+  };
   return (
-    <div className="border-b  rounded-md flex items-center">
+    <div
+      className="border-b  rounded-md flex items-center hover:bg-blue-200 cursor-pointer"
+      onClick={handleConversationClick}
+    >
       {conversation.avatar?.length > 0 ? (
         <img
           className="w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover object-center top-4"
@@ -43,4 +48,5 @@ export default Conversation;
 
 Conversation.propTypes = {
   conversation: propTypes.object,
+  setChatId: propTypes.func,
 };
