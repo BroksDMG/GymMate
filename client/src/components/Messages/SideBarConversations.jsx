@@ -1,8 +1,14 @@
 import useGetConversation from "../hooks/useGetConversation";
 import Conversation from "./Conversation";
 import propTypes from "prop-types";
-function SideBarConversations({ chat, chatId, setChatId }) {
+function SideBarConversations({
+  chat,
+  chatId,
+  setChatId,
+  setChatReceiverAvatar,
+}) {
   const { loading, conversation } = useGetConversation();
+
   return (
     <div className="pt-2 flex flex-col overflow-auto">
       {conversation.map((conversation) => (
@@ -10,6 +16,7 @@ function SideBarConversations({ chat, chatId, setChatId }) {
           key={conversation._id}
           conversation={conversation}
           setChatId={setChatId}
+          setChatReceiverAvatar={setChatReceiverAvatar}
         />
       ))}
 
@@ -22,6 +29,7 @@ function SideBarConversations({ chat, chatId, setChatId }) {
 
 export default SideBarConversations;
 SideBarConversations.propTypes = {
+  setChatReceiverAvatar: propTypes.func,
   chat: propTypes.array,
   chatId: propTypes.string,
   setChatId: propTypes.func,

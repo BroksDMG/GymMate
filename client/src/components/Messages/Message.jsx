@@ -1,11 +1,12 @@
 import propTypes from "prop-types";
 import { formatDistanceToNow } from "date-fns";
-function Message({ loggedUserMessage, msgData }) {
+function Message({ loggedUserMessage, msgData, avatar }) {
   function formatDate(dateString) {
     const date = new Date(dateString);
     return formatDistanceToNow(date, { addSuffix: true });
   }
   const formattedDate = formatDate(msgData?.createdAt);
+  console.log(avatar);
   return (
     <div
       style={{
@@ -15,7 +16,9 @@ function Message({ loggedUserMessage, msgData }) {
       className="flex w-full mt-2 space-x-3 max-w-xs "
     >
       {!loggedUserMessage && (
-        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
+        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
+          <img src={avatar} alt="receiverAvatar" />
+        </div>
       )}
       <div>
         <div
@@ -38,7 +41,9 @@ function Message({ loggedUserMessage, msgData }) {
         </span>
       </div>
       {loggedUserMessage && (
-        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
+        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300">
+          <img src={avatar} alt="userAvatar" />
+        </div>
       )}
     </div>
   );

@@ -1,10 +1,17 @@
 import Messages from "./Messages";
 import propTypes from "prop-types";
-function Chat({ onTextChange, chat, sendMessage, message, chatId }) {
+function Chat({
+  onTextChange,
+  chat,
+  sendMessage,
+  message,
+  chatId,
+  chatReceiverAvatar,
+}) {
   return chatId !== "" ? (
     <div className="flex flex-col flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden">
       <div className="flex flex-col flex-grow h-0 p-4 overflow-auto">
-        <Messages chat={chat} />
+        <Messages chat={chat} chatReceiverAvatar={chatReceiverAvatar} />
       </div>
       <form onSubmit={sendMessage} className="bg-gray-300 p-4 flex">
         <input
@@ -35,4 +42,5 @@ Chat.propTypes = {
   sendMessage: propTypes.func,
   message: propTypes.string,
   chatId: propTypes.string,
+  chatReceiverAvatar: propTypes.string,
 };
