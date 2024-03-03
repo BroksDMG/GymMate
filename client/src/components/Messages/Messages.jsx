@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { UserContext } from "../UserContext";
 function Messages({ chat, chatReceiverAvatar }) {
   const { user } = useContext(UserContext);
+
   return (
     <>
       {chat.map((msg) => (
