@@ -1,12 +1,7 @@
 import useGetConversation from "../hooks/useGetConversation";
 import Conversation from "./Conversation";
 import propTypes from "prop-types";
-function SideBarConversations({
-  chat,
-  chatId,
-  setChatId,
-  setChatReceiverAvatar,
-}) {
+function SideBarConversations({ chat, chatId, setChatId, setChatAvatars }) {
   const { loading, conversation } = useGetConversation();
 
   return (
@@ -16,7 +11,7 @@ function SideBarConversations({
           key={conversation._id}
           conversation={conversation}
           setChatId={setChatId}
-          setChatReceiverAvatar={setChatReceiverAvatar}
+          setChatAvatars={setChatAvatars}
         />
       ))}
 
@@ -29,7 +24,7 @@ function SideBarConversations({
 
 export default SideBarConversations;
 SideBarConversations.propTypes = {
-  setChatReceiverAvatar: propTypes.func,
+  setChatAvatars: propTypes.func,
   chat: propTypes.array,
   chatId: propTypes.string,
   setChatId: propTypes.func,

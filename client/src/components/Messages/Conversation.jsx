@@ -2,7 +2,10 @@ import propTypes from "prop-types";
 import { useEffect, useState } from "react";
 import useGetImagesFromDataBase from "../hooks/useGetImagesFromDataBase";
 import useImagesFromBinaryArray from "../hooks/useBinaryToImage";
-function Conversation({ conversation, setChatId, setChatReceiverAvatar }) {
+import { useContext } from "react";
+import { UserContext } from "../UserContext";
+function Conversation({ conversation, setChatId, setChatAvatars }) {
+  const { user } = useContext(UserContext);
   const [imagesData, setImagesData] = useState([]);
   useEffect(() => {
     if (conversation?.avatar) {
@@ -15,9 +18,24 @@ function Conversation({ conversation, setChatId, setChatReceiverAvatar }) {
   const imageUrlsConversationAvatar = useImagesFromBinaryArray(
     downloadedImagesAvatar
   );
+  const [userImagesData, setUserImagesData] = useState([]);
+  useEffect(() => {
+    if (user?.avatar) {
+      setUserImagesData(user.avatar);
+    }
+  }, [user?.avatar]);
+  const [downloadedUserImagesAvatar, errorUserDownload] =
+    useGetImagesFromDataBase(userImagesData);
+  if (errorUserDownload) console.error(errorUserDownload);
+  const imageUserUrlsConversationAvatar = useImagesFromBinaryArray(
+    downloadedUserImagesAvatar
+  );
   const handleConversationClick = () => {
     setChatId(conversation._id);
-    setChatReceiverAvatar(imageUrlsConversationAvatar[0]?.imageData.url);
+    setChatAvatars({
+      receiverAvatar: imageUrlsConversationAvatar[0]?.imageData.url,
+      userAvatar: imageUserUrlsConversationAvatar[0]?.imageData.url,
+    });
   };
 
   return (
@@ -49,7 +67,7 @@ function Conversation({ conversation, setChatId, setChatReceiverAvatar }) {
 export default Conversation;
 
 Conversation.propTypes = {
-  setChatReceiverAvatar: propTypes.func,
+  setChatAvatars: propTypes.func,
   conversation: propTypes.object,
   setChatId: propTypes.func,
 };

@@ -1,7 +1,7 @@
 import InputField from "../InputField";
 import SideBarConversation from "./SideBarConversations";
 import propTypes from "prop-types";
-function SideBar({ chat, chatId, setChatId, setChatReceiverAvatar }) {
+function SideBar({ chat, chatId, setChatId, setChatAvatars }) {
   return (
     <div className="h-full">
       <InputField></InputField>
@@ -9,7 +9,7 @@ function SideBar({ chat, chatId, setChatId, setChatReceiverAvatar }) {
         chat={chat}
         chatId={chatId}
         setChatId={setChatId}
-        setChatReceiverAvatar={setChatReceiverAvatar}
+        setChatAvatars={setChatAvatars}
       />
     </div>
   );
@@ -17,7 +17,7 @@ function SideBar({ chat, chatId, setChatId, setChatReceiverAvatar }) {
 
 export default SideBar;
 SideBar.propTypes = {
-  setChatReceiverAvatar: propTypes.func,
+  setChatAvatars: propTypes.func,
   chat: propTypes.array,
   chatId: propTypes.string,
   setChatId: propTypes.func,

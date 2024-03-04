@@ -6,12 +6,12 @@ function Chat({
   sendMessage,
   message,
   chatId,
-  chatReceiverAvatar,
+  chatAvatars,
 }) {
   return chatId !== "" ? (
     <div className="flex flex-col flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden">
       <div className="flex flex-col flex-grow h-0 p-4 overflow-auto">
-        <Messages chat={chat} chatReceiverAvatar={chatReceiverAvatar} />
+        <Messages chat={chat} chatAvatars={chatAvatars} />
       </div>
       <form onSubmit={sendMessage} className="bg-gray-300 p-4 flex">
         <input
@@ -42,5 +42,5 @@ Chat.propTypes = {
   sendMessage: propTypes.func,
   message: propTypes.string,
   chatId: propTypes.string,
-  chatReceiverAvatar: propTypes.string,
+  chatAvatars: propTypes.string,
 };

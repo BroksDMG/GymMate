@@ -6,7 +6,6 @@ function Message({ loggedUserMessage, msgData, avatar }) {
     return formatDistanceToNow(date, { addSuffix: true });
   }
   const formattedDate = formatDate(msgData?.createdAt);
-  console.log(avatar);
   return (
     <div
       style={{

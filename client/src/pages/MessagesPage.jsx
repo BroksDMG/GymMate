@@ -8,7 +8,7 @@ function MessagesPage() {
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
   const [chatId, setChatId] = useState(""); // Hardcoded chatId for now [TODO: get chatId from URL params or from the server response
-  const [chatReceiverAvatar, setChatReceiverAvatar] = useState("");
+  const [chatAvatars, setChatAvatars] = useState("");
   // 65b1424caec7de72a76d8bd3
   const socketRef = useRef();
   useEffect(() => {
@@ -55,7 +55,7 @@ function MessagesPage() {
                 chat={chat}
                 chatId={chatId}
                 setChatId={setChatId}
-                setChatReceiverAvatar={setChatReceiverAvatar}
+                setChatAvatars={setChatAvatars}
               />
               <div className="flex w-full h-full  flex-col items-center justify-center ">
                 <Chat
@@ -64,7 +64,7 @@ function MessagesPage() {
                   chatId={chatId}
                   sendMessage={onMessageSubmit}
                   message={message}
-                  chatReceiverAvatar={chatReceiverAvatar}
+                  chatAvatars={chatAvatars}
                 />
               </div>
             </div>
