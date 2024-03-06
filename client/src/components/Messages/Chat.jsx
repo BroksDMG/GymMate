@@ -30,7 +30,9 @@ function Chat({
       </form>
     </div>
   ) : (
-    <div className="flex flex-col flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden"></div>
+    <div className="flex flex-col justify-center items-center flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden">
+      Select from sidebar Conversation to start chat
+    </div>
   );
 }
 
