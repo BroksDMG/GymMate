@@ -6,6 +6,7 @@ const userController = require("../controllers/userController");
 router.post("/login", userController.login);
 router.get("/profile", userController.profile);
 router.post("/logout", userController.logout);
+router.get("/user-events", userController.getUserEvents);
 // router.post("/user-avatar", userController.updateAvatar);
 // router.post("/add-friend", userController.addFriend);
 // router.post("/accept-friend", userController.acceptFriend);

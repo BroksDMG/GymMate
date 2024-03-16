@@ -104,9 +104,37 @@ const profile = async (req, res) => {
     res.json(null);
   }
 };
+const getUserEvents = async (req, res) => {
+  try {
+    const { token } = req.cookies;
+
+    if (!token) {
+      return res
+        .status(401)
+        .json({ error: "Unauthorized - Token not provided" });
+    }
+
+    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+      if (err) {
+        console.error(err);
+        return res
+          .status(500)
+          .json({ error: "Internal Server Error - Invalid token" });
+      }
+
+      const { id } = userData;
+      const events = await Event.find({ owner: id });
+      res.json(events);
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 module.exports = {
   login,
   logout,
   profile,
   updateSettings,
+  getUserEvents,
 };
