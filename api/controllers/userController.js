@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Event = require("../models/Event");
 const bcrypt = require("bcrypt");
 const generateToken = require("../middleware/generateToken");
 const mongoose = require("mongoose");
