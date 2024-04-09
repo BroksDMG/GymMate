@@ -9,15 +9,15 @@ function MessagesPage() {
   const [chat, setChat] = useState([]);
   const [chatId, setChatId] = useState(""); // Hardcoded chatId for now [TODO: get chatId from URL params or from the server response
   const [chatAvatars, setChatAvatars] = useState("");
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   // 65b1424caec7de72a76d8bd3
   const socketRef = useRef();
   useEffect(() => {
-    socketRef.current = io.connect("/"); // Connect to the server
+    socketRef.current = io.connect("/");
 
     socketRef.current.on("message", ({ message }) => {
       setChat([...chat, message]);
     });
-    // Get messages from server when component mounts
     axios
       .get(`/message/getMessage/${chatId}`)
       .then((response) => {
@@ -28,6 +28,15 @@ function MessagesPage() {
     return () => socketRef.current.disconnect();
   }, [chat, chatId]);
 
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [windowWidth]);
   const onTextChange = (e) => {
     setMessage(e.target.value);
   };
@@ -51,22 +60,26 @@ function MessagesPage() {
         <div className="flex flex-col h-full  mt-28 sm:mt-20  lg:mt-32 w-full border-2 rounded-2xl relative px-1 sm:px-5 shadow-md shadow-gray-400">
           <label className="w-full h-full  flex flex-col justify-center min-w-min max-h-max lg:w-full sm:gap-2 lg:gap-0 ">
             <div className="flex w-full flex-grow gap-1 sm:gap-5 items-end  my-5">
-              <SideBar
-                chat={chat}
-                chatId={chatId}
-                setChatId={setChatId}
-                setChatAvatars={setChatAvatars}
-              />
-              <div className="flex w-full h-full  flex-col items-center justify-center ">
-                <Chat
-                  onTextChange={onTextChange}
+              {chatId === "" || windowWidth > 640 ? (
+                <SideBar
                   chat={chat}
                   chatId={chatId}
-                  sendMessage={onMessageSubmit}
-                  message={message}
-                  chatAvatars={chatAvatars}
+                  setChatId={setChatId}
+                  setChatAvatars={setChatAvatars}
                 />
-              </div>
+              ) : null}
+              {chatId !== "" || windowWidth > 640 ? (
+                <div className="flex w-full h-full flex-col items-center justify-center ">
+                  <Chat
+                    onTextChange={onTextChange}
+                    chat={chat}
+                    chatId={chatId}
+                    sendMessage={onMessageSubmit}
+                    message={message}
+                    chatAvatars={chatAvatars}
+                  />
+                </div>
+              ) : null}
             </div>
           </label>
         </div>

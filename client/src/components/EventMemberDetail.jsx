@@ -5,8 +5,6 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { format, set } from "date-fns";
 import axios from "axios";
-import { FaHeart } from "react-icons/fa6";
-import { AiFillLike } from "react-icons/ai";
 import { BiSolidCalendarPlus } from "react-icons/bi";
 import Button from "./Button";
 import { toast } from "react-toastify";
@@ -198,23 +196,6 @@ function EventMemberDetail({ event, user }) {
           </div>
         </div>
         <div className="flex mr-1 gap-1">
-          <Button
-            bgColor="bg-red-500"
-            boxShadowColor="rgb(127 29 29)"
-            padding="px-3 py-1"
-            textSize="text-sm sm:text-lg"
-            style="h-9"
-          >
-            <FaHeart />
-          </Button>
-          <Button
-            bgColor="bg-darkBluePrimary"
-            padding="px-3 py-1"
-            textSize="text-sm sm:text-lg"
-            style="h-9"
-          >
-            <AiFillLike />
-          </Button>
           <Button
             bgColor="bg-darkBluePrimary"
             padding="px-3 py-1"
