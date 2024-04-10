@@ -16,17 +16,23 @@ function MessagesPage() {
     socketRef.current = io.connect("/");
 
     socketRef.current.on("message", ({ message }) => {
-      setChat([...chat, message]);
+      setChat((prevChat) => [...prevChat, message]);
     });
-    axios
-      .get(`/message/getMessage/${chatId}`)
-      .then((response) => {
-        setChat(response.data);
-      })
-      .catch((error) => console.error("Error:", error));
 
     return () => socketRef.current.disconnect();
-  }, [chat, chatId]);
+  }, []);
+
+  // Fetch messages when the component mounts and when 'chatId' changes
+  useEffect(() => {
+    if (chatId !== "") {
+      axios
+        .get(`/message/getMessage/${chatId}`)
+        .then((response) => {
+          setChat(response.data);
+        })
+        .catch((error) => console.error("Error:", error));
+    }
+  }, [chatId]); // 'chatId' is the only dependency
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -36,7 +42,7 @@ function MessagesPage() {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [windowWidth]);
+  }, []);
   const onTextChange = (e) => {
     setMessage(e.target.value);
   };
@@ -46,6 +52,7 @@ function MessagesPage() {
     axios.post(`/message/sendMessage/${chatId}`, { message });
     setMessage("");
   };
+  console.log(chatId);
   return (
     <div className="w-full h-full rounded-t-[2rem] bg-white mt-32 relative flex flex-col px-1 sm:px-10 lg:px-32">
       <div className=" flex h-full items-center flex-col lg:justify-normal lg:flex-col lg:items-start lg:mb-10">
@@ -77,6 +84,7 @@ function MessagesPage() {
                     sendMessage={onMessageSubmit}
                     message={message}
                     chatAvatars={chatAvatars}
+                    setChatId={setChatId}
                   />
                 </div>
               ) : null}

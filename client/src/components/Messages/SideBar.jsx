@@ -26,7 +26,7 @@ function SideBar({ setChatId, setChatAvatars }) {
     setSearchedConversation(filteredConversation);
   };
   return (
-    <div className="h-full">
+    <div className="h-full w-full lg:w-1/2">
       <InputField
         value={searchConversation}
         onChange={(e) => handleSearch(e.target.value)}

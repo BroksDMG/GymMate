@@ -4,7 +4,12 @@ import useGetImagesFromDataBase from "../hooks/useGetImagesFromDataBase";
 import useImagesFromBinaryArray from "../hooks/useBinaryToImage";
 import { useContext } from "react";
 import { UserContext } from "../UserContext";
-function Conversation({ conversation, setChatId, setChatAvatars }) {
+function Conversation({
+  conversation,
+  setChatId,
+  setChatAvatars,
+  setIsChatSelected,
+}) {
   const { user } = useContext(UserContext);
   const [imagesData, setImagesData] = useState([]);
   useEffect(() => {
@@ -30,7 +35,8 @@ function Conversation({ conversation, setChatId, setChatAvatars }) {
   const imageUserUrlsConversationAvatar = useImagesFromBinaryArray(
     downloadedUserImagesAvatar
   );
-  const handleConversationClick = () => {
+  const handleConversationClick = (e) => {
+    e.stopPropagation();
     setChatId(conversation._id);
     setChatAvatars({
       receiverAvatar: imageUrlsConversationAvatar[0]?.imageData.url,
@@ -41,7 +47,7 @@ function Conversation({ conversation, setChatId, setChatAvatars }) {
   return (
     <div
       className="border-b  rounded-md flex items-center hover:bg-blue-200 cursor-pointer"
-      onClick={handleConversationClick}
+      onClick={(e) => handleConversationClick(e)}
     >
       {conversation.avatar?.length > 0 ? (
         <img

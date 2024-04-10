@@ -1,5 +1,6 @@
 import Messages from "./Messages";
 import propTypes from "prop-types";
+import { FaArrowLeft } from "react-icons/fa6";
 function Chat({
   onTextChange,
   chat,
@@ -7,9 +8,16 @@ function Chat({
   message,
   chatId,
   chatAvatars,
+  setChatId,
 }) {
   return chatId !== "" ? (
     <div className="flex flex-col flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden">
+      <button
+        onMouseDown={() => setChatId("")}
+        className="p-4 pt-8 absolute text-2xl text-gray-200"
+      >
+        <FaArrowLeft />
+      </button>
       <div className="flex flex-col flex-grow h-0 p-4 overflow-auto">
         <Messages chat={chat} chatAvatars={chatAvatars} />
       </div>
@@ -30,7 +38,7 @@ function Chat({
       </form>
     </div>
   ) : (
-    <div className="flex flex-col justify-center items-center flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden">
+    <div className="flex flex-col min-w-max px-2 justify-center items-center flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden">
       Select from sidebar Conversation to start chat
     </div>
   );
@@ -44,5 +52,6 @@ Chat.propTypes = {
   sendMessage: propTypes.func,
   message: propTypes.string,
   chatId: propTypes.string,
-  chatAvatars: propTypes.string,
+  chatAvatars: propTypes.object,
+  setChatId: propTypes.func,
 };
