@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Stars from "../components/Stars";
 import { PiMapPinFill } from "react-icons/pi";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { format, set } from "date-fns";
+import { format } from "date-fns";
 import axios from "axios";
 import { BiSolidCalendarPlus } from "react-icons/bi";
 import Button from "./Button";
@@ -16,6 +16,7 @@ function EventMemberDetail({ event, user }) {
   const [eventOwner, setEventOwner] = useState({});
   const [guests, setGuests] = useState(event?.guests || []);
   const [imagesData, setImagesData] = useState([]);
+  const navigate = useNavigate();
   let starSize;
   useEffect(() => {
     const hanldeResize = () => {
@@ -86,11 +87,13 @@ function EventMemberDetail({ event, user }) {
   if (errorDownloadPhotos) console.error(errorDownloadPhotos);
   const imageUrlsPhotos = useImagesFromBinaryArray(downloadedImagesPhotos);
   return (
-    <Link
-      to={
-        event?.owner === user?._id
-          ? "/events/" + event._id
-          : "/event-detail/" + event._id
+    <div
+      onClick={() =>
+        navigate(
+          event?.owner === user?._id
+            ? "/events/" + event._id
+            : "/event-detail/" + event._id
+        )
       }
       className="flex flex-col cursor-pointer mt-5 bg-gray-100  rounded-xl shadow-md shadow-gray-400"
     >
@@ -207,7 +210,7 @@ function EventMemberDetail({ event, user }) {
           </Button>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
 EventMemberDetail.propTypes = {

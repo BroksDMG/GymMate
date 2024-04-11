@@ -2,34 +2,25 @@ import InputField from "../InputField";
 import useGetConversation from "../hooks/useGetConversation";
 import { useState } from "react";
 import SideBarConversation from "./SideBarConversations";
+import { conversationFilter } from "../../utils/filterConditions";
+import { useFilter } from "../hooks/useFilter";
 import propTypes from "prop-types";
+import { useSearch } from "../hooks/useSearch";
 function SideBar({ setChatId, setChatAvatars }) {
   const { loading, conversation } = useGetConversation();
   const [searchConversation, setSearchConversation] = useState("");
-  const [searchedConversation, setSearchedConversation] = useState([]);
-  const handleSearch = (searchValue) => {
-    setSearchConversation(searchValue);
-    if (searchValue.length < 3) {
-      setSearchedConversation([]);
-      return;
-    }
-    const filteredConversation = conversation?.filter((event) => {
-      const nameCondition = event.name
-        .toLowerCase()
-        .includes(searchValue.toLowerCase());
+  const filteredItems = useFilter(
+    conversation,
+    searchConversation,
+    conversationFilter
+  );
+  const searchedConversation = useSearch(searchConversation, filteredItems);
 
-      const surnameCondition = event.surname
-        .toLowerCase()
-        .includes(searchValue.toLowerCase());
-      return nameCondition || surnameCondition;
-    });
-    setSearchedConversation(filteredConversation);
-  };
   return (
     <div className="h-full w-full md:w-1/2">
       <InputField
         value={searchConversation}
-        onChange={(e) => handleSearch(e.target.value)}
+        onChange={(e) => setSearchConversation(e.target.value)}
       ></InputField>
       <SideBarConversation
         setChatId={setChatId}

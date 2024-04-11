@@ -9,7 +9,7 @@ function MessagesPage() {
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
   const [chatId, setChatId] = useState("");
-  const [chatAvatars, setChatAvatars] = useState("");
+  const [chatAvatars, setChatAvatars] = useState({});
   const windowWidth = useWindowResize();
 
   useSocket(({ message }) => {
@@ -45,7 +45,6 @@ function MessagesPage() {
       />
     ) : null;
   };
-
   const renderChat = () => {
     return chatId !== "" || windowWidth > 768 ? (
       <div className="flex w-full h-full flex-col items-center justify-center ">
