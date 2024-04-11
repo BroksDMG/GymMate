@@ -11,10 +11,10 @@ function Chat({
   setChatId,
 }) {
   return chatId !== "" ? (
-    <div className="flex flex-col flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden">
+    <div className="flex flex-col flex-grow w-full max-w-2xl bg-white shadow-xl rounded-lg overflow-hidden">
       <button
         onMouseDown={() => setChatId("")}
-        className="p-4 pt-8 absolute text-2xl text-gray-200"
+        className="p-4 pt-8 absolute text-2xl text-gray-200 md:hidden"
       >
         <FaArrowLeft />
       </button>
