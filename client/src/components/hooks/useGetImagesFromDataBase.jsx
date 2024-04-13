@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 
-const useGetImagesFromDataBase = (imagesData) => {
+export default function useGetImagesFromDataBase(imagesData) {
   const [downloadedImages, setDownloadedImages] = useState([]);
   const [error, setError] = useState(null);
 
@@ -26,6 +26,4 @@ const useGetImagesFromDataBase = (imagesData) => {
   }, [imageIds]);
 
   return [downloadedImages, error];
-};
-
-export default useGetImagesFromDataBase;
+}

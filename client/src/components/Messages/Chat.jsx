@@ -1,6 +1,14 @@
 import Messages from "./Messages";
 import propTypes from "prop-types";
 import { FaArrowLeft } from "react-icons/fa6";
+
+function handleMouseDown(setChatId) {
+  setChatId("");
+}
+
+function handleChange(e, onTextChange) {
+  onTextChange(e);
+}
 function Chat({
   onTextChange,
   chat,
@@ -11,9 +19,9 @@ function Chat({
   setChatId,
 }) {
   return chatId !== "" ? (
-    <div className="flex flex-col flex-grow w-full max-w-2xl bg-white shadow-xl rounded-lg overflow-hidden">
+    <section className="flex flex-col flex-grow w-full max-w-2xl bg-white shadow-xl rounded-lg overflow-hidden">
       <button
-        onMouseDown={() => setChatId("")}
+        onMouseDown={() => handleMouseDown(setChatId)}
         className="p-4 pt-8 absolute text-2xl text-gray-200 md:hidden"
       >
         <FaArrowLeft />
@@ -23,7 +31,7 @@ function Chat({
       </div>
       <form onSubmit={sendMessage} className="bg-gray-300 p-4 flex">
         <input
-          onChange={(e) => onTextChange(e)}
+          onChange={(e) => handleChange(e, onTextChange)}
           value={message}
           className="flex items-center h-10 w-full rounded px-3 text-sm"
           type="text"
@@ -36,11 +44,11 @@ function Chat({
           send
         </button>
       </form>
-    </div>
+    </section>
   ) : (
-    <div className="flex flex-col min-w-max px-2 justify-center items-center flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden">
+    <section className="flex flex-col min-w-max px-2 justify-center items-center flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden">
       Select from sidebar Conversation to start chat
-    </div>
+    </section>
   );
 }
 

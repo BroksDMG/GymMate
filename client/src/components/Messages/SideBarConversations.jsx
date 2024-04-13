@@ -7,25 +7,18 @@ function SideBarConversations({
   loading,
   searchedConversation,
 }) {
+  const conversationsToDisplay =
+    searchedConversation.length > 0 ? searchedConversation : conversation;
   return (
     <div className="pt-2 flex flex-col overflow-auto">
-      {searchedConversation.length > 0
-        ? searchedConversation.map((conversation) => (
-            <Conversation
-              key={conversation._id}
-              conversation={conversation}
-              setChatId={setChatId}
-              setChatAvatars={setChatAvatars}
-            />
-          ))
-        : conversation.map((conversation) => (
-            <Conversation
-              key={conversation._id}
-              conversation={conversation}
-              setChatId={setChatId}
-              setChatAvatars={setChatAvatars}
-            />
-          ))}
+      {conversationsToDisplay.map((conversation) => (
+        <Conversation
+          key={conversation._id}
+          conversation={conversation}
+          setChatId={setChatId}
+          setChatAvatars={setChatAvatars}
+        />
+      ))}
 
       {loading && (
         <span className="loading loading-spinner mx-auto">Loading...</span>
