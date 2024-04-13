@@ -6,8 +6,9 @@ function Message({ loggedUserMessage, msgData, avatar }) {
     return formatDistanceToNow(date, { addSuffix: true });
   }
   const formattedDate = formatDate(msgData?.createdAt);
+
   return (
-    <div
+    <article
       style={{
         marginLeft: loggedUserMessage && "auto",
         justifyContent: loggedUserMessage && "flex-end",
@@ -52,7 +53,7 @@ function Message({ loggedUserMessage, msgData, avatar }) {
           />
         </div>
       )}
-    </div>
+    </article>
   );
 }
 

@@ -6,8 +6,8 @@ import { getChatMessage, sendChatMessage } from "../apiServices/chatService";
 import { useWindowResize } from "../components/hooks/useWindowResize";
 import { useSocket } from "../components/hooks/useSocket";
 function MessagesPage() {
-  const [message, setMessage] = useState("");
-  const [chat, setChat] = useState([]);
+  const [message, setMessage] = useState(""); //// state for the message input, updated after each keystroke
+  const [chat, setChat] = useState([]); //// state for the chat messages, updated after each message is sent
   const [chatId, setChatId] = useState("");
   const [chatAvatars, setChatAvatars] = useState({});
   const windowWidth = useWindowResize();
@@ -30,9 +30,10 @@ function MessagesPage() {
     setMessage(e.target.value);
   };
 
-  const onMessageSubmit = (e) => {
+  const onMessageSubmit = async (e) => {
     e.preventDefault();
-    sendChatMessage(chatId, message);
+    const newMessage = await sendChatMessage(chatId, message);
+    setChat((prevChat) => [...prevChat, newMessage.data]);
     setMessage("");
   };
   const renderSideBar = () => {
@@ -84,3 +85,30 @@ function MessagesPage() {
 }
 
 export default MessagesPage;
+// useEffect(() => {
+//   socketRef.current = io.connect("/");
+
+//   socketRef.current.on("message", ({ message }) => {
+//     setChat((prevChat) => [...prevChat, message]);
+//   });
+//   axios
+//     .get(`/message/getMessage/${chatId}`)
+//     .then((response) => {
+//       setChat(response.data);
+//     })
+//     .catch((error) => console.error("Error:", error));
+
+//   return () => socketRef.current.disconnect();
+// }, [chat, chatId]);
+
+// // Fetch messages when the component mounts and when 'chatId' changes
+// useEffect(() => {
+//   if (chatId !== "") {
+//     axios
+//       .get(`/message/getMessage/${chatId}`)
+//       .then((response) => {
+//         setChat(response.data);
+//       })
+//       .catch((error) => console.error("Error:", error));
+//   }
+// }, [chatId]); // 'chatId' is the only dependency

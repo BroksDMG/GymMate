@@ -26,7 +26,7 @@ function Chat({
       >
         <FaArrowLeft />
       </button>
-      <div className="flex flex-col flex-grow h-0 p-4 overflow-auto">
+      <div className="flex flex-col-reverse flex-grow h-0 p-4 overflow-auto">
         <Messages chat={chat} chatAvatars={chatAvatars} />
       </div>
       <form onSubmit={sendMessage} className="bg-gray-300 p-4 flex">

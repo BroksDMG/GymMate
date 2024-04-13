@@ -6,18 +6,23 @@ function Messages({ chat, chatAvatars }) {
   const { user } = useContext(UserContext);
   return (
     <>
-      {chat.map((msg) => (
-        <Message
-          msgData={msg}
-          key={msg._id}
-          loggedUserMessage={user?._id === msg.senderId}
-          avatar={
-            user?._id === msg.senderId
-              ? chatAvatars.userAvatar
-              : chatAvatars.receiverAvatar
-          }
-        />
-      ))}
+      {chat
+        .slice(0)
+        .reverse()
+        .map((msg) => {
+          const isLoggedUserMessage = user?._id === msg.senderId;
+          const avatar = isLoggedUserMessage
+            ? chatAvatars.userAvatar
+            : chatAvatars.receiverAvatar;
+          return (
+            <Message
+              msgData={msg}
+              key={msg._id}
+              loggedUserMessage={isLoggedUserMessage}
+              avatar={avatar}
+            />
+          );
+        })}
     </>
   );
 }
