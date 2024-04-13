@@ -47,7 +47,7 @@ function InputField({
   return (
     <div
       onFocus={() => setIsFocus(true)}
-      className={`w-full h-[40px] lg:h-[60px] text-lightBlue border-lightBlue font-medium  text-sm sm:text-base lg:text-xl min-w-[100px] relative mt-3 sm:mt-6 transform duration-200 ease-linear
+      className={`w-full h-[40px] sm:h-[60px] text-lightBlue border-lightBlue font-medium  text-sm sm:text-base lg:text-xl min-w-[100px] relative mt-3 sm:mt-6 transform duration-200 ease-linear
     hover:border-darkBluePrimary hover:text-darkBluePrimary active:text-mediumBlue
     `}
     >

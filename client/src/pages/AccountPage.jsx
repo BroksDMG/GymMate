@@ -19,7 +19,7 @@ function AccountPage() {
   const [userFriends, setUserFriends] = useState([]);
   const [userFriendsRequest, setUserFriendsRequest] = useState([]);
   useEffect(() => {
-    axios.get("/user-events").then((response) => {
+    axios.get("/user/user-events").then((response) => {
       setUserEvents(response.data);
     });
   }, []);

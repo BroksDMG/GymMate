@@ -61,6 +61,9 @@ export default function EventListPage() {
     setSearchedEvents(filteredEvent);
   };
 
+  const clearFilters = () => {
+    setFilteredEvents([]);
+  };
   const initialSortValues = {
     guestNumber: "",
     startingDate: "",
@@ -133,15 +136,6 @@ export default function EventListPage() {
                     >
                       Address
                     </InputField>
-                    <InputField
-                      name="guestNumber"
-                      id="guestNumber"
-                      onChange={handleChange}
-                      error={errors.guestNumber}
-                      value={values["guestNumber"]}
-                    >
-                      Max Guest
-                    </InputField>
                   </div>
                   <div className="flex flex-col w-full">
                     <DateInputField
@@ -176,8 +170,25 @@ export default function EventListPage() {
                     >
                       Experience
                     </InputField>
-                    <Button type="submit" style="bg-darkBluePrimary">
+                    <InputField
+                      name="guestNumber"
+                      id="guestNumber"
+                      onChange={handleChange}
+                      error={errors.guestNumber}
+                      value={values["guestNumber"]}
+                    >
+                      Max Guest
+                    </InputField>
+                  </div>
+                  <div className="flex w-full">
+                    <Button type="submit" style="bg-darkBluePrimary mt-1">
                       Add Filters
+                    </Button>
+                    <Button
+                      onClick={clearFilters}
+                      style="bg-darkBluePrimary mt-1"
+                    >
+                      Clear Filters
                     </Button>
                   </div>
                 </div>

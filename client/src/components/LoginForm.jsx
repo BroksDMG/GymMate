@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
@@ -21,7 +21,7 @@ function LoginForm({ toggleForm }) {
 
   const handleSubmit = async (values) => {
     await axios
-      .post("/login", { ...values })
+      .post("/user/login", { ...values })
       .then(({ data }) => {
         setUser(data);
         toast.success("Login succesful");

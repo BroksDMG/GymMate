@@ -11,7 +11,7 @@ export function UserContextProvider({ children }) {
   const location = useLocation();
   useEffect(() => {
     if (!user) {
-      axios.get("/profile").then(({ data, status }) => {
+      axios.get("/user/profile").then(({ data, status }) => {
         if (status === 401) {
           setUser(null);
           setRedirect(true);

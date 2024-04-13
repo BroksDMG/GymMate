@@ -1,12 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Stars from "../components/Stars";
 import { PiMapPinFill } from "react-icons/pi";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import axios from "axios";
-import { FaHeart } from "react-icons/fa6";
-import { AiFillLike } from "react-icons/ai";
 import { BiSolidCalendarPlus } from "react-icons/bi";
 import Button from "./Button";
 import { toast } from "react-toastify";
@@ -19,6 +17,7 @@ function EventListElement({ event, user }) {
   const [guests, setGuests] = useState(event?.guests || []);
   const [imagesAvatarData, setImagesAvatarData] = useState([]);
   const [imagesPhotosData, setImagesPhotosData] = useState([]);
+  const navigate = useNavigate();
   let starSize;
   useEffect(() => {
     const hanldeResize = () => {
@@ -93,11 +92,13 @@ function EventListElement({ event, user }) {
   if (errorDownloadPhotos) console.error(errorDownloadPhotos);
   const imageUrlsPhotos = useImagesFromBinaryArray(downloadedImagesPhotos);
   return (
-    <Link
-      to={
-        event?.owner === user?._id
-          ? "/events/" + event._id
-          : "/event-detail/" + event._id
+    <div
+      onClick={() =>
+        navigate(
+          event?.owner === user?._id
+            ? "/events/" + event._id
+            : "/event-detail/" + event._id
+        )
       }
       className="flex flex-col cursor-pointer mt-5 bg-gray-100  rounded-xl shadow-md shadow-gray-400"
     >
@@ -204,23 +205,6 @@ function EventListElement({ event, user }) {
         </div>
         <div className="flex mr-1 gap-1">
           <Button
-            bgColor="bg-red-500"
-            boxShadowColor="rgb(127 29 29)"
-            padding="px-3 py-1"
-            textSize="text-sm sm:text-lg"
-            style="h-9"
-          >
-            <FaHeart />
-          </Button>
-          <Button
-            bgColor="bg-darkBluePrimary"
-            padding="px-3 py-1"
-            textSize="text-sm sm:text-lg"
-            style="h-9"
-          >
-            <AiFillLike />
-          </Button>
-          <Button
             bgColor="bg-darkBluePrimary"
             padding="px-3 py-1"
             textSize="text-sm sm:text-lg"
@@ -231,7 +215,7 @@ function EventListElement({ event, user }) {
           </Button>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
 EventListElement.propTypes = {
