@@ -125,7 +125,7 @@ export default function EventListPage() {
             return (
               <Form>
                 {console.log(errors)}
-                <div className="flex flex-col items-center w-full mt-5">
+                <section className="flex flex-col items-center w-full mt-5 border-b-2 border-black pb-10">
                   <div className="flex w-full">
                     <InputField
                       name="address"
@@ -191,7 +191,7 @@ export default function EventListPage() {
                       Clear Filters
                     </Button>
                   </div>
-                </div>
+                </section>
               </Form>
             );
           }}

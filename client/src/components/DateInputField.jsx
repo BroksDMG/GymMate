@@ -39,7 +39,7 @@ function TextAreaField({ children, value, error, ...props }) {
         onClick={() => handleOnClick()}
         onBlur={() => setIsFocus(value ? true : false)}
         style={{}}
-        className={`border-[2px] rounded-l-xl sm:rounded-l-2xl lg:rounded-l-3xl text-right  resize-none gap-3 text-mediumBlue  p-1 pr-2 sm:p-4  border-inherit w-full focus-visible:outline-none
+        className={`border-[2px] rounded-l-xl sm:rounded-l-2xl lg:rounded-l-xl text-right  resize-none gap-3 text-mediumBlue  p-1 pr-2 sm:p-4  border-inherit w-full focus-visible:outline-none
       hover:border-inherit 
       
       ${isFocus ? "text-mediumBlue border-mediumBlue  " : ""}`}
