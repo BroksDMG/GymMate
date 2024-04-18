@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import InputField from "./InputField";
 import axios from "axios";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import { Link } from "react-router-dom";
 import graphicGymRoomLogin from "../assets/graphicGymRoomLogin.svg";
@@ -17,8 +17,8 @@ import PropsTypes from "prop-types";
 
 function LoginForm({ toggleForm }) {
   const [redirect, setRedirect] = useState(false);
-  const { setUser } = useContext(UserContext);
-
+  const { setUser, user } = useContext(UserContext);
+  const location = useLocation();
   const handleSubmit = async (values) => {
     await axios
       .post("/user/login", { ...values })
@@ -42,7 +42,7 @@ function LoginForm({ toggleForm }) {
     email: Yup.string().email("Email is invalid").required("Email is required"),
   });
 
-  if (redirect) {
+  if (redirect || (user && location.pathname !== "/login")) {
     return <Navigate to={"/events"} />;
   }
 

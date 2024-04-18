@@ -109,96 +109,110 @@ export default function EventListPage() {
           </div>
         </div>
       </div>
-      {showSortForm && (
-        <Formik
-          initialValues={initialSortValues}
-          validationSchema={sortValidationSchema}
-          validateOnBlur={false}
-          validateOnChange={false}
-          validateOnMount={false}
-          onSubmit={handleSubmit}
-        >
-          {({ values, handleChange, errors, setFieldValue }) => {
-            function handleExpClick(value) {
-              setFieldValue("experience", value);
-            }
-            return (
-              <Form>
-                {console.log(errors)}
-                <section className="flex flex-col items-center w-full mt-5 border-b-2 border-black pb-10">
-                  <div className="flex w-full">
-                    <InputField
-                      name="address"
-                      id="address"
-                      onChange={handleChange}
-                      error={errors.address}
-                      value={values["address"]}
-                    >
-                      Address
-                    </InputField>
-                  </div>
-                  <div className="flex flex-col w-full">
-                    <DateInputField
-                      type="date"
-                      name="startingDate"
-                      id="startingDate"
-                      onChange={handleChange}
-                      error={errors.startingDate}
-                      value={values["startingDate"]}
-                    >
-                      Starting Date
-                    </DateInputField>
-                    <DateInputField
-                      type="date"
-                      name="endingDate"
-                      id="endingDate"
-                      onChange={handleChange}
-                      error={errors.endingDate}
-                      value={values["endingDate"]}
-                    >
-                      Finishing Date
-                    </DateInputField>
-                  </div>
-                  <div className="flex w-full items-center ">
-                    <InputField
-                      name="experience"
-                      id="experience"
-                      listOnChange={handleExpClick}
-                      error={errors.experience}
-                      isList={true}
-                      listOptions={["Beginner", "Intermediate", "Advanced"]}
-                    >
-                      Experience
-                    </InputField>
-                    <InputField
-                      name="guestNumber"
-                      id="guestNumber"
-                      onChange={handleChange}
-                      error={errors.guestNumber}
-                      value={values["guestNumber"]}
-                    >
-                      Max Guest
-                    </InputField>
-                  </div>
-                  <div className="flex w-full">
+      <Formik
+        initialValues={initialSortValues}
+        validationSchema={sortValidationSchema}
+        validateOnBlur={false}
+        validateOnChange={false}
+        validateOnMount={false}
+        onSubmit={handleSubmit}
+      >
+        {({ values, handleChange, errors, setFieldValue }) => {
+          function handleExpClick(value) {
+            setFieldValue("experience", value);
+          }
+          return (
+            <Form
+              className={`flex flex-col items-center w-screen mt-5  -mx-2 sm:-mx-10 md:-mx-20 lg:-mx-10 xl:-mx-20  transition-all duration-700 ease-out transform ${
+                showSortForm
+                  ? "translate-y-0 opacity-100 visible"
+                  : "-translate-y-10 opacity-0 invisible  "
+              }`}
+            >
+              {console.log(errors)}
+              <section
+                className={`flex flex-col items-screen w-full rounded-b-3xl pb-5 px-2 sm:px-10 md:px-20 lg:px-10 xl:px-20 shadow-xl shadow-gray-300 `}
+              >
+                <div className="flex w-full">
+                  <InputField
+                    name="address"
+                    id="address"
+                    onChange={handleChange}
+                    error={errors.address}
+                    value={values["address"]}
+                  >
+                    Address
+                  </InputField>
+                </div>
+                <div className="flex flex-col sm:flex-row w-full gap-5">
+                  <DateInputField
+                    type="date"
+                    name="startingDate"
+                    id="startingDate"
+                    onChange={handleChange}
+                    error={errors.startingDate}
+                    value={values["startingDate"]}
+                  >
+                    Starting Date
+                  </DateInputField>
+                  <DateInputField
+                    type="date"
+                    name="endingDate"
+                    id="endingDate"
+                    onChange={handleChange}
+                    error={errors.endingDate}
+                    value={values["endingDate"]}
+                  >
+                    Finishing Date
+                  </DateInputField>
+                </div>
+                <div className="flex w-full  items-center gap-5 ">
+                  <InputField
+                    name="experience"
+                    id="experience"
+                    listOnChange={handleExpClick}
+                    error={errors.experience}
+                    isList={true}
+                    listOptions={["Beginner", "Intermediate", "Advanced"]}
+                  >
+                    Experience
+                  </InputField>
+                  <InputField
+                    name="guestNumber"
+                    id="guestNumber"
+                    onChange={handleChange}
+                    error={errors.guestNumber}
+                    value={values["guestNumber"]}
+                  >
+                    Max Guest
+                  </InputField>
+                </div>
+                <div className="flex w-full justify-end mt-3 ">
+                  <div className="flex w-full sm:w-1/2 sm:pl-3 gap-5">
                     <Button type="submit" style="bg-darkBluePrimary mt-1">
-                      Add Filters
+                      Add
                     </Button>
                     <Button
                       onClick={clearFilters}
                       style="bg-darkBluePrimary mt-1"
                     >
-                      Clear Filters
+                      Clear
                     </Button>
                   </div>
-                </section>
-              </Form>
-            );
-          }}
-        </Formik>
-      )}
+                </div>
+              </section>
+            </Form>
+          );
+        }}
+      </Formik>
 
-      <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
+      <div
+        className={`mt-10 grid grid-cols-1 lg:grid-cols-2 gap-10 transition-all duration-500 ease-out transform ${
+          showSortForm
+            ? "translate-y-0 "
+            : "sm:-translate-y-64 -translate-y-80 md:-translate-y-80 lg:-translate-y-[22rem] "
+        }`}
+      >
         {searchedEvents.length > 0
           ? searchedEvents.map((searchedEvent, key) => (
               <EventListElement event={searchedEvent} key={key} user={user} />
