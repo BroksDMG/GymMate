@@ -4,33 +4,28 @@ import { PiMapPinFill } from "react-icons/pi";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
-import axios from "axios";
 import { BiSolidCalendarPlus } from "react-icons/bi";
 import Button from "./Button";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useGetImagesFromDataBase from "./hooks/useGetImagesFromDataBase";
 import useImagesFromBinaryArray from "./hooks/useBinaryToImage";
+import { useWindowResize } from "./hooks/useWindowResize";
+import { getEventOwner, joinEvent } from "../apiServices/eventService";
+import useAvatarImg from "./hooks/useAvatarImg";
+import defaultUserAvatar from "../assets/defaultUser.png";
 function EventListElement({ event, user }) {
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [eventOwner, setEventOwner] = useState({});
   const [guests, setGuests] = useState(event?.guests || []);
   const [imagesAvatarData, setImagesAvatarData] = useState([]);
   const [imagesPhotosData, setImagesPhotosData] = useState([]);
   const navigate = useNavigate();
+  const screenWidth = useWindowResize();
+  const userAvatar = useAvatarImg(event?.avatar, defaultUserAvatar);
   let starSize;
   useEffect(() => {
-    const hanldeResize = () => {
-      setScreenWidth(window.innerWidth);
-    };
-    window.addEventListener("resize", hanldeResize);
-    return () => {
-      window.removeEventListener("resize", hanldeResize);
-    };
-  }, []);
-  useEffect(() => {
     if (event.owner) {
-      axios.get("/event-owner/" + event?.owner).then(({ data }) => {
+      getEventOwner(event).then(({ data }) => {
         setEventOwner(data);
       });
     }
@@ -61,8 +56,7 @@ function EventListElement({ event, user }) {
   }
   function joinEventHandler() {
     if (event.owner === user._id) return;
-    axios
-      .post("/join-event", { guestId: user._id, eventId: event._id })
+    joinEvent(user, event)
       .then(({ data }) => {
         if (data === "joined") {
           toast.success("You joined the event");
@@ -73,15 +67,7 @@ function EventListElement({ event, user }) {
         toast.error(error.response.data.error);
       });
   }
-  useEffect(() => {
-    if (event?.avatar) {
-      setImagesAvatarData(event.avatar);
-    }
-  }, [event?.avatar]);
-  const [downloadedImagesAvatar, errorDownload] =
-    useGetImagesFromDataBase(imagesAvatarData);
-  if (errorDownload) console.error(errorDownload);
-  const imageUrlsAvatar = useImagesFromBinaryArray(downloadedImagesAvatar);
+
   useEffect(() => {
     if (event?.photos) {
       setImagesPhotosData(event.photos);
@@ -118,19 +104,11 @@ function EventListElement({ event, user }) {
               to={"/account/" + event.owner}
               className="absolute -translate-y-10 hover:-translate-y-12 sm:hover:-translate-y-16  sm:-translate-y-14 flex justify-center items-center w-[89px] h-[89px] sm:w-[105px] sm:h-[105px] bg-white rounded-full  "
             >
-              {event.avatar?.length > 0 ? (
-                <img
-                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover object-center top-4"
-                  src={imageUrlsAvatar[0]?.imageData.url}
-                  alt="defaultProfileImg"
-                />
-              ) : (
-                <img
-                  src="https://img.freepik.com/free-photo/elf-woman-forest_71767-117.jpg?w=826&t=st=1699015819~exp=1699016419~hmac=74e1f2bd99b8e2de4489799ab8476301c1747e33fbb6fb1d6da863b5c6230ca6"
-                  alt="profileImg"
-                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover object-center top-4 "
-                />
-              )}
+              <img
+                className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover object-center top-4"
+                src={userAvatar}
+                alt="defaultProfileImg"
+              />
             </Link>
             <div className="w-[120px]  sm:w-[105px]  "></div>
             <h2 className="text-4xl sm:text-5xl font-bold uppercase w-full flex justify-center">
