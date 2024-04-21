@@ -9,28 +9,23 @@ import { BiSolidCalendarPlus } from "react-icons/bi";
 import Button from "./Button";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import useGetImagesFromDataBase from "./hooks/useGetImagesFromDataBase";
-import useImagesFromBinaryArray from "./hooks/useBinaryToImage";
+import { useWindowResize } from "./hooks/useWindowResize";
+import defaultUserAvatar from "../assets/defaultUser.png";
+import defaultBacgroudImage from "../assets/show_a_default_image.png";
+import useAvatarImg from "./hooks/useAvatarImg";
+import { getEventOwner, joinEvent } from "../apiServices/eventService";
 function EventMemberDetail({ event, user }) {
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [eventOwner, setEventOwner] = useState({});
   const [guests, setGuests] = useState(event?.guests || []);
-  const [imagesData, setImagesData] = useState([]);
   const navigate = useNavigate();
+  const screenWidth = useWindowResize();
+  const userAvatar = useAvatarImg(event?.avatar, defaultUserAvatar);
+  const bacgroundImage = useAvatarImg(event?.photos, defaultBacgroudImage);
   let starSize;
-  useEffect(() => {
-    const hanldeResize = () => {
-      setScreenWidth(window.innerWidth);
-    };
-    window.addEventListener("resize", hanldeResize);
-    return () => {
-      window.removeEventListener("resize", hanldeResize);
-    };
-  }, []);
 
   useEffect(() => {
     if (event.owner) {
-      axios.get("/event-owner/" + event?.owner).then(({ data }) => {
+      getEventOwner(event).then(({ data }) => {
         setEventOwner(data);
       });
     }
@@ -61,8 +56,7 @@ function EventMemberDetail({ event, user }) {
   }
   function joinEventHandler() {
     if (event.owner === user._id) return;
-    axios
-      .post("/join-event", { guestId: user._id, eventId: event._id })
+    joinEvent(user, event)
       .then(({ data }) => {
         if (data === "joined") {
           toast.success("You joined the event");
@@ -73,19 +67,7 @@ function EventMemberDetail({ event, user }) {
         toast.error(error.response.data.error);
       });
   }
-  const [downloadedImagesAvatar, errorDownload] =
-    useGetImagesFromDataBase(imagesData);
-  if (errorDownload) console.error(errorDownload);
-  const imageUrlsAvatar = useImagesFromBinaryArray(downloadedImagesAvatar);
-  useEffect(() => {
-    if (event?.photos) {
-      setImagesData(event.photos);
-    }
-  }, [event?.photos]);
-  const [downloadedImagesPhotos, errorDownloadPhotos] =
-    useGetImagesFromDataBase(imagesData);
-  if (errorDownloadPhotos) console.error(errorDownloadPhotos);
-  const imageUrlsPhotos = useImagesFromBinaryArray(downloadedImagesPhotos);
+
   return (
     <div
       onClick={() =>
@@ -95,16 +77,14 @@ function EventMemberDetail({ event, user }) {
             : "/event-detail/" + event._id
         )
       }
-      className="flex flex-col cursor-pointer mt-5 bg-gray-100  rounded-xl shadow-md shadow-gray-400"
+      className="flex flex-col max-w-4xl cursor-pointer mt-5 bg-gray-100  rounded-xl shadow-md shadow-gray-400"
     >
       <div className="h-24 sm:h-32 w-full bg-gray-300 flex rounded-t-xl">
-        {event?.photos?.length > 0 && (
-          <img
-            className="w-full object-cover  rounded-t-xl"
-            src={imageUrlsPhotos[0]?.imageData.url}
-            alt=""
-          />
-        )}
+        <img
+          className="w-full object-cover  rounded-t-xl"
+          src={bacgroundImage}
+          alt="bacgroundImage"
+        />
       </div>
       <div className=" relative flex flex-col  px-4 pb-1  gap-3  md:px-10 ">
         <div className="flex flex-col w-full  h-full ">
@@ -113,19 +93,11 @@ function EventMemberDetail({ event, user }) {
               to={"/account/" + event.owner}
               className="absolute -translate-y-10 hover:-translate-y-12 sm:hover:-translate-y-16  sm:-translate-y-14 flex justify-center items-center w-[89px] h-[89px] sm:w-[105px] sm:h-[105px] bg-white rounded-full  "
             >
-              {event.avatar?.length > 0 ? (
-                <img
-                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover object-center top-4"
-                  src={imageUrlsAvatar[0]?.imageData.url}
-                  alt="defaultProfileImg"
-                />
-              ) : (
-                <img
-                  src="https://img.freepik.com/free-photo/elf-woman-forest_71767-117.jpg?w=826&t=st=1699015819~exp=1699016419~hmac=74e1f2bd99b8e2de4489799ab8476301c1747e33fbb6fb1d6da863b5c6230ca6"
-                  alt="profileImg"
-                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover object-center top-4 "
-                />
-              )}
+              <img
+                className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover object-center top-4"
+                src={userAvatar}
+                alt="defaultProfileImg"
+              />
             </Link>
             <div className="w-[120px]  sm:w-[105px]  "></div>
             <h2 className="text-4xl sm:text-5xl font-bold uppercase w-full flex justify-center">

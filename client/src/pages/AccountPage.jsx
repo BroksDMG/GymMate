@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../components/UserContext";
 import { Navigate } from "react-router-dom";
-import axios from "axios";
 import NavigationMenuBottom from "../components/NavigationMenuBottom";
 import PhotosUploder from "../components/PhotosUploder";
 import { Form, Formik } from "formik";
@@ -11,30 +10,33 @@ import UserEventsList from "../components/UserEventsList";
 import TextAreaField from "../components/TextAreaField";
 import UserGallery from "../components/UserGallery";
 import UserFriendsList from "../components/UserFriendsList";
+import {
+  addUserAvatar,
+  getFriendsRequest,
+  getUserEvents,
+  getFriendById,
+} from "../apiServices/userService";
 function AccountPage() {
   const { ready, user, setUser } = useContext(UserContext);
-  const [redirect, setRedirect] = useState(null);
   const [avtiveTab, setActiveTab] = useState(1);
   const [userEvents, setUserEvents] = useState([]);
   const [userFriends, setUserFriends] = useState([]);
   const [userFriendsRequest, setUserFriendsRequest] = useState([]);
   useEffect(() => {
-    axios.get("/user/user-events").then((response) => {
+    getUserEvents().then((response) => {
       setUserEvents(response.data);
     });
   }, []);
   useEffect(() => {
     if (!user) return;
-    axios.get(`/friend-request/${user._id}`).then((response) => {
-      const { data } = response;
-      setUserFriendsRequest(data);
+    getFriendsRequest(user).then((response) => {
+      setUserFriendsRequest(response.data);
     });
   }, [user]);
   useEffect(() => {
     if (!user) return;
-    axios.get(`/friends/${user._id}`).then((response) => {
-      const { data } = response;
-      setUserFriends(data);
+    getFriendById(user).then((response) => {
+      setUserFriends(response.data);
     });
   }, [user]);
   const initialFormValues = {
@@ -45,11 +47,8 @@ function AccountPage() {
   if (!ready) {
     return "Loading...";
   }
-  if (ready && !user && !redirect) {
+  if (ready && !user) {
     return <Navigate to={"/login"} />;
-  }
-  if (redirect) {
-    return <Navigate to={redirect} />;
   }
   const validationSchema = Yup.object().shape({
     avatar: Yup.array(),
@@ -57,10 +56,7 @@ function AccountPage() {
     gallery: Yup.array(),
   });
   async function photosUploderSubmit(values) {
-    await axios.post("/user-avatar", {
-      ...user,
-      ...values,
-    });
+    addUserAvatar(user, values);
     setUser((prev) => ({
       ...prev,
       ...values,
