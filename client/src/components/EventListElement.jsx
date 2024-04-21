@@ -8,20 +8,18 @@ import { BiSolidCalendarPlus } from "react-icons/bi";
 import Button from "./Button";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import useGetImagesFromDataBase from "./hooks/useGetImagesFromDataBase";
-import useImagesFromBinaryArray from "./hooks/useBinaryToImage";
 import { useWindowResize } from "./hooks/useWindowResize";
 import { getEventOwner, joinEvent } from "../apiServices/eventService";
 import useAvatarImg from "./hooks/useAvatarImg";
 import defaultUserAvatar from "../assets/defaultUser.png";
+import defaultBacgroudImage from "../assets/show_a_default_image.png";
 function EventListElement({ event, user }) {
   const [eventOwner, setEventOwner] = useState({});
   const [guests, setGuests] = useState(event?.guests || []);
-  const [imagesAvatarData, setImagesAvatarData] = useState([]);
-  const [imagesPhotosData, setImagesPhotosData] = useState([]);
   const navigate = useNavigate();
   const screenWidth = useWindowResize();
   const userAvatar = useAvatarImg(event?.avatar, defaultUserAvatar);
+  const bacgroundImage = useAvatarImg(event?.photos, defaultBacgroudImage);
   let starSize;
   useEffect(() => {
     if (event.owner) {
@@ -68,15 +66,6 @@ function EventListElement({ event, user }) {
       });
   }
 
-  useEffect(() => {
-    if (event?.photos) {
-      setImagesPhotosData(event.photos);
-    }
-  }, [event?.photos]);
-  const [downloadedImagesPhotos, errorDownloadPhotos] =
-    useGetImagesFromDataBase(imagesPhotosData);
-  if (errorDownloadPhotos) console.error(errorDownloadPhotos);
-  const imageUrlsPhotos = useImagesFromBinaryArray(downloadedImagesPhotos);
   return (
     <div
       onClick={() =>
@@ -89,13 +78,11 @@ function EventListElement({ event, user }) {
       className="flex flex-col cursor-pointer mt-5 bg-gray-100  rounded-xl shadow-md shadow-gray-400"
     >
       <div className="h-24 sm:h-32 w-full bg-gray-300 flex rounded-t-xl">
-        {event?.photos?.length > 0 && (
-          <img
-            className="w-full object-cover  rounded-t-xl"
-            src={imageUrlsPhotos[0]?.imageData.url}
-            alt=""
-          />
-        )}
+        <img
+          className="w-full object-cover  rounded-t-xl"
+          src={bacgroundImage}
+          alt=""
+        />
       </div>
       <div className=" relative flex flex-col  px-4 pb-1  gap-3  md:px-10 ">
         <div className="flex flex-col w-full  h-full ">
