@@ -88,6 +88,7 @@ function EventListElement({ event, user }) {
         <div className="flex flex-col w-full  h-full ">
           <div className="flex">
             <Link
+              onClick={(event) => event.stopPropagation()}
               to={"/account/" + event.owner}
               className="absolute -translate-y-10 hover:-translate-y-12 sm:hover:-translate-y-16  sm:-translate-y-14 flex justify-center items-center w-[89px] h-[89px] sm:w-[105px] sm:h-[105px] bg-white rounded-full  "
             >

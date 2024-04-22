@@ -22,7 +22,6 @@ export function UserContextProvider({ children }) {
       });
     }
   }, [user, ready]);
-  console.log(ready);
   if (redirect) {
     if (location.pathname !== "/login") {
       return <Navigate to={"/login"} />;

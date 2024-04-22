@@ -4,7 +4,6 @@ import { PiMapPinFill } from "react-icons/pi";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
-import axios from "axios";
 import { BiSolidCalendarPlus } from "react-icons/bi";
 import Button from "./Button";
 import { toast } from "react-toastify";

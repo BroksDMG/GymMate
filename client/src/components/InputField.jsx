@@ -77,6 +77,7 @@ function InputField({
         {...props}
         value={isList ? selectedValue : value}
         onChange={onChange}
+        readOnly={!onChange}
       ></input>
       <div
         className={`absolute top-2 md:top-4 lg:top-3 left-3 sm:left-5 pt-0.5 bg-white  pointer-events-none  max-w-max transform duration-200 ease-linear${

@@ -129,7 +129,6 @@ export default function EventListPage() {
                   : "-translate-y-10 opacity-0 invisible  "
               }`}
             >
-              {console.log(errors)}
               <section
                 className={`flex flex-col items-screen w-full rounded-b-3xl pb-5 px-2 sm:px-10 md:px-20 lg:px-10 xl:px-20 shadow-xl shadow-gray-300 `}
               >

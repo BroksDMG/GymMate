@@ -5,10 +5,10 @@ import { useContext, useEffect } from "react";
 import { AiFillPlusCircle } from "react-icons/ai";
 import { BsPlusCircleDotted } from "react-icons/bs";
 import { FaRegTrashAlt } from "react-icons/fa";
-import userDefaultAvatar from "../assets/user-128.png";
 import useImagesFromBinaryArray from "./hooks/useBinaryToImage";
 import useGetImagesFromDataBase from "./hooks/useGetImagesFromDataBase";
 import { useState } from "react";
+import defaulUserAvatar from "../assets/defaultUser.png";
 export default function PhotosUploder({
   addedPhotos,
   onChange,
@@ -20,7 +20,7 @@ export default function PhotosUploder({
   const { user } = useContext(UserContext);
   const [imagesData, setImagesData] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
-
+  ////////////if avatar is added set it as main photo, else set uplodaded photo
   useEffect(() => {
     if (isUserAvatar && user?.avatar && !isUploading) {
       setImagesData(user?.avatar);
@@ -28,7 +28,7 @@ export default function PhotosUploder({
       setImagesData(addedPhotos);
     }
   }, [isUserAvatar, user?.avatar, addedPhotos, isUploading]);
-
+  ////////////uploading images to server as binary data
   async function handleFileUpload(files) {
     const formData = new FormData();
     for (let file of files) {
@@ -44,15 +44,16 @@ export default function PhotosUploder({
       return null;
     }
   }
-
+  //////// get images from database and convert them to urls
   const [downloadedImages, error] = useGetImagesFromDataBase(imagesData);
   if (error) console.error(error);
-
   const imageUrls = useImagesFromBinaryArray(downloadedImages);
+
   function removePhoto(ev, fileName) {
     ev.preventDefault();
     onChange([...addedPhotos.filter((photo) => photo !== fileName)]);
   }
+
   useEffect(() => {
     if (isGallery) {
       onChange(imageUrls);
@@ -105,7 +106,7 @@ export default function PhotosUploder({
         <div className="w-full flex relative">
           {addedPhotos?.length === 0 && isUserAvatar && !user.avatar[0] && (
             <img
-              src={userDefaultAvatar}
+              src={defaulUserAvatar}
               alt="defaultImageBacground"
               className={`${backgroundStyles}  object-center object-cover `}
             />
@@ -136,11 +137,20 @@ export default function PhotosUploder({
           {addedPhotos?.length > 0 &&
             addedPhotos.map((link) => (
               <div className="w-full" key={link}>
-                <img
-                  src={link?.imageData?.url}
-                  alt="adedeventImageBacground"
-                  className={`${backgroundStyles}  object-center object-cover `}
-                />
+                {link?.imageData?.url ? (
+                  <img
+                    src={link?.imageData?.url}
+                    alt="adedeventImageBacground"
+                    className={`${backgroundStyles}  object-center object-cover `}
+                  />
+                ) : (
+                  <img
+                    src={defaulUserAvatar}
+                    alt="adedeventImageBacground"
+                    className={`${backgroundStyles}  object-center object-cover `}
+                  />
+                )}
+
                 {!isDisplayOnly && (
                   <button
                     onClick={(ev) => {
