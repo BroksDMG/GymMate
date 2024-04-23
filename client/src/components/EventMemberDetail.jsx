@@ -76,7 +76,7 @@ function EventMemberDetail({ event, user }) {
             : "/event-detail/" + event._id
         )
       }
-      className="flex flex-col max-w-4xl cursor-pointer mt-5 bg-gray-100  rounded-xl shadow-md shadow-gray-400"
+      className="flex flex-col max-w-3xl cursor-pointer mt-5 bg-gray-100  rounded-xl shadow-md shadow-gray-400"
     >
       <div className="h-24 sm:h-32 w-full bg-gray-300 flex rounded-t-xl">
         <img

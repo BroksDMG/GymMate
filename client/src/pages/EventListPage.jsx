@@ -89,23 +89,32 @@ export default function EventListPage() {
             className="w-52 lg:w-full "
           />
         </a>
-        <div className="flex items-center flex-col mt-20 lg:mt-0 w-full lg:flex-row-reverse lg:pl-80">
+        <div className="flex  items-center flex-col mt-20 lg:mt-0 w-full lg:flex-row-reverse lg:pl-80">
           <InputField
             value={serchValue}
             onChange={(e) => handleSearch(e.target.value)}
           >
             Search
           </InputField>
-          <div className="flex gap-5 lg:mr-5 mt-5 translate-y-5 lg:mt-0 lg:translate-y-2 w-64 sm:w-96 justify-center">
-            <Link className="w-full" to={"/events/new"}>
-              <Button style="bg-darkBluePrimary">Add new</Button>
-            </Link>
-            <Button
-              onClick={() => setShowSortForm((e) => !e)}
-              style="bg-darkBluePrimary"
-            >
-              Sort
-            </Button>
+          <div className=" flex w-full justify-end   ">
+            <div className="gap-3 flex lg:gap-5 lg:mr-5  translate-y-2  lg:translate-y-2  sm:w-64">
+              <Link className="w-full" to={"/events/new"}>
+                <Button
+                  style="bg-darkBluePrimary"
+                  textSize="text-xs sm:text-sm"
+                >
+                  Add new
+                </Button>
+              </Link>
+              <Button
+                onClick={() => setShowSortForm((e) => !e)}
+                style="bg-darkBluePrimary "
+                textSize="text-xs sm:text-sm"
+                padding="px-5 py-2"
+              >
+                Sort
+              </Button>
+            </div>
           </div>
         </div>
       </div>
