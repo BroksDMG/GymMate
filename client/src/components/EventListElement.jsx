@@ -20,6 +20,9 @@ function EventListElement({ event, user }) {
   const screenWidth = useWindowResize();
   const userAvatar = useAvatarImg(event?.avatar, defaultUserAvatar);
   const bacgroundImage = useAvatarImg(event?.photos, defaultBacgroudImage);
+  const [conditonsForTitleHeiht, setConditionsForTitleHeiht] = useState([
+    9, 13, 30,
+  ]);
   let starSize;
   useEffect(() => {
     if (event.owner) {
@@ -66,6 +69,26 @@ function EventListElement({ event, user }) {
       });
   }
 
+  useEffect(() => {
+    if (screenWidth >= 639) {
+      setConditionsForTitleHeiht([25, 32, 43]);
+    } else if (screenWidth >= 500) {
+      setConditionsForTitleHeiht([19, 45, 60]);
+    } else if (screenWidth >= 420) {
+      setConditionsForTitleHeiht([13, 18, 30]);
+    } else if (screenWidth >= 320) {
+      setConditionsForTitleHeiht([9, 13, 30]);
+    }
+  }, [screenWidth]);
+  const titleSize =
+    event.title.length < conditonsForTitleHeiht[0]
+      ? "1.875rem"
+      : event.title.length < conditonsForTitleHeiht[1]
+      ? "1.5rem"
+      : event.title.length < conditonsForTitleHeiht[2]
+      ? "1.1rem"
+      : "1rem";
+
   return (
     <div
       onClick={() =>
@@ -98,12 +121,23 @@ function EventListElement({ event, user }) {
                 alt="defaultProfileImg"
               />
             </Link>
-            <div className="w-[120px]  sm:w-[105px]  "></div>
-            <h2 className="text-4xl sm:text-5xl font-bold uppercase w-full flex justify-center">
-              push-ups
-            </h2>
+            <div className="w-full pl-[90px] sm:pl-[110px]">
+              <h2
+                style={{
+                  fontSize: titleSize,
+                  wordWrap: "break-word",
+                }}
+                className=" break-all font-bold uppercase w-full flex flex-wrap justify-center whitespace-normal"
+              >
+                {`${
+                  event.title.length > 50
+                    ? event.title.substring(0, 50) + "..."
+                    : event.title
+                }`}
+              </h2>
+            </div>
           </div>
-          <h2 className="flex gap-2 text-lg sm:text-2xl font-bold capitalize mt-2">
+          <h2 className="flex gap-2 text-lg sm:text-2xl font-bold capitalize mt-5">
             {eventOwner.name && eventOwner.surname ? (
               <>
                 <p>{eventOwner.name}</p> <p>{eventOwner.surname}</p>
