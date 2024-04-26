@@ -81,9 +81,12 @@ lg:rounded-tl-none lg:rounded-r-[2rem]"
                     style={{ filter: "drop-shadow(0px 3px 0px  gray)" }}
                     className="relative -translate-y-1 text-5xl translate-x-3 lg:text-7xl"
                   >
-                    <TbSquareRoundedArrowRightFilled className="z-10 absolute top-0 left-0" />
+                    <TbSquareRoundedArrowRightFilled className="z-10 top-0 left-0" />
                     {/* <TbSquareRoundedArrowRightFilled className="z-0 absolute top-[2px] text-gray-600 left-0 lg:top-1" /> */}
                   </div>
+                </div>
+                <div className=" w-full flex justify-center">
+                  <div className=" w-96  rounded-3xl bg-darkBluePrimary"></div>
                 </div>
               </label>
               <label className="w-full h-full flex flex-col justify-center sm:gap-2 lg:gap-0 min-w-min  md:w-3/4 lg:w-full lg:pr-[30%] lg:h-1/2 lg:pb-10">
