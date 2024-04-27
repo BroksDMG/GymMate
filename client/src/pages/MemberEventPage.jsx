@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { UserContext } from "../components/UserContext";
 import { useContext } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import logoWithBorder from "../assets/logoWithBorder.svg";
 import EventMemberDetail from "../components/EventMemberDetail";
+import { getEventsById } from "../apiServices/eventService";
 export default function MemberEventPage() {
   const { id } = useParams();
   const [event, setEvent] = useState([]);
@@ -14,9 +14,8 @@ export default function MemberEventPage() {
   useEffect(() => {
     if (!id) return;
 
-    axios.get("/events/" + id).then((response) => {
-      const { data } = response;
-      setEvent(data);
+    getEventsById(id).then((response) => {
+      setEvent(response.data);
       setIsLoading(false);
     });
   }, [id]);
@@ -25,7 +24,7 @@ export default function MemberEventPage() {
   }
   return (
     <div className="w-full h-full rounded-t-[2rem] bg-white mt-32 relative flex flex-col px-2 sm:px-10 md:px-20 lg:px-10 xl:px-20">
-      <div className=" flex  items-center flex-col lg:justify-normal lg:flex-row lg:items-start lg:mb-10">
+      <div className=" flex   items-center flex-col lg:justify-normal lg:flex-row lg:items-start lg:mb-10">
         <a href="#" className="absolute -top-20  lg:-top-32 select-none ">
           <img
             src={logoWithBorder}
@@ -35,7 +34,7 @@ export default function MemberEventPage() {
         </a>
       </div>
 
-      <div className="mt-16 grid grid-cols-1 ">
+      <div className="mt-16 grid place-items-center ">
         <EventMemberDetail event={event} user={user} />
       </div>
     </div>

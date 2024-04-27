@@ -20,7 +20,7 @@ export default function NavigationMenuTop() {
   }, [redirect, setUser]);
   async function logout() {
     onClikHandle(5);
-    await axios.post("/logout");
+    await axios.post("/user/logout");
     setRedirect("/login");
   }
   if (!ready) {
@@ -97,7 +97,8 @@ export default function NavigationMenuTop() {
             onClick={() => onClikHandle(3)}
           >
             <div href="#" className="relative">
-              <span
+              <Link
+                to={"/chats"}
                 className={` relative flex dropRadiousTop justify-center items-end pb-2 rounded-full w-14 h-10 
             ${
               isActive === 3
@@ -107,7 +108,7 @@ export default function NavigationMenuTop() {
               >
                 <BiSolidMessageDots className="z-10" />
                 <BiSolidMessageDots className="absolute text-gray-300 translate-y-[2px]" />
-              </span>
+              </Link>
             </div>
           </li>
           <li
