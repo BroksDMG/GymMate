@@ -4,33 +4,29 @@ import { PiMapPinFill } from "react-icons/pi";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
-import axios from "axios";
 import { BiSolidCalendarPlus } from "react-icons/bi";
 import Button from "./Button";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import useGetImagesFromDataBase from "./hooks/useGetImagesFromDataBase";
-import useImagesFromBinaryArray from "./hooks/useBinaryToImage";
+import { useWindowResize } from "./hooks/useWindowResize";
+import { getEventOwner, joinEvent } from "../apiServices/eventService";
+import useAvatarImg from "./hooks/useAvatarImg";
+import defaultUserAvatar from "../assets/defaultUser.png";
+import defaultBacgroudImage from "../assets/show_a_default_image.png";
 function EventListElement({ event, user }) {
-  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const [eventOwner, setEventOwner] = useState({});
   const [guests, setGuests] = useState(event?.guests || []);
-  const [imagesAvatarData, setImagesAvatarData] = useState([]);
-  const [imagesPhotosData, setImagesPhotosData] = useState([]);
   const navigate = useNavigate();
+  const screenWidth = useWindowResize();
+  const userAvatar = useAvatarImg(event?.avatar, defaultUserAvatar);
+  const bacgroundImage = useAvatarImg(event?.photos, defaultBacgroudImage);
+  const [conditonsForTitleHeiht, setConditionsForTitleHeiht] = useState([
+    9, 13, 30,
+  ]);
   let starSize;
   useEffect(() => {
-    const hanldeResize = () => {
-      setScreenWidth(window.innerWidth);
-    };
-    window.addEventListener("resize", hanldeResize);
-    return () => {
-      window.removeEventListener("resize", hanldeResize);
-    };
-  }, []);
-  useEffect(() => {
     if (event.owner) {
-      axios.get("/event-owner/" + event?.owner).then(({ data }) => {
+      getEventOwner(event).then(({ data }) => {
         setEventOwner(data);
       });
     }
@@ -61,8 +57,7 @@ function EventListElement({ event, user }) {
   }
   function joinEventHandler() {
     if (event.owner === user._id) return;
-    axios
-      .post("/join-event", { guestId: user._id, eventId: event._id })
+    joinEvent(user, event)
       .then(({ data }) => {
         if (data === "joined") {
           toast.success("You joined the event");
@@ -73,24 +68,27 @@ function EventListElement({ event, user }) {
         toast.error(error.response.data.error);
       });
   }
+
   useEffect(() => {
-    if (event?.avatar) {
-      setImagesAvatarData(event.avatar);
+    if (screenWidth >= 639) {
+      setConditionsForTitleHeiht([25, 32, 43]);
+    } else if (screenWidth >= 500) {
+      setConditionsForTitleHeiht([19, 45, 60]);
+    } else if (screenWidth >= 420) {
+      setConditionsForTitleHeiht([13, 18, 30]);
+    } else if (screenWidth >= 320) {
+      setConditionsForTitleHeiht([9, 13, 30]);
     }
-  }, [event?.avatar]);
-  const [downloadedImagesAvatar, errorDownload] =
-    useGetImagesFromDataBase(imagesAvatarData);
-  if (errorDownload) console.error(errorDownload);
-  const imageUrlsAvatar = useImagesFromBinaryArray(downloadedImagesAvatar);
-  useEffect(() => {
-    if (event?.photos) {
-      setImagesPhotosData(event.photos);
-    }
-  }, [event?.photos]);
-  const [downloadedImagesPhotos, errorDownloadPhotos] =
-    useGetImagesFromDataBase(imagesPhotosData);
-  if (errorDownloadPhotos) console.error(errorDownloadPhotos);
-  const imageUrlsPhotos = useImagesFromBinaryArray(downloadedImagesPhotos);
+  }, [screenWidth]);
+  const titleSize =
+    event.title.length < conditonsForTitleHeiht[0]
+      ? "1.875rem"
+      : event.title.length < conditonsForTitleHeiht[1]
+      ? "1.5rem"
+      : event.title.length < conditonsForTitleHeiht[2]
+      ? "1.1rem"
+      : "1rem";
+
   return (
     <div
       onClick={() =>
@@ -103,41 +101,43 @@ function EventListElement({ event, user }) {
       className="flex flex-col cursor-pointer mt-5 bg-gray-100  rounded-xl shadow-md shadow-gray-400"
     >
       <div className="h-24 sm:h-32 w-full bg-gray-300 flex rounded-t-xl">
-        {event?.photos?.length > 0 && (
-          <img
-            className="w-full object-cover  rounded-t-xl"
-            src={imageUrlsPhotos[0]?.imageData.url}
-            alt=""
-          />
-        )}
+        <img
+          className="w-full object-cover  rounded-t-xl"
+          src={bacgroundImage}
+          alt=""
+        />
       </div>
       <div className=" relative flex flex-col  px-4 pb-1  gap-3  md:px-10 ">
         <div className="flex flex-col w-full  h-full ">
           <div className="flex">
             <Link
+              onClick={(event) => event.stopPropagation()}
               to={"/account/" + event.owner}
               className="absolute -translate-y-10 hover:-translate-y-12 sm:hover:-translate-y-16  sm:-translate-y-14 flex justify-center items-center w-[89px] h-[89px] sm:w-[105px] sm:h-[105px] bg-white rounded-full  "
             >
-              {event.avatar?.length > 0 ? (
-                <img
-                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover object-center top-4"
-                  src={imageUrlsAvatar[0]?.imageData.url}
-                  alt="defaultProfileImg"
-                />
-              ) : (
-                <img
-                  src="https://img.freepik.com/free-photo/elf-woman-forest_71767-117.jpg?w=826&t=st=1699015819~exp=1699016419~hmac=74e1f2bd99b8e2de4489799ab8476301c1747e33fbb6fb1d6da863b5c6230ca6"
-                  alt="profileImg"
-                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover object-center top-4 "
-                />
-              )}
+              <img
+                className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover object-center top-4"
+                src={userAvatar}
+                alt="defaultProfileImg"
+              />
             </Link>
-            <div className="w-[120px]  sm:w-[105px]  "></div>
-            <h2 className="text-4xl sm:text-5xl font-bold uppercase w-full flex justify-center">
-              push-ups
-            </h2>
+            <div className="w-full pl-[90px] sm:pl-[110px]">
+              <h2
+                style={{
+                  fontSize: titleSize,
+                  wordWrap: "break-word",
+                }}
+                className=" break-all font-bold uppercase w-full flex flex-wrap justify-center whitespace-normal"
+              >
+                {`${
+                  event.title.length > 50
+                    ? event.title.substring(0, 50) + "..."
+                    : event.title
+                }`}
+              </h2>
+            </div>
           </div>
-          <h2 className="flex gap-2 text-lg sm:text-2xl font-bold capitalize mt-2">
+          <h2 className="flex gap-2 text-lg sm:text-2xl font-bold capitalize mt-5">
             {eventOwner.name && eventOwner.surname ? (
               <>
                 <p>{eventOwner.name}</p> <p>{eventOwner.surname}</p>
