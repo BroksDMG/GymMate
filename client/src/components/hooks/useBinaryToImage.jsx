@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-function useImagesFromBinaryArray(downloadedImages) {
+export default function useImagesFromBinaryArray(downloadedImages) {
   const imageUrls = useMemo(() => {
     if (downloadedImages.length === 0) return [];
     try {
@@ -42,5 +42,3 @@ function useImagesFromBinaryArray(downloadedImages) {
 
   return imageUrls;
 }
-
-export default useImagesFromBinaryArray;

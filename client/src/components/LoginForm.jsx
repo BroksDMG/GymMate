@@ -1,27 +1,29 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import InputField from "./InputField";
 import axios from "axios";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import { Link } from "react-router-dom";
 import graphicGymRoomLogin from "../assets/graphicGymRoomLogin.svg";
 import Button from "./Button";
 import { RiArrowRightSFill } from "react-icons/ri";
 import { AiFillCheckCircle } from "react-icons/ai";
+import { BsBell } from "react-icons/bs";
+
 import { TbSquareRoundedArrowRightFilled } from "react-icons/tb";
 import PropsTypes from "prop-types";
 
 function LoginForm({ toggleForm }) {
   const [redirect, setRedirect] = useState(false);
-  const { setUser } = useContext(UserContext);
-
+  const { setUser, user } = useContext(UserContext);
+  const location = useLocation();
   const handleSubmit = async (values) => {
     await axios
-      .post("/login", { ...values })
+      .post("/user/login", { ...values })
       .then(({ data }) => {
         setUser(data);
         toast.success("Login succesful");
@@ -42,12 +44,10 @@ function LoginForm({ toggleForm }) {
     email: Yup.string().email("Email is invalid").required("Email is required"),
   });
 
-  if (redirect) {
+  if (redirect || (user && location.pathname !== "/login")) {
     return <Navigate to={"/events"} />;
   }
-  const rootFontSize = parseFloat(
-    getComputedStyle(document.documentElement).fontSize
-  );
+
   return (
     <>
       <Formik
@@ -73,7 +73,7 @@ lg:rounded-tl-none lg:rounded-r-[2rem]"
             }}
           >
             <div className="w-full h-full px-8 flex flex-col justify-center items-center">
-              <label className="text-3xl w-full  h-1/6 flex relative md:w-3/4  lg:w-full lg:text-6xl">
+              <label className="text-3xl w-full sm:mt-16 md:mt-32 lg:mt-0 flex relative md:w-3/4  lg:w-full lg:text-6xl">
                 <div
                   style={{ filter: "drop-shadow(0px 3px 0px  gray)" }}
                   className="z-10 mt-10 flex font-bold  "
@@ -83,8 +83,28 @@ lg:rounded-tl-none lg:rounded-r-[2rem]"
                     style={{ filter: "drop-shadow(0px 3px 0px  gray)" }}
                     className="relative -translate-y-1 text-5xl translate-x-3 lg:text-7xl"
                   >
-                    <TbSquareRoundedArrowRightFilled className="z-10 absolute top-0 left-0" />
+                    <TbSquareRoundedArrowRightFilled className="z-10 top-0 left-0" />
                     {/* <TbSquareRoundedArrowRightFilled className="z-0 absolute top-[2px] text-gray-600 left-0 lg:top-1" /> */}
+                  </div>
+                </div>
+                <div className=" hidden sm:flex w-full lg:flex justify-center text-3xl text-white ml-2 first-letter:">
+                  <div className=" w-96 h-40 rounded-3xl bg-darkBluePrimary relative px-3">
+                    <div className="flex justify-center items-center rounded-full border-[4px] border-white h-16 w-16  bg-darkBluePrimary absolute left-1/2 -translate-x-1/2 -translate-y-1/2">
+                      <BsBell />
+                    </div>
+                    <article>
+                      <p className=" uppercase tracking-widest font-semibold mt-8 text-center text-base">
+                        attention
+                      </p>
+                      <p className="text-center  text-sm">
+                        If you are a recruiter, use a ready-made test account or
+                        create your own account ;)
+                      </p>
+                      <p className="text-base flex flex-col text-center font-semibold">
+                        <span>email: GymMate@email.com</span>{" "}
+                        <span>passowrd: GymMatePassword#1</span>
+                      </p>
+                    </article>
                   </div>
                 </div>
               </label>

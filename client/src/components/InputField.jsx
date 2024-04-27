@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { BiSolidErrorCircle } from "react-icons/bi";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useWindowResize } from "./hooks/useWindowResize";
 function InputField({
   children,
   value,
   error,
   onChange,
-  inputHeight = "56",
+  inputHeight,
   isList = false,
   listOptions = [],
   listOnChange,
@@ -16,9 +19,13 @@ function InputField({
   const [isError, setIsError] = useState(false);
   const [selectedValue, setSelectedValue] = useState("");
   const [isListOpen, setIsListOpen] = useState(false);
-  if (error && !isError) {
-    setIsError(true);
-  }
+  const windowWidth = useWindowResize();
+  useEffect(() => {
+    if (error && !isError) {
+      setIsError(true);
+      toast.error(error);
+    }
+  }, [error, isError]);
   function handleOnClick() {
     setIsError(false);
     setIsListOpen((isPrevListOpen) => !isPrevListOpen);
@@ -33,22 +40,29 @@ function InputField({
     addEventListener("keydown", (e) => {
       if (e.key === "Backspace") {
         setSelectedValue("");
-        setIsListOpen(false);
       }
     });
   });
   useEffect(() => {
     setIsFocus(!!value);
   }, [value]);
+  const heightStyle = inputHeight
+    ? { height: `${inputHeight}px` }
+    : windowWidth < 768
+    ? { height: "40px" }
+    : { height: "60px" };
+  const paddingStyle =
+    windowWidth > 768 ? { padding: "16px" } : { padding: "8px" };
   return (
     <div
       onFocus={() => setIsFocus(true)}
-      className={`w-full h-[40px] lg:h-[60px] text-lightBlue border-lightBlue font-medium  text-sm sm:text-base lg:text-xl min-w-[100px] relative mt-3 sm:mt-6 transform duration-200 ease-linear
+      style={heightStyle}
+      className={`w-full  text-lightBlue border-lightBlue font-medium  text-sm sm:text-base lg:text-xl min-w-[100px] relative mt-3 sm:mt-4 transform duration-200 ease-linear
     hover:border-darkBluePrimary hover:text-darkBluePrimary active:text-mediumBlue
     `}
     >
       <div
-        className={`text-red-400  translate-x-3 translate-y-3 lg:translate-y-4 absolute right-10
+        className={`text-red-400  translate-x-3 translate-y-2 sm:translate-y-5  absolute right-10
       ${isError ? "text-xl lg:text-2xl" : ""}`}
       >
         {isError && !isFocus && <BiSolidErrorCircle />}
@@ -57,16 +71,18 @@ function InputField({
       <input
         onClick={() => handleOnClick()}
         onBlur={() => setIsFocus(value ? true : false)}
-        className={`border-[2px] rounded-l-xl lg:h-16 overflow-scroll p-2 pr-0 sm:p-4  border-inherit w-full focus-visible:outline-none
+        style={paddingStyle}
+        className={`border-[2px] rounded-l-xl  overflow-scroll lg:h-16  pr-0  border-inherit w-full focus-visible:outline-none
   hover:border-inherit ${isFocus ? "text-mediumBlue border-mediumBlue  " : ""}`}
         {...props}
         value={isList ? selectedValue : value}
         onChange={onChange}
+        readOnly={!onChange}
       ></input>
       <div
-        className={`absolute top-2 sm:top-4 lg:top-3 left-3 sm:left-5 pt-0.5 bg-white  pointer-events-none  max-w-max transform duration-200 ease-linear${
+        className={`absolute top-2 md:top-4 lg:top-3 left-3 sm:left-5 pt-0.5 bg-white  pointer-events-none  max-w-max transform duration-200 ease-linear${
           isFocus
-            ? " -translate-y-5 sm:-translate-y-7 scale-[0.88] px-1 sm:px-2 z-[1111] text-mediumBlue"
+            ? " -translate-y-5 md:-translate-y-7 scale-[0.88] px-1 sm:px-2 z-40 text-mediumBlue"
             : ""
         }`}
       >

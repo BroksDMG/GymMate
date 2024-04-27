@@ -11,18 +11,18 @@ import TextAreaField from "../components/TextAreaField";
 import UserGallery from "../components/UserGallery";
 import { useParams } from "react-router-dom";
 import FriendListElement from "../components/FriendListElement";
-import useGetImagesFromDataBase from "../components/hooks/useGetImagesFromDataBase";
-import useImagesFromBinaryArray from "../components/hooks/useBinaryToImage";
+import useAvatarImg from "../components/hooks/useAvatarImg";
+import defaultUserAvatar from "../assets/defaultUser.png";
+import { sendFriendRequest } from "../apiServices/userService";
 function MemberProfilPage() {
-  const { ready, user, setUser } = useContext(UserContext);
-  const [redirect, setRedirect] = useState(null);
+  const { ready, user } = useContext(UserContext);
   const [avtiveTab, setActiveTab] = useState(1);
   const [otherUser, setOtherUser] = useState(null);
   const { id: accountId } = useParams();
   const [userEvents, setUserEvents] = useState([]);
   const [isSendInvite, setIsSendInvite] = useState(false);
   const [userFriends, setUserFriends] = useState([]);
-  const [imagesData, setImagesData] = useState([]);
+  const userAvatar = useAvatarImg(otherUser?.avatar, defaultUserAvatar);
   useEffect(() => {
     axios.get("/members-events/" + accountId).then((response) => {
       setUserEvents(response.data);
@@ -32,22 +32,15 @@ function MemberProfilPage() {
     if (!accountId) return;
 
     axios.get(`/account/${accountId}`).then((response) => {
-      const { data } = response;
-      setOtherUser(data);
-      setImagesData(data?.avatar);
+      setOtherUser(response.data);
     });
   }, [accountId]);
   useEffect(() => {
     if (!accountId) return;
     axios.get(`/friends/${accountId}`).then((response) => {
-      const { data } = response;
-      setUserFriends(data);
+      setUserFriends(response.data);
     });
   }, [accountId]);
-  const [downloadedImagesGallery, errorDownload] =
-    useGetImagesFromDataBase(imagesData);
-  if (errorDownload) console.error(errorDownload);
-  const imageUrlsAvatar = useImagesFromBinaryArray(downloadedImagesGallery);
 
   const initialFormValues = {
     avatar: otherUser?.avatar || [],
@@ -57,11 +50,8 @@ function MemberProfilPage() {
   if (!ready) {
     return "Loading...";
   }
-  if (ready && !user && !redirect) {
+  if (ready && !user) {
     return <Navigate to={"/login"} />;
-  }
-  if (redirect) {
-    return <Navigate to={redirect} />;
   }
   const validationSchema = Yup.object().shape({
     avatar: Yup.array(),
@@ -69,10 +59,7 @@ function MemberProfilPage() {
     gallery: Yup.array(),
   });
   async function photosUploderSubmit() {
-    await axios.post("/add-friend", {
-      currentUserId: user._id,
-      friendId: accountId,
-    });
+    sendFriendRequest(user, accountId);
     setIsSendInvite((e) => !e);
   }
 
@@ -99,20 +86,11 @@ function MemberProfilPage() {
                     style={{ boxShadow: "0px 5px 0px rgb(156 163 175)" }}
                     className="absolute top-5 lg:top-16 h-[9rem] w-[9rem] lg:w-[12rem] lg:h-[12rem] bg-gra flex justify-center items-center bg-darkBluePrimary rounded-full object-cover object-center"
                   >
-                    {otherUser?.avatar.length > 0 &&
-                    imageUrlsAvatar[0]?.imageData.url ? (
-                      <img
-                        className="w-[8rem] h-[8rem] lg:w-[11rem] lg:h-[11rem] rounded-full object-cover object-center"
-                        src={imageUrlsAvatar[0].imageData.url}
-                        alt=""
-                      />
-                    ) : (
-                      <img
-                        src="https://img.freepik.com/free-photo/elf-woman-forest_71767-117.jpg?w=826&t=st=1699015819~exp=1699016419~hmac=74e1f2bd99b8e2de4489799ab8476301c1747e33fbb6fb1d6da863b5c6230ca6"
-                        alt="profileImg"
-                        className="w-[8rem] h-[8rem] lg:w-[11rem] lg:h-[11rem] rounded-full object-cover object-center  "
-                      />
-                    )}
+                    <img
+                      className="w-[8rem] h-[8rem] lg:w-[11rem] lg:h-[11rem] rounded-full object-cover object-center"
+                      src={userAvatar}
+                      alt=""
+                    />
                   </div>
                   <div className="relative top-44 lg:top-[17rem] ">
                     <Button type="submit">

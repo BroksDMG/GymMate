@@ -15,7 +15,7 @@ const multer = require("multer");
 require("dotenv").config();
 const app = express();
 
-const jwtSecret = "fasefraw4r5r3wq45wdfgw34twdfg";
+const jwtSecret = process.env.JWT_SECRET;
 
 app.use(express.json());
 app.use(cookieParser());
@@ -27,7 +27,6 @@ app.use(
     credentials: true,
     origin: process.env.CLIENT_URL,
     methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type"],
   })
 );
 console.log(process.env.MONGO_URL);
@@ -50,6 +49,7 @@ app.get("/", (req, res) => {
 
 app.use("/images", require("./routes/imagesRoute.js"));
 app.use("/user", require("./routes/userRoute.js"));
+app.use("/message", require("./routes/messageRoute.js"));
 
 app.post("/register", async (req, res) => {
   const { name, surname, email, password } = req.body;
@@ -75,100 +75,6 @@ app.post("/register", async (req, res) => {
     res
       .status(500)
       .json({ error: "Wystąpił błąd podczas rejestracji użytkownika." });
-  }
-});
-
-app.post("/login", async (req, res) => {
-  try {
-    await mongoose.connect(process.env.MONGO_URL);
-  } catch (error) {
-    console.error("Database connection error:", error);
-    return res.status(500).json("Database connection error");
-  }
-
-  const { email, password } = req.body;
-
-  const userDoc = await User.findOne({ email });
-  if (userDoc) {
-    const passOk = bcrypt.compareSync(password, userDoc.password);
-    if (passOk) {
-      jwt.sign(
-        {
-          email: userDoc.email,
-          id: userDoc._id,
-        },
-        jwtSecret,
-        { expiresIn: "2h" },
-        (err, token) => {
-          if (err) throw err;
-          res
-            .cookie("token", token, {
-              httpOnly: true,
-              sameSite: "None",
-              secure: true,
-            })
-            .json(userDoc);
-        }
-      );
-    } else {
-      res.status(422).json("pass not ok");
-    }
-  } else {
-    res.status(400).json("not found");
-  }
-});
-
-app.get("/profile", async (req, res) => {
-  const { token } = req.cookies;
-  if (token) {
-    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-      if (err) {
-        if (err.name === "TokenExpiredError") {
-          return res.status(401).json({ error: "Token expired" });
-        } else {
-          throw err;
-        }
-      } else {
-        const {
-          name,
-          email,
-          surname,
-          _id,
-          avatar,
-          userDescription,
-          gallery,
-          friends,
-          friendRequests,
-        } = await User.findById(userData.id);
-        res.json({
-          name,
-          email,
-          surname,
-          _id,
-          avatar,
-          userDescription,
-          gallery,
-          friends,
-          friendRequests,
-        });
-      }
-    });
-  } else {
-    res.json(null);
-  }
-});
-
-let isLogoutInProgress = false;
-
-app.post("/logout", (req, res) => {
-  if (!isLogoutInProgress) {
-    isLogoutInProgress = true;
-    res
-      .clearCookie("token", { httpOnly: true, sameSite: "None", secure: true })
-      .json(true);
-    isLogoutInProgress = false;
-  } else {
-    res.status(500).json({ error: "Logout in progress" });
   }
 });
 
@@ -228,33 +134,7 @@ app.post("/events", async (req, res) => {
     res.json(eventDoc);
   });
 });
-app.get("/user-events", async (req, res) => {
-  try {
-    const { token } = req.cookies;
 
-    if (!token) {
-      return res
-        .status(401)
-        .json({ error: "Unauthorized - Token not provided" });
-    }
-
-    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-      if (err) {
-        console.error(err);
-        return res
-          .status(500)
-          .json({ error: "Internal Server Error - Invalid token" });
-      }
-
-      const { id } = userData;
-      const events = await Event.find({ owner: id });
-      res.json(events);
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
 app.get("/event-owner/:id", async (req, res) => {
   const { id } = req.params;
   const user = await User.findById(id);
@@ -399,8 +279,15 @@ app.post("/accept-friend", async (req, res) => {
   currentUser.friends.push(friendId);
   friend.friends.push(currentUserId);
 
-  await friend.save();
-  await currentUser.save();
+  await User.findByIdAndUpdate(currentUserId, {
+    $pull: { friendRequests: friendId },
+    $push: { friends: friendId },
+  });
+
+  await User.findByIdAndUpdate(friendId, {
+    $pull: { friendRequests: currentUserId },
+    $push: { friends: currentUserId },
+  });
 
   res.json({ message: "Friend requset accepted successfully" });
 });
@@ -441,5 +328,8 @@ app.get("/friends/:userId", async (req, res) => {
 app.get("/test", (req, res) => {
   res.json("test ok");
 });
-
+// app.use(function (req, res, next) {
+//   res.status(404).sendFile(__dirname + "/path/to/your/404page.html");
+// });
+console.log(process.env.PORT);
 app.listen(process.env.PORT || 4000);

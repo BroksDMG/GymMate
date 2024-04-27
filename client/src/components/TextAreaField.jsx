@@ -42,6 +42,7 @@ function TextAreaField({ children, value, error, ...props }) {
         isFocus ? "text-mediumBlue border-mediumBlue  " : ""
       }`}
         value={value}
+        readOnly={!props.onChange}
         {...props}
       ></textarea>
       <div
@@ -63,6 +64,7 @@ TextAreaField.propTypes = {
   value: PropTypes.string || PropTypes.number,
   error: PropTypes.string,
   inputHeight: PropTypes.string,
+  onChange: PropTypes.func,
 };
 
 export default TextAreaField;
